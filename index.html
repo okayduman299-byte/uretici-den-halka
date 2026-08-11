@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Üreticiden Halka</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f5f6f8;
+    color:#17202a;
+}
+
+header{
+    background:#ffffff;
+    border-bottom:1px solid #e5e7eb;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.topbar{
+    max-width:1200px;
+    margin:auto;
+    height:72px;
+    display:flex;
+    align-items:center;
+    gap:28px;
+    padding:0 20px;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:800;
+    color:#16834b;
+    white-space:nowrap;
+}
+
+.logo span{
+    color:#17202a;
+}
+
+.search{
+    flex:1;
+    position:relative;
+}
+
+.search input{
+    width:100%;
+    height:46px;
+    border:1px solid #d8dde3;
+    border-radius:12px;
+    padding:0 50px 0 18px;
+    font-size:15px;
+    outline:none;
+}
+
+.search input:focus{
+    border-color:#16834b;
+}
+
+.search button{
+    position:absolute;
+    right:5px;
+    top:5px;
+    width:36px;
+    height:36px;
+    border:0;
+    border-radius:9px;
+    background:#16834b;
+    color:white;
+    cursor:pointer;
+}
+
+.header-actions{
+    display:flex;
+    gap:10px;
+}
+
+.action{
+    border:1px solid #e0e4e8;
+    background:white;
+    border-radius:10px;
+    padding:10px 13px;
+    cursor:pointer;
+}
+
+.hero{
+    background:linear-gradient(135deg,#0f7a43,#25a866);
+    color:white;
+    padding:70px 20px;
+}
+
+.hero-inner{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+}
+
+.hero h1{
+    font-size:48px;
+    line-height:1.05;
+    margin-bottom:18px;
+}
+
+.hero p{
+    font-size:18px;
+    opacity:.92;
+    max-width:620px;
+    line-height:1.6;
+}
+
+.hero button{
+    margin-top:25px;
+    background:white;
+    color:#117842;
+    border:0;
+    padding:14px 23px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.hero-box{
+    background:rgba(255,255,255,.13);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:20px;
+    padding:30px;
+    min-width:280px;
+}
+
+.hero-box strong{
+    font-size:34px;
+    display:block;
+    margin-bottom:8px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:45px 20px;
+}
+
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:22px;
+}
+
+.section-title h2{
+    font-size:27px;
+}
+
+.section-title a{
+    color:#16834b;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.categories{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+    margin-bottom:50px;
+}
+
+.category{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:15px;
+    padding:22px 12px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.category:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.category .icon{
+    font-size:32px;
+    margin-bottom:10px;
+}
+
+.category b{
+    font-size:14px;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.product{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    overflow:hidden;
+    transition:.2s;
+}
+
+.product:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(0,0,0,.09);
+}
+
+.product-image{
+    height:190px;
+    background:#eef3ee;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:70px;
+}
+
+.product-info{
+    padding:17px;
+}
+
+.product-info small{
+    color:#75808a;
+}
+
+.product-info h3{
+    margin:7px 0;
+    font-size:17px;
+}
+
+.price{
+    color:#16834b;
+    font-size:21px;
+    font-weight:800;
+    margin:12px 0;
+}
+
+.product button{
+    width:100%;
+    padding:11px;
+    border:0;
+    background:#16834b;
+    color:white;
+    border-radius:9px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.producer{
+    margin-top:55px;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:20px;
+    padding:30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+}
+
+.producer h2{
+    margin-bottom:10px;
+}
+
+.producer p{
+    color:#66717b;
+    line-height:1.6;
+}
+
+.producer button{
+    background:#17202a;
+    color:white;
+    border:0;
+    padding:14px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+footer{
+    margin-top:50px;
+    background:#17202a;
+    color:white;
+    padding:40px 20px;
+}
+
+.footer-inner{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    gap:30px;
+}
+
+footer p{
+    color:#b7c0c8;
+    margin-top:8px;
+}
+
+@media(max-width:900px){
+    .categories{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .products{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero h1{
+        font-size:38px;
+    }
+}
+
+@media(max-width:600px){
+    .topbar{
+        height:auto;
+        padding:14px;
+        flex-wrap:wrap;
+    }
+
+    .logo{
+        width:100%;
+    }
+
+    .header-actions{
+        display:none;
+    }
+
+    .hero{
+        padding:45px 20px;
+    }
+
+    .hero-inner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .hero h1{
+        font-size:34px;
+    }
+
+    .hero-box{
+        width:100%;
+    }
+
+    .categories{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .products{
+        grid-template-columns:1fr;
+    }
+
+    .producer{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .footer-inner{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="topbar">
+        <div class="logo">Üreticiden <span>Halka</span></div>
+
+        <div class="search">
+            <input id="searchInput" type="text" placeholder="Ürün, üretici veya kategori ara...">
+            <button onclick="searchProducts()">⌕</button>
+        </div>
+
+        <div class="header-actions">
+            <button class="action">♡ Favoriler</button>
+            <button class="action">🛒 Sepet</button>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-inner">
+        <div>
+            <h1>Üreticiden<br>doğrudan sana.</h1>
+            <p>
+                Aracısız alışveriş. Gerçek üreticilerden,
+                kaliteli ürünleri daha uygun fiyatlarla keşfet.
+            </p>
+            <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+                Ürünleri Keşfet →
+            </button>
+        </div>
+
+        <div class="hero-box">
+            <strong>10.000+</strong>
+            <span>üreticiyi tek platformda buluşturma hedefi</span>
+        </div>
+    </div>
+</section>
+
+<main class="container">
+
+    <div class="section-title">
+        <h2>Kategoriler</h2>
+        <a href="#">Tümünü gör →</a>
+    </div>
+
+    <div class="categories">
+        <div class="category"><div class="icon">🥬</div><b>Meyve & Sebze</b></div>
+        <div class="category"><div class="icon">🫒</div><b>Zeytin & Zeytinyağı</b></div>
+        <div class="category"><div class="icon">🍯</div><b>Bal & Kahvaltılık</b></div>
+        <div class="category"><div class="icon">🧀</div><b>Süt Ürünleri</b></div>
+        <div class="category"><div class="icon">🌾</div><b>Bakliyat</b></div>
+        <div class="category"><div class="icon">🧺</div><b>Yöresel Ürünler</b></div>
+    </div>
+
+    <div class="section-title" id="products">
+        <h2>Öne Çıkan Ürünler</h2>
+        <a href="#">Tüm ürünler →</a>
+    </div>
+
+    <div class="products" id="productList">
+
+        <div class="product" data-name="organik domates">
+            <div class="product-image">🍅</div>
+            <div class="product-info">
+                <small>Antalya • Çiftçi Mehmet</small>
+                <h3>Organik Köy Domatesi</h3>
+                <div class="price">59,90 TL / kg</div>
+                <button onclick="addCart('Organik Köy Domatesi')">Sepete Ekle</button>
+            </div>
+        </div>
+
+        <div class="product" data-name="zeytinyagi">
+            <div class="product-image">🫒</div>
+            <div class="product-info">
+                <small>Bursa • Yıldız Zeytincilik</small>
+                <h3>Soğuk Sıkım Zeytinyağı</h3>
+                <div class="price">449 TL / litre</div>
+                <button onclick="addCart('Soğuk Sıkım Zeytinyağı')">Sepete Ekle</button>
+            </div>
+        </div>
+
+        <div class="product" data-name="cicek bali">
+            <div class="product-image">🍯</div>
+            <div class="product-info">
+                <small>Artvin • Doğa Arıcılık</small>
+                <h3>Doğal Çiçek Balı</h3>
+                <div class="price">389 TL / kg</div>
+                <button onclick="addCart('Doğal Çiçek Balı')">Sepete Ekle</button>
+            </div>
+        </div>
+
+        <div class="product" data-name="koy peyniri">
+            <div class="product-image">🧀</div>
+            <div class="product-info">
+                <small>Erzincan • Köy Ürünleri</small>
+                <h3>Geleneksel Köy Peyniri</h3>
+                <div class="price">329 TL / kg</div>
+                <button onclick="addCart('Geleneksel Köy Peyniri')">Sepete Ekle</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="producer">
+        <div>
+            <h2>Sen de üretici ol.</h2>
+            <p>
+                Ürünlerini doğrudan müşterilere sat.
+                Kendi mağazanı oluştur, siparişlerini yönet
+                ve daha fazla müşteriye ulaş.
+            </p>
+        </div>
+
+        <button onclick="becomeProducer()">Üretici Mağazası Aç →</button>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div>
+            <h3>Üreticiden Halka</h3>
+            <p>Üretici ile tüketiciyi doğrudan buluşturuyoruz.</p>
+        </div>
+
+        <div>
+            <h3>Marketplace</h3>
+            <p>Ürünler • Üreticiler • Siparişler</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+function addCart(product){
+    alert(product + " sepete eklendi.");
+}
+
+function becomeProducer(){
+    alert("Üretici mağazası oluşturma sistemi yakında aktif olacak.");
+}
+
+function searchProducts(){
+    const text = document.getElementById("searchInput").value.toLowerCase();
+    const products = document.querySelectorAll(".product");
+
+    products.forEach(product => {
+        const name = product.dataset.name.toLowerCase();
+
+        if(name.includes(text) || text === ""){
+            product.style.display = "";
+        }else{
+            product.style.display = "none";
+        }
+    });
+}
+
+document.getElementById("searchInput").addEventListener("keyup", function(){
+    searchProducts();
+});
+</script>
+
+</body>
+</html>
