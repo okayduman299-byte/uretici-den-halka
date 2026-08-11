@@ -3,538 +3,327 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Üreticiden Halka</title>
-
+<title>Üreticiden Halka | Doğrudan üreticiden alışveriş</title>
+<meta name="description" content="Üreticiden Halka — yerel üreticilerden güvenli ve doğrudan alışveriş platformu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,Helvetica,sans-serif;
+:root{
+  --green:#166534; --green2:#15803d; --lime:#84cc16; --cream:#f7f8f3;
+  --ink:#17211b; --muted:#69756d; --line:#e4e9e4; --white:#fff;
+  --shadow:0 14px 40px rgba(22,45,31,.09);
 }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font-family:"DM Sans",Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.container{width:min(1180px,calc(100% - 40px));margin:auto}
 
-body{
-    background:#f5f6f8;
-    color:#17202a;
-}
+/* HEADER */
+.topbar{background:#f0f7ef;border-bottom:1px solid #dce8dc;font-size:13px;color:#45614d}
+.topbar .container{height:36px;display:flex;align-items:center;justify-content:space-between}
+.header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header-row{height:76px;display:flex;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;min-width:205px}
+.logo-mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#166534,#4d9b52);display:grid;place-items:center;color:white;font-size:22px;box-shadow:0 8px 20px rgba(22,101,52,.2)}
+.logo strong{font-family:Manrope;font-size:18px;letter-spacing:-.5px}
+.logo span{display:block;color:#6c776f;font-size:11px;margin-top:1px}
+.search{flex:1;position:relative}
+.search input{width:100%;height:46px;border:1px solid #dce3dc;border-radius:14px;padding:0 48px 0 18px;outline:none;background:#fafcf9;transition:.2s}
+.search input:focus{border-color:#7baa82;box-shadow:0 0 0 4px rgba(21,128,61,.08)}
+.search button{position:absolute;right:6px;top:5px;width:36px;height:36px;border:0;border-radius:10px;background:#edf4ed;color:var(--green)}
+.actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:#fff;border-radius:12px;position:relative;color:#314039}
+.badge{position:absolute;right:-4px;top:-5px;background:#ef4444;color:#fff;border-radius:20px;font-size:10px;padding:3px 6px;font-weight:700}
+.user-btn{height:42px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:#fff;font-weight:600}
 
-header{
-    background:#ffffff;
-    border-bottom:1px solid #e5e7eb;
-    position:sticky;
-    top:0;
-    z-index:100;
-}
+/* HERO */
+.hero{padding:42px 0 26px;background:linear-gradient(180deg,#f7faf5 0%,#fff 100%)}
+.hero-card{min-height:390px;border-radius:28px;overflow:hidden;position:relative;background:linear-gradient(115deg,#123d25 0%,#1e6a3b 55%,#3c8d4c 100%);box-shadow:var(--shadow)}
+.hero-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 83% 25%,rgba(255,255,255,.18),transparent 26%),radial-gradient(circle at 74% 90%,rgba(167,243,208,.15),transparent 28%)}
+.hero-content{position:relative;z-index:2;padding:56px 58px;color:#fff;max-width:650px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:7px 12px;border-radius:30px;font-size:12px;font-weight:700;margin-bottom:18px}
+.hero h1{font-family:Manrope;font-size:clamp(34px,4.2vw,58px);line-height:1.02;letter-spacing:-2px;margin:0 0 18px}
+.hero h1 span{color:#bef264}
+.hero p{font-size:17px;line-height:1.6;color:#e1eee5;max-width:560px;margin:0 0 28px}
+.hero-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:#fff;color:#14532d}
+.btn-primary:hover{background:#f0fdf4}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.hero-orbit{position:absolute;right:7%;bottom:0;width:390px;height:330px}
+.orbit{position:absolute;border:1px solid rgba(255,255,255,.18);border-radius:50%}
+.o1{width:320px;height:320px;right:20px;bottom:-120px}
+.o2{width:230px;height:230px;right:75px;bottom:-75px}
+.basket{position:absolute;right:70px;bottom:48px;font-size:155px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.2));transform:rotate(-7deg)}
 
-.topbar{
-    max-width:1200px;
-    margin:auto;
-    height:72px;
-    display:flex;
-    align-items:center;
-    gap:28px;
-    padding:0 20px;
-}
+/* TRUST */
+.trust{padding:18px 0;border-bottom:1px solid var(--line)}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.trust-item{display:flex;align-items:center;gap:12px;padding:12px 10px}
+.trust-icon{width:40px;height:40px;border-radius:12px;background:#eff8ef;display:grid;place-items:center;font-size:18px}
+.trust-item b{font-size:13px;display:block}.trust-item small{color:var(--muted);font-size:11px}
 
-.logo{
-    font-size:24px;
-    font-weight:800;
-    color:#16834b;
-    white-space:nowrap;
-}
+/* SECTIONS */
+.section{padding:52px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:22px}
+.section-head h2{font-family:Manrope;font-size:26px;letter-spacing:-.8px;margin:0}
+.section-head p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.link{color:var(--green);font-weight:700;font-size:14px}
 
-.logo span{
-    color:#17202a;
-}
+/* CATEGORIES */
+.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.cat{border:1px solid var(--line);border-radius:18px;padding:18px 12px;text-align:center;background:#fff;transition:.2s}
+.cat:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#cbdccc}
+.cat .emoji{width:58px;height:58px;border-radius:18px;background:#f5f8f3;display:grid;place-items:center;font-size:29px;margin:0 auto 10px}
+.cat b{font-size:13px}.cat small{display:block;color:#8a948d;margin-top:4px;font-size:11px}
 
-.search{
-    flex:1;
-    position:relative;
-}
+/* PRODUCTS */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.product{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff;transition:.2s;position:relative}
+.product:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.product-img{height:205px;background:#f4f5f1;position:relative;overflow:hidden}
+.product-img img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.product:hover .product-img img{transform:scale(1.05)}
+.heart{position:absolute;right:12px;top:12px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.92);font-size:17px}
+.heart.active{color:#dc2626}
+.tag{position:absolute;left:12px;top:12px;background:#e8f5e8;color:#166534;border-radius:20px;padding:6px 9px;font-size:10px;font-weight:800}
+.product-body{padding:15px}
+.producer{font-size:11px;color:#718078;margin-bottom:6px}
+.product h3{font-size:15px;margin:0 0 7px}
+.stars{font-size:11px;color:#e59b17}.rating{color:#7d8780;margin-left:4px}
+.price-row{display:flex;align-items:center;justify-content:space-between;margin-top:13px}
+.price{font-family:Manrope;font-size:18px}.unit{font-size:11px;color:#8a948d;font-family:"DM Sans"}
+.add{width:38px;height:38px;border:0;border-radius:11px;background:#166534;color:#fff;font-size:20px}
 
-.search input{
-    width:100%;
-    height:46px;
-    border:1px solid #d8dde3;
-    border-radius:12px;
-    padding:0 50px 0 18px;
-    font-size:15px;
-    outline:none;
-}
+/* PRODUCERS */
+.producer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.producer-card{border:1px solid var(--line);border-radius:20px;padding:20px;display:flex;gap:14px;align-items:center}
+.avatar{width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#dcefdc,#a9d3ad);display:grid;place-items:center;font-size:28px;flex:none}
+.producer-card h3{font-size:15px;margin:0 0 5px}.producer-card p{font-size:12px;color:var(--muted);margin:0 0 8px}
+.verified{font-size:10px;color:#166534;font-weight:800;background:#eff8ef;padding:5px 8px;border-radius:20px}
 
-.search input:focus{
-    border-color:#16834b;
-}
+/* CTA */
+.cta{padding:0 0 56px}
+.cta-box{border-radius:24px;padding:30px 34px;background:#f0f7ed;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.cta-box h2{font-family:Manrope;margin:0 0 6px;font-size:25px}.cta-box p{margin:0;color:var(--muted);font-size:14px}
 
-.search button{
-    position:absolute;
-    right:5px;
-    top:5px;
-    width:36px;
-    height:36px;
-    border:0;
-    border-radius:9px;
-    background:#16834b;
-    color:white;
-    cursor:pointer;
-}
+/* FOOTER */
+footer{background:#13231a;color:#dce7df;padding:45px 0 20px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+footer h3{color:#fff;font-size:13px;margin:0 0 15px}
+footer a{display:block;color:#aab9af;font-size:12px;margin:10px 0}
+.footer-brand p{max-width:340px;color:#9dad9f;font-size:12px;line-height:1.7}
+.copy{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-top:18px;color:#819187;font-size:11px;display:flex;justify-content:space-between}
 
-.header-actions{
-    display:flex;
-    gap:10px;
-}
+/* TOAST + CART */
+.toast{position:fixed;right:20px;bottom:20px;background:#17211b;color:#fff;padding:13px 16px;border-radius:13px;box-shadow:var(--shadow);opacity:0;transform:translateY(15px);pointer-events:none;transition:.25s;z-index:100;font-size:13px}
+.toast.show{opacity:1;transform:translateY(0)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:80;display:none}
+.cart-panel{position:fixed;right:0;top:0;height:100%;width:min(390px,92vw);background:#fff;z-index:90;transform:translateX(100%);transition:.3s;box-shadow:-10px 0 40px rgba(0,0,0,.12);padding:22px}
+.cart-panel.open{transform:translateX(0)}.overlay.open{display:block}
+.cart-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:15px}
+.cart-head h2{font-family:Manrope;font-size:20px;margin:0}.close{border:0;background:#f4f5f2;width:34px;height:34px;border-radius:10px}
+.cart-empty{text-align:center;color:var(--muted);padding:80px 20px}.cart-list{margin-top:18px}.cart-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.cart-item img{width:60px;height:60px;object-fit:cover;border-radius:12px}.cart-item b{font-size:13px}.cart-item small{color:var(--muted)}.cart-total{margin-top:20px;padding-top:15px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-weight:800}
 
-.action{
-    border:1px solid #e0e4e8;
-    background:white;
-    border-radius:10px;
-    padding:10px 13px;
-    cursor:pointer;
-}
-
-.hero{
-    background:linear-gradient(135deg,#0f7a43,#25a866);
-    color:white;
-    padding:70px 20px;
-}
-
-.hero-inner{
-    max-width:1200px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:40px;
-}
-
-.hero h1{
-    font-size:48px;
-    line-height:1.05;
-    margin-bottom:18px;
-}
-
-.hero p{
-    font-size:18px;
-    opacity:.92;
-    max-width:620px;
-    line-height:1.6;
-}
-
-.hero button{
-    margin-top:25px;
-    background:white;
-    color:#117842;
-    border:0;
-    padding:14px 23px;
-    border-radius:10px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.hero-box{
-    background:rgba(255,255,255,.13);
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:20px;
-    padding:30px;
-    min-width:280px;
-}
-
-.hero-box strong{
-    font-size:34px;
-    display:block;
-    margin-bottom:8px;
-}
-
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:45px 20px;
-}
-
-.section-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:22px;
-}
-
-.section-title h2{
-    font-size:27px;
-}
-
-.section-title a{
-    color:#16834b;
-    text-decoration:none;
-    font-weight:bold;
-}
-
-.categories{
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:15px;
-    margin-bottom:50px;
-}
-
-.category{
-    background:white;
-    border:1px solid #e5e7eb;
-    border-radius:15px;
-    padding:22px 12px;
-    text-align:center;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.category:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
-
-.category .icon{
-    font-size:32px;
-    margin-bottom:10px;
-}
-
-.category b{
-    font-size:14px;
-}
-
-.products{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-}
-
-.product{
-    background:white;
-    border:1px solid #e5e7eb;
-    border-radius:16px;
-    overflow:hidden;
-    transition:.2s;
-}
-
-.product:hover{
-    transform:translateY(-4px);
-    box-shadow:0 12px 30px rgba(0,0,0,.09);
-}
-
-.product-image{
-    height:190px;
-    background:#eef3ee;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:70px;
-}
-
-.product-info{
-    padding:17px;
-}
-
-.product-info small{
-    color:#75808a;
-}
-
-.product-info h3{
-    margin:7px 0;
-    font-size:17px;
-}
-
-.price{
-    color:#16834b;
-    font-size:21px;
-    font-weight:800;
-    margin:12px 0;
-}
-
-.product button{
-    width:100%;
-    padding:11px;
-    border:0;
-    background:#16834b;
-    color:white;
-    border-radius:9px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.producer{
-    margin-top:55px;
-    background:#ffffff;
-    border:1px solid #e5e7eb;
-    border-radius:20px;
-    padding:30px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:30px;
-}
-
-.producer h2{
-    margin-bottom:10px;
-}
-
-.producer p{
-    color:#66717b;
-    line-height:1.6;
-}
-
-.producer button{
-    background:#17202a;
-    color:white;
-    border:0;
-    padding:14px 22px;
-    border-radius:10px;
-    cursor:pointer;
-    white-space:nowrap;
-}
-
-footer{
-    margin-top:50px;
-    background:#17202a;
-    color:white;
-    padding:40px 20px;
-}
-
-.footer-inner{
-    max-width:1200px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    gap:30px;
-}
-
-footer p{
-    color:#b7c0c8;
-    margin-top:8px;
-}
-
+/* MOBILE */
 @media(max-width:900px){
-    .categories{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-    .products{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .hero h1{
-        font-size:38px;
-    }
+ .header-row{gap:10px}.logo{min-width:auto}.logo span{display:none}.search{order:3;flex-basis:100%}.header-row{height:auto;padding:12px 0;flex-wrap:wrap}.actions{margin-left:auto}
+ .hero-card{min-height:440px}.hero-content{padding:40px 28px}.hero-orbit{opacity:.55;right:-60px}
+ .trust-grid{grid-template-columns:repeat(2,1fr)}.cat-grid{grid-template-columns:repeat(3,1fr)}.product-grid{grid-template-columns:repeat(2,1fr)}.producer-grid{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:1.5fr 1fr 1fr}
 }
-
-@media(max-width:600px){
-    .topbar{
-        height:auto;
-        padding:14px;
-        flex-wrap:wrap;
-    }
-
-    .logo{
-        width:100%;
-    }
-
-    .header-actions{
-        display:none;
-    }
-
-    .hero{
-        padding:45px 20px;
-    }
-
-    .hero-inner{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .hero h1{
-        font-size:34px;
-    }
-
-    .hero-box{
-        width:100%;
-    }
-
-    .categories{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .products{
-        grid-template-columns:1fr;
-    }
-
-    .producer{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .footer-inner{
-        flex-direction:column;
-    }
+@media(max-width:560px){
+ .container{width:min(100% - 24px,1180px)}.topbar{display:none}.user-btn{display:none}.logo strong{font-size:15px}.icon-btn{width:38px;height:38px}
+ .hero{padding-top:18px}.hero-card{border-radius:22px;min-height:500px}.hero-content{padding:34px 22px}.hero h1{font-size:39px}.hero p{font-size:14px}.hero-orbit{right:-130px;bottom:-10px}.basket{font-size:120px;right:75px}
+ .trust-grid{grid-template-columns:1fr 1fr;gap:4px}.trust-item{padding:8px 2px}.trust-item small{display:none}
+ .section{padding:38px 0}.section-head h2{font-size:22px}.section-head p{display:none}.cat-grid{gap:8px}.cat{padding:12px 6px;border-radius:15px}.cat .emoji{width:48px;height:48px;font-size:24px}.cat small{font-size:9px}
+ .product-grid{gap:10px}.product-img{height:155px}.product-body{padding:11px}.product h3{font-size:13px}.price{font-size:15px}
+ .producer-grid{grid-template-columns:1fr}.cta-box{display:block;padding:25px}.cta-box .btn{margin-top:18px}.footer-grid{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}.copy{display:block;line-height:1.8}
 }
 </style>
 </head>
-
 <body>
 
-<header>
-    <div class="topbar">
-        <div class="logo">Üreticiden <span>Halka</span></div>
+<div class="topbar">
+  <div class="container">
+    <span>🌿 Yerel üreticiyi destekle, doğrudan alışveriş yap.</span>
+    <span>Güvenli ödeme • Kapıda teslim seçenekleri</span>
+  </div>
+</div>
 
-        <div class="search">
-            <input id="searchInput" type="text" placeholder="Ürün, üretici veya kategori ara...">
-            <button onclick="searchProducts()">⌕</button>
-        </div>
-
-        <div class="header-actions">
-            <button class="action">♡ Favoriler</button>
-            <button class="action">🛒 Sepet</button>
-        </div>
+<header class="header">
+  <div class="container header-row">
+    <a class="logo" href="#">
+      <div class="logo-mark">🌱</div>
+      <div><strong>Üreticiden Halka</strong><span>Doğrudan üreticiden</span></div>
+    </a>
+    <div class="search">
+      <input id="searchInput" placeholder="Ürün, üretici veya kategori ara..." autocomplete="off">
+      <button aria-label="Ara">⌕</button>
     </div>
+    <div class="actions">
+      <button class="icon-btn" id="favBtn" title="Favoriler">♡<span class="badge" id="favCount" style="display:none">0</span></button>
+      <button class="icon-btn" id="cartBtn" title="Sepet">🛒<span class="badge" id="cartCount" style="display:none">0</span></button>
+      <button class="user-btn">Giriş Yap</button>
+    </div>
+  </div>
 </header>
 
+<main>
 <section class="hero">
-    <div class="hero-inner">
-        <div>
-            <h1>Üreticiden<br>doğrudan sana.</h1>
-            <p>
-                Aracısız alışveriş. Gerçek üreticilerden,
-                kaliteli ürünleri daha uygun fiyatlarla keşfet.
-            </p>
-            <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
-                Ürünleri Keşfet →
-            </button>
-        </div>
-
-        <div class="hero-box">
-            <strong>10.000+</strong>
-            <span>üreticiyi tek platformda buluşturma hedefi</span>
-        </div>
+ <div class="container">
+  <div class="hero-card">
+   <div class="hero-content">
+    <div class="eyebrow">✦ Yeni nesil üretici pazaryeri</div>
+    <h1>Üreticiden <span>doğrudan</span> sofrana.</h1>
+    <p>Yerel üreticilerin emeğini aracısız keşfet. Taze gıda, doğal ürünler ve el emeği ürünleri güvenle satın al.</p>
+    <div class="hero-buttons">
+      <a class="btn btn-primary" href="#urunler">Ürünleri Keşfet →</a>
+      <a class="btn btn-ghost" href="#ureticiler">Üreticileri Gör</a>
     </div>
+   </div>
+   <div class="hero-orbit"><div class="orbit o1"></div><div class="orbit o2"></div><div class="basket">🧺</div></div>
+  </div>
+ </div>
 </section>
 
-<main class="container">
+<section class="trust">
+ <div class="container trust-grid">
+  <div class="trust-item"><div class="trust-icon">🚜</div><div><b>Gerçek üreticiler</b><small>Doğrudan üreticiden</small></div></div>
+  <div class="trust-item"><div class="trust-icon">✓</div><div><b>Güvenli alışveriş</b><small>Korunan ödeme sistemi</small></div></div>
+  <div class="trust-item"><div class="trust-icon">📦</div><div><b>Hızlı gönderim</b><small>Üreticiden kapına</small></div></div>
+  <div class="trust-item"><div class="trust-icon">♻</div><div><b>Yerel ekonomiye destek</b><small>Üretici kazansın</small></div></div>
+ </div>
+</section>
 
-    <div class="section-title">
-        <h2>Kategoriler</h2>
-        <a href="#">Tümünü gör →</a>
-    </div>
+<section class="section">
+ <div class="container">
+  <div class="section-head"><div><h2>Kategoriler</h2><p>Aradığın ürünü kolayca keşfet.</p></div><a class="link" href="#urunler">Tümünü gör →</a></div>
+  <div class="cat-grid">
+   <button class="cat" data-cat="Meyve & Sebze"><div class="emoji">🥬</div><b>Meyve & Sebze</b><small>124 ürün</small></button>
+   <button class="cat" data-cat="Süt & Kahvaltılık"><div class="emoji">🧀</div><b>Süt & Kahvaltılık</b><small>86 ürün</small></button>
+   <button class="cat" data-cat="Bal & Reçel"><div class="emoji">🍯</div><b>Bal & Reçel</b><small>61 ürün</small></button>
+   <button class="cat" data-cat="Zeytin & Zeytinyağı"><div class="emoji">🫒</div><b>Zeytin & Yağ</b><small>73 ürün</small></button>
+   <button class="cat" data-cat="Et & Yöresel"><div class="emoji">🥩</div><b>Et & Yöresel</b><small>45 ürün</small></button>
+   <button class="cat" data-cat="El Emeği"><div class="emoji">🧺</div><b>El Emeği</b><small>98 ürün</small></button>
+  </div>
+ </div>
+</section>
 
-    <div class="categories">
-        <div class="category"><div class="icon">🥬</div><b>Meyve & Sebze</b></div>
-        <div class="category"><div class="icon">🫒</div><b>Zeytin & Zeytinyağı</b></div>
-        <div class="category"><div class="icon">🍯</div><b>Bal & Kahvaltılık</b></div>
-        <div class="category"><div class="icon">🧀</div><b>Süt Ürünleri</b></div>
-        <div class="category"><div class="icon">🌾</div><b>Bakliyat</b></div>
-        <div class="category"><div class="icon">🧺</div><b>Yöresel Ürünler</b></div>
-    </div>
+<section class="section" id="urunler" style="padding-top:10px">
+ <div class="container">
+  <div class="section-head"><div><h2>Öne çıkan ürünler</h2><p>Üreticilerden seçtiğimiz popüler ürünler.</p></div><a class="link" href="#urunler">Tüm ürünler →</a></div>
+  <div class="product-grid" id="productGrid">
 
-    <div class="section-title" id="products">
-        <h2>Öne Çıkan Ürünler</h2>
-        <a href="#">Tüm ürünler →</a>
-    </div>
+   <article class="product" data-name="köy yumurtası" data-cat="Süt & Kahvaltılık">
+    <div class="product-img"><span class="tag">Çok satan</span><button class="heart" data-fav="Köy Yumurtası">♡</button><img src="https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=700&q=80" alt="Köy yumurtası"></div>
+    <div class="product-body"><div class="producer">🌿 Ayşe Hanım Çiftliği</div><h3>Köy Yumurtası — 15'li</h3><div class="stars">★★★★★ <span class="rating">(48)</span></div><div class="price-row"><div class="price">145 ₺ <span class="unit">/ paket</span></div><button class="add" data-add="Köy Yumurtası">+</button></div></div>
+   </article>
 
-    <div class="products" id="productList">
+   <article class="product" data-name="soğuk sıkım zeytinyağı" data-cat="Zeytin & Zeytinyağı">
+    <div class="product-img"><span class="tag">Yeni</span><button class="heart" data-fav="Soğuk Sıkım Zeytinyağı">♡</button><img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=700&q=80" alt="Zeytinyağı"></div>
+    <div class="product-body"><div class="producer">🫒 Orhangazi Zeytinliği</div><h3>Soğuk Sıkım Zeytinyağı</h3><div class="stars">★★★★★ <span class="rating">(31)</span></div><div class="price-row"><div class="price">620 ₺ <span class="unit">/ 1 L</span></div><button class="add" data-add="Soğuk Sıkım Zeytinyağı">+</button></div></div>
+   </article>
 
-        <div class="product" data-name="organik domates">
-            <div class="product-image">🍅</div>
-            <div class="product-info">
-                <small>Antalya • Çiftçi Mehmet</small>
-                <h3>Organik Köy Domatesi</h3>
-                <div class="price">59,90 TL / kg</div>
-                <button onclick="addCart('Organik Köy Domatesi')">Sepete Ekle</button>
-            </div>
-        </div>
+   <article class="product" data-name="çiçek balı" data-cat="Bal & Reçel">
+    <div class="product-img"><button class="heart" data-fav="Çiçek Balı">♡</button><img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=700&q=80" alt="Çiçek balı"></div>
+    <div class="product-body"><div class="producer">🐝 Dağ Arıcılık</div><h3>Yayla Çiçek Balı</h3><div class="stars">★★★★★ <span class="rating">(27)</span></div><div class="price-row"><div class="price">390 ₺ <span class="unit">/ 850 g</span></div><button class="add" data-add="Çiçek Balı">+</button></div></div>
+   </article>
 
-        <div class="product" data-name="zeytinyagi">
-            <div class="product-image">🫒</div>
-            <div class="product-info">
-                <small>Bursa • Yıldız Zeytincilik</small>
-                <h3>Soğuk Sıkım Zeytinyağı</h3>
-                <div class="price">449 TL / litre</div>
-                <button onclick="addCart('Soğuk Sıkım Zeytinyağı')">Sepete Ekle</button>
-            </div>
-        </div>
+   <article class="product" data-name="köy peyniri" data-cat="Süt & Kahvaltılık">
+    <div class="product-img"><span class="tag">Taze</span><button class="heart" data-fav="Köy Peyniri">♡</button><img src="https://images.unsplash.com/photo-1452195100486-9cc805987862?auto=format&fit=crop&w=700&q=80" alt="Köy peyniri"></div>
+    <div class="product-body"><div class="producer">🐄 Bereket Mandıra</div><h3>Geleneksel Köy Peyniri</h3><div class="stars">★★★★☆ <span class="rating">(19)</span></div><div class="price-row"><div class="price">280 ₺ <span class="unit">/ 500 g</span></div><button class="add" data-add="Köy Peyniri">+</button></div></div>
+   </article>
 
-        <div class="product" data-name="cicek bali">
-            <div class="product-image">🍯</div>
-            <div class="product-info">
-                <small>Artvin • Doğa Arıcılık</small>
-                <h3>Doğal Çiçek Balı</h3>
-                <div class="price">389 TL / kg</div>
-                <button onclick="addCart('Doğal Çiçek Balı')">Sepete Ekle</button>
-            </div>
-        </div>
+  </div>
+ </div>
+</section>
 
-        <div class="product" data-name="koy peyniri">
-            <div class="product-image">🧀</div>
-            <div class="product-info">
-                <small>Erzincan • Köy Ürünleri</small>
-                <h3>Geleneksel Köy Peyniri</h3>
-                <div class="price">329 TL / kg</div>
-                <button onclick="addCart('Geleneksel Köy Peyniri')">Sepete Ekle</button>
-            </div>
-        </div>
+<section class="section" id="ureticiler" style="background:#f8faf7">
+ <div class="container">
+  <div class="section-head"><div><h2>Öne çıkan üreticiler</h2><p>Hikâyesini ve ürünlerini keşfet.</p></div><a class="link" href="#">Tüm üreticiler →</a></div>
+  <div class="producer-grid">
+   <div class="producer-card"><div class="avatar">👩‍🌾</div><div><h3>Ayşe Hanım Çiftliği</h3><p>Orhangazi, Bursa • 24 ürün</p><span class="verified">✓ Doğrulanmış üretici</span></div></div>
+   <div class="producer-card"><div class="avatar">🫒</div><div><h3>Orhangazi Zeytinliği</h3><p>Orhangazi, Bursa • 18 ürün</p><span class="verified">✓ Doğrulanmış üretici</span></div></div>
+   <div class="producer-card"><div class="avatar">🐝</div><div><h3>Dağ Arıcılık</h3><p>Uludağ, Bursa • 12 ürün</p><span class="verified">✓ Doğrulanmış üretici</span></div></div>
+  </div>
+ </div>
+</section>
 
-    </div>
-
-    <div class="producer">
-        <div>
-            <h2>Sen de üretici ol.</h2>
-            <p>
-                Ürünlerini doğrudan müşterilere sat.
-                Kendi mağazanı oluştur, siparişlerini yönet
-                ve daha fazla müşteriye ulaş.
-            </p>
-        </div>
-
-        <button onclick="becomeProducer()">Üretici Mağazası Aç →</button>
-    </div>
-
+<section class="cta">
+ <div class="container">
+  <div class="cta-box">
+   <div><h2>Sen de üretimini sat.</h2><p>Ürünlerini milyonlarca müşteriye ulaştır, emeğinin karşılığını doğrudan kazan.</p></div>
+   <button class="btn" style="background:#166534;color:#fff" onclick="toast('Üretici başvuru sistemi yakında aktif olacak.')">Üretici Ol →</button>
+  </div>
+ </div>
+</section>
 </main>
 
 <footer>
-    <div class="footer-inner">
-        <div>
-            <h3>Üreticiden Halka</h3>
-            <p>Üretici ile tüketiciyi doğrudan buluşturuyoruz.</p>
-        </div>
-
-        <div>
-            <h3>Marketplace</h3>
-            <p>Ürünler • Üreticiler • Siparişler</p>
-        </div>
-    </div>
+ <div class="container">
+  <div class="footer-grid">
+   <div class="footer-brand"><div class="logo"><div class="logo-mark">🌱</div><div><strong style="color:#fff">Üreticiden Halka</strong><span style="color:#9dad9f">Doğrudan üreticiden</span></div></div><p>Üreticiyi tüketiciyle buluşturan yeni nesil yerel pazaryeri. Daha adil ticaret, daha taze ürün.</p></div>
+   <div><h3>Keşfet</h3><a href="#urunler">Ürünler</a><a href="#ureticiler">Üreticiler</a><a href="#">Kategoriler</a></div>
+   <div><h3>Yardım</h3><a href="#">Nasıl çalışır?</a><a href="#">Sık sorulanlar</a><a href="#">İletişim</a></div>
+   <div><h3>Üreticiler</h3><a href="#">Üretici ol</a><a href="#">Üretici giriş</a><a href="#">Satış rehberi</a></div>
+  </div>
+  <div class="copy"><span>© 2026 Üreticiden Halka</span><span>Gizlilik • Kullanım koşulları</span></div>
+ </div>
 </footer>
 
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay"></div>
+<aside class="cart-panel" id="cartPanel">
+ <div class="cart-head"><h2>Sepetim</h2><button class="close" id="closeCart">✕</button></div>
+ <div id="cartContent" class="cart-empty">Sepetiniz şu an boş.<br><br>Ürünlerin yanındaki <b>+</b> butonuna basarak ekleyebilirsiniz.</div>
+</aside>
+
 <script>
-function addCart(product){
-    alert(product + " sepete eklendi.");
+let cart=[];
+let favorites=new Set();
+
+function toast(msg){
+ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+ clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.classList.remove('show'),2200);
 }
-
-function becomeProducer(){
-    alert("Üretici mağazası oluşturma sistemi yakında aktif olacak.");
+function updateBadges(){
+ const cc=document.getElementById('cartCount'), fc=document.getElementById('favCount');
+ cc.textContent=cart.length; cc.style.display=cart.length?'block':'none';
+ fc.textContent=favorites.size; fc.style.display=favorites.size?'block':'none';
 }
-
-function searchProducts(){
-    const text = document.getElementById("searchInput").value.toLowerCase();
-    const products = document.querySelectorAll(".product");
-
-    products.forEach(product => {
-        const name = product.dataset.name.toLowerCase();
-
-        if(name.includes(text) || text === ""){
-            product.style.display = "";
-        }else{
-            product.style.display = "none";
-        }
-    });
+function renderCart(){
+ const box=document.getElementById('cartContent');
+ if(!cart.length){box.className='cart-empty';box.innerHTML='Sepetiniz şu an boş.<br><br>Ürünlerin yanındaki <b>+</b> butonuna basarak ekleyebilirsiniz.';return}
+ box.className='cart-list';
+ box.innerHTML=cart.map((x,i)=>`<div class="cart-item"><div style="flex:1"><b>${x}</b><br><small>1 adet</small></div><button class="close" onclick="removeCart(${i})">✕</button></div>`).join('')+
+ `<div class="cart-total"><span>Ürün sayısı</span><span>${cart.length}</span></div><button class="btn" style="width:100%;justify-content:center;background:#166534;color:#fff;margin-top:15px" onclick="toast('Ödeme sistemi sonraki aşamada bağlanacak.')">Sepete Git →</button>`;
 }
+function removeCart(i){cart.splice(i,1);renderCart();updateBadges()}
+document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{cart.push(b.dataset.add);updateBadges();renderCart();toast('Ürün sepete eklendi ✓')}));
+document.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.fav;if(favorites.has(n)){favorites.delete(n);b.classList.remove('active');b.textContent='♡'}else{favorites.add(n);b.classList.add('active');b.textContent='♥';toast('Favorilere eklendi ♥')}updateBadges()}));
 
-document.getElementById("searchInput").addEventListener("keyup", function(){
-    searchProducts();
-});
+document.getElementById('cartBtn').onclick=()=>{document.getElementById('cartPanel').classList.add('open');document.getElementById('overlay').classList.add('open');renderCart()};
+function closeCart(){document.getElementById('cartPanel').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
+document.getElementById('closeCart').onclick=closeCart;document.getElementById('overlay').onclick=closeCart;
+
+const search=document.getElementById('searchInput');
+function filterProducts(q){
+ q=q.toLocaleLowerCase('tr-TR').trim();
+ document.querySelectorAll('.product').forEach(p=>{
+   const hay=(p.dataset.name+' '+p.dataset.cat+' '+p.innerText).toLocaleLowerCase('tr-TR');
+   p.style.display=(!q||hay.includes(q))?'':'none';
+ });
+}
+search.addEventListener('input',e=>filterProducts(e.target.value));
+search.addEventListener('keydown',e=>{if(e.key==='Enter'){document.getElementById('urunler').scrollIntoView({behavior:'smooth'});}});
+document.querySelectorAll('.cat').forEach(c=>c.addEventListener('click',()=>{
+ search.value=c.dataset.cat;filterProducts(c.dataset.cat);document.getElementById('urunler').scrollIntoView({behavior:'smooth'});toast(c.dataset.cat+' kategorisi filtrelendi');
+}));
+document.getElementById('favBtn').onclick=()=>toast(favorites.size?favorites.size+' favoriniz var ♥':'Henüz favoriniz yok');
 </script>
-
 </body>
 </html>
