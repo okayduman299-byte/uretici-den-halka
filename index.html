@@ -3,91 +3,533 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Üreticiden Halka</title>
+<title>Üretici Ol | Üreticiden Halka</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#17211b;background:#f7faf7}a{text-decoration:none}
-.container{width:min(1150px,calc(100% - 28px));margin:auto}
-header{background:#fff;border-bottom:1px solid #e5e9e5;position:sticky;top:0;z-index:10}
-.nav{height:72px;display:flex;align-items:center;gap:20px}
-.logo{font-size:20px;font-weight:800;color:#166534;white-space:nowrap}.logo span{color:#17211b}
-.search{flex:1}.search input{width:100%;height:44px;border:1px solid #dce3dc;border-radius:12px;padding:0 15px;outline:0;background:#fafcf9}
-.navbtn{border:1px solid #dce3dc;background:#fff;border-radius:11px;padding:11px 14px;font-weight:700;cursor:pointer}
-.hero{padding:35px 0}.heroBox{border-radius:25px;padding:55px;background:linear-gradient(120deg,#123d25,#2f7d45);color:white;min-height:380px}
-.hero h1{font-size:52px;line-height:1.05;max-width:650px;margin:15px 0}.hero h1 span{color:#bef264}
-.hero p{max-width:570px;line-height:1.7;color:#e2eee5}.eyebrow{font-size:12px;font-weight:800;background:#ffffff1c;padding:8px 12px;border-radius:20px}
-.btn{display:inline-block;padding:13px 18px;border-radius:11px;font-weight:800;margin:10px 8px 0 0}
-.primary{background:#fff;color:#14532d}.secondary{border:1px solid #ffffff55;color:#fff;background:#ffffff12}
-section{padding:35px 0}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.head h2{margin:0;font-size:25px}.head p{margin:6px 0;color:#78837b;font-size:13px}
-.cats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.cat{background:#fff;border:1px solid #e1e7e1;border-radius:16px;padding:18px 8px;text-align:center;font-weight:700;cursor:pointer}.cat div{font-size:28px;margin-bottom:8px}.cat small{display:block;color:#879189;margin-top:4px;font-weight:400}
-.products{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.product{background:#fff;border:1px solid #e1e7e1;border-radius:17px;overflow:hidden}.pic{height:190px;background:#eef2ec;display:grid;place-items:center;font-size:70px}.body{padding:14px}.body small{color:#778279}.body h3{font-size:14px;margin:7px 0}.price{font-size:17px;font-weight:800}.add{float:right;border:0;background:#166534;color:#fff;border-radius:9px;width:36px;height:36px;font-size:20px;cursor:pointer}
-.cta{background:#edf6eb;border-radius:22px;padding:28px;display:flex;justify-content:space-between;align-items:center}.cta h2{margin:0 0 6px}.cta p{margin:0;color:#69756d}.green{background:#166534;color:white}
-footer{margin-top:40px;background:#13231a;color:#dbe6de;padding:35px 0}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footergrid a{display:block;color:#a9b8ae;font-size:12px;margin:9px 0}
-@media(max-width:850px){.cats{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:42px}.footergrid{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.nav{height:auto;padding:12px 0;flex-wrap:wrap}.search{order:3;flex-basis:100%}.heroBox{padding:32px 22px}.hero h1{font-size:37px}.cats{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:1fr 1fr}.pic{height:145px}.cta{display:block}.cta .btn{margin-top:15px}}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+color:#17211b;
+background:#f6f9f5
+}
+a{text-decoration:none;color:inherit}
+.container{
+width:min(1050px,calc(100% - 28px));
+margin:auto
+}
+header{
+background:#fff;
+border-bottom:1px solid #e3e8e3
+}
+.nav{
+height:70px;
+display:flex;
+align-items:center;
+justify-content:space-between
+}
+.logo{
+font-size:20px;
+font-weight:800;
+color:#166534
+}
+.logo span{color:#17211b}
+.back{
+border:1px solid #dce3dc;
+background:#fff;
+border-radius:10px;
+padding:10px 14px;
+font-weight:700
+}
+main{padding:40px 0 70px}
+.hero{
+text-align:center;
+margin-bottom:28px
+}
+.badge{
+display:inline-block;
+background:#eaf5e8;
+color:#166534;
+border-radius:20px;
+padding:8px 13px;
+font-size:12px;
+font-weight:800
+}
+h1{
+font-size:42px;
+margin:15px 0 8px
+}
+.hero p{
+color:#68746c;
+max-width:650px;
+margin:auto;
+line-height:1.6
+}
+.card{
+background:#fff;
+border:1px solid #e0e7df;
+border-radius:22px;
+padding:30px;
+box-shadow:0 8px 30px #1b3b2410
+}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px
+}
+.field{
+display:flex;
+flex-direction:column;
+gap:7px
+}
+.field.full{grid-column:1/-1}
+label{
+font-size:13px;
+font-weight:800
+}
+.required{color:#b42318}
+input,select,textarea{
+width:100%;
+border:1px solid #d8e0d8;
+border-radius:11px;
+padding:13px;
+font:inherit;
+outline:none;
+background:#fbfdfb
+}
+input:focus,select:focus,textarea:focus{
+border-color:#4b9460;
+box-shadow:0 0 0 3px #4b946015
+}
+textarea{
+min-height:120px;
+resize:vertical
+}
+.actions{
+margin-top:24px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px
+}
+.submit{
+border:0;
+background:#166534;
+color:#fff;
+border-radius:11px;
+padding:14px 22px;
+font-weight:800;
+font-size:15px;
+cursor:pointer
+}
+.submit:disabled{
+opacity:.6;
+cursor:not-allowed
+}
+.note{
+font-size:12px;
+color:#748078;
+line-height:1.5
+}
+.message{
+display:none;
+margin-top:20px;
+padding:14px;
+border-radius:12px;
+font-weight:700
+}
+.success{
+background:#eaf7ed;
+color:#176b35
+}
+.error{
+background:#fff0f0;
+color:#a32121
+}
+footer{
+background:#13231a;
+color:#dbe6de;
+padding:28px 0;
+text-align:center;
+font-size:12px
+}
+@media(max-width:650px){
+h1{font-size:34px}
+.grid{grid-template-columns:1fr}
+.field.full{grid-column:auto}
+.actions{display:block}
+.submit{
+width:100%;
+margin-top:12px
+}
+}
 </style>
 </head>
+
 <body>
-<header><div class="container nav">
-<a class="logo" href="index.html">Üreticiden <span>Halka</span></a>
-<div class="search"><input id="search" placeholder="Ürün, üretici veya kategori ara..."></div>
-<button class="navbtn" onclick="alert('Favoriler yakında aktif olacak.')">♡</button>
-<button class="navbtn" onclick="alert('Sepetiniz boş.')">🛒</button>
-</div></header>
+
+<header>
+<div class="container nav">
+<a class="logo" href="index.html">
+Üreticiden <span>Halka</span>
+</a>
+
+<a class="back" href="index.html">
+← Ana Sayfa
+</a>
+</div>
+</header>
 
 <main>
 <div class="container">
-<section class="hero"><div class="heroBox">
-<div class="eyebrow">✦ YENİ NESİL ÜRETİCİ PAZARYERİ</div>
-<h1>Üreticiden <span>doğrudan</span> sofrana.</h1>
-<p>Yerel üreticilerin emeğini aracısız keşfet. Taze gıda, doğal ürünler ve el emeği ürünleri güvenle satın al.</p>
-<a class="btn primary" href="#urunler">Ürünleri Keşfet →</a>
-<a class="btn secondary" href="#ureticiler">Üreticileri Gör</a>
-</div></section>
 
-<section><div class="head"><div><h2>Kategoriler</h2><p>Aradığın ürünü kolayca keşfet.</p></div></div>
-<div class="cats">
-<button class="cat" onclick="filterCat('meyve')"><div>🥬</div>Meyve & Sebze<small>124 ürün</small></button>
-<button class="cat" onclick="filterCat('süt')"><div>🧀</div>Süt & Kahvaltılık<small>86 ürün</small></button>
-<button class="cat" onclick="filterCat('bal')"><div>🍯</div>Bal & Reçel<small>61 ürün</small></button>
-<button class="cat" onclick="filterCat('zeytin')"><div>🫒</div>Zeytin & Yağ<small>73 ürün</small></button>
-<button class="cat" onclick="filterCat('et')"><div>🥩</div>Et & Yöresel<small>45 ürün</small></button>
-<button class="cat" onclick="filterCat('el emeği')"><div>🧺</div>El Emeği<small>98 ürün</small></button>
-</div></section>
+<div class="hero">
 
-<section id="urunler"><div class="head"><div><h2>Öne çıkan ürünler</h2><p>Üreticilerden seçtiğimiz popüler ürünler.</p></div></div>
-<div class="products" id="products">
-<div class="product" data-search="köy yumurtası süt kahvaltılık"><div class="pic">🥚</div><div class="body"><small>🌿 Ayşe Hanım Çiftliği</small><h3>Köy Yumurtası — 15'li</h3><span class="price">145 ₺</span><button class="add" onclick="addCart('Köy Yumurtası')">+</button></div></div>
-<div class="product" data-search="zeytinyağı zeytin"><div class="pic">🫒</div><div class="body"><small>🫒 Orhangazi Zeytinliği</small><h3>Soğuk Sıkım Zeytinyağı</h3><span class="price">620 ₺</span><button class="add" onclick="addCart('Soğuk Sıkım Zeytinyağı')">+</button></div></div>
-<div class="product" data-search="bal"><div class="pic">🍯</div><div class="body"><small>🐝 Dağ Arıcılık</small><h3>Yayla Çiçek Balı</h3><span class="price">390 ₺</span><button class="add" onclick="addCart('Yayla Çiçek Balı')">+</button></div></div>
-<div class="product" data-search="peynir süt kahvaltılık"><div class="pic">🧀</div><div class="body"><small>🐄 Bereket Mandıra</small><h3>Geleneksel Köy Peyniri</h3><span class="price">280 ₺</span><button class="add" onclick="addCart('Köy Peyniri')">+</button></div></div>
-</div></section>
+<div class="badge">
+✦ ÜRETİCİ PROGRAMI
+</div>
 
-<section id="ureticiler"><div class="head"><div><h2>Öne çıkan üreticiler</h2><p>Hikâyelerini ve ürünlerini keşfet.</p></div></div>
-<div class="products">
-<div class="product"><div class="pic">👩‍🌾</div><div class="body"><h3>Ayşe Hanım Çiftliği</h3><small>Orhangazi, Bursa • ✓ Doğrulanmış</small></div></div>
-<div class="product"><div class="pic">🫒</div><div class="body"><h3>Orhangazi Zeytinliği</h3><small>Orhangazi, Bursa • ✓ Doğrulanmış</small></div></div>
-<div class="product"><div class="pic">🐝</div><div class="body"><h3>Dağ Arıcılık</h3><small>Uludağ, Bursa • ✓ Doğrulanmış</small></div></div>
-<div class="product"><div class="pic">🐄</div><div class="body"><h3>Bereket Mandıra</h3><small>Bursa • ✓ Doğrulanmış</small></div></div>
-</div></section>
+<h1>Üretici Ol</h1>
 
-<section><div class="cta"><div><h2>Sen de üretimini sat.</h2><p>Ürünlerini müşterilere ulaştır, emeğinin karşılığını doğrudan kazan.</p></div>
-<a class="btn green" href="uretici-ol.html">Üretici Ol →</a></div></section>
+<p>
+Ürünlerini doğrudan müşterilerle buluştur.
+Başvurunu gönder, ekibimiz bilgilerini inceleyip
+seninle iletişime geçsin.
+</p>
+
+</div>
+
+<div class="card">
+
+<form id="producerForm">
+
+<div class="grid">
+
+<div class="field">
+<label>
+Üretici / İşletme Adı
+<span class="required">*</span>
+</label>
+
+<input
+id="uretici_adi"
+required
+placeholder="Örn. Ayşe Hanım Çiftliği">
+</div>
+
+
+<div class="field">
+<label>
+Yetkili Kişi
+<span class="required">*</span>
+</label>
+
+<input
+id="yetkili"
+required
+placeholder="Ad Soyad">
+</div>
+
+
+<div class="field">
+<label>
+Telefon
+<span class="required">*</span>
+</label>
+
+<input
+id="telefon"
+required
+type="tel"
+placeholder="05XX XXX XX XX">
+</div>
+
+
+<div class="field">
+<label>
+E-posta
+<span class="required">*</span>
+</label>
+
+<input
+id="email"
+required
+type="email"
+placeholder="ornek@mail.com">
+</div>
+
+
+<div class="field">
+<label>
+İl
+<span class="required">*</span>
+</label>
+
+<input
+id="il"
+required
+placeholder="Bursa">
+</div>
+
+
+<div class="field">
+<label>
+İlçe
+<span class="required">*</span>
+</label>
+
+<input
+id="ilce"
+required
+placeholder="Orhangazi">
+</div>
+
+
+<div class="field full">
+
+<label>
+Ürün Kategorisi
+<span class="required">*</span>
+</label>
+
+<select id="kategori" required>
+
+<option value="">
+Kategori seçin
+</option>
+
+<option>
+Meyve & Sebze
+</option>
+
+<option>
+Süt & Kahvaltılık
+</option>
+
+<option>
+Bal & Reçel
+</option>
+
+<option>
+Zeytin & Yağ
+</option>
+
+<option>
+Et & Yöresel
+</option>
+
+<option>
+El Emeği
+</option>
+
+<option>
+Diğer
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+Ürünleriniz / Üretiminiz Hakkında
+</label>
+
+<textarea
+id="aciklama"
+placeholder="Ne üretiyorsunuz? Ürünleriniz hakkında kısa bilgi verin."></textarea>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<div class="note">
+Başvurunuz önce <b>Beklemede</b> durumuna alınır.
+İnceleme sonrası sizinle iletişime geçilir.
+</div>
+
+<button
+class="submit"
+id="submitBtn"
+type="submit">
+
+Başvuruyu Gönder →
+
+</button>
+
+</div>
+
+<div id="message" class="message"></div>
+
+</form>
+
+</div>
+
 </div>
 </main>
 
-<footer><div class="container footergrid">
-<div><b style="font-size:18px;color:#fff">Üreticiden Halka</b><p style="color:#9dad9f;font-size:12px;line-height:1.7">Üreticiyi tüketiciyle buluşturan yeni nesil yerel pazaryeri.</p></div>
-<div><b>Keşfet</b><a href="#urunler">Ürünler</a><a href="#ureticiler">Üreticiler</a></div>
-<div><b>Üreticiler</b><a href="uretici-ol.html">Üretici ol</a><a href="#">Üretici giriş</a></div>
-</div></footer>
+
+<footer>
+© 2026 Üreticiden Halka — Üreticiyi tüketiciyle buluşturuyoruz.
+</footer>
+
 
 <script>
-function addCart(name){alert(name+' sepete eklendi ✓')}
-function filterCat(q){document.getElementById('search').value=q;document.getElementById('search').dispatchEvent(new Event('input'));document.getElementById('urunler').scrollIntoView({behavior:'smooth'})}
-document.getElementById('search').addEventListener('input',function(){
-let q=this.value.toLocaleLowerCase('tr-TR');
-document.querySelectorAll('.product').forEach(p=>{let s=(p.dataset.search||p.innerText).toLocaleLowerCase('tr-TR');p.style.display=!q||s.includes(q)?'':'none'})
+
+const SUPABASE_URL =
+"https://bzudwfyxgbkzvfjhhywy.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+
+
+const form =
+document.getElementById("producerForm");
+
+const btn =
+document.getElementById("submitBtn");
+
+const message =
+document.getElementById("message");
+
+
+function showMessage(text,type){
+
+message.textContent = text;
+
+message.className =
+"message " + type;
+
+message.style.display =
+"block";
+
+}
+
+
+form.addEventListener("submit",async function(e){
+
+e.preventDefault();
+
+btn.disabled = true;
+
+btn.textContent =
+"Gönderiliyor...";
+
+message.style.display =
+"none";
+
+
+const data = {
+
+uretici_adi:
+document.getElementById("uretici_adi").value.trim(),
+
+yetkili:
+document.getElementById("yetkili").value.trim(),
+
+telefon:
+document.getElementById("telefon").value.trim(),
+
+email:
+document.getElementById("email").value.trim(),
+
+il:
+document.getElementById("il").value.trim(),
+
+ilce:
+document.getElementById("ilce").value.trim(),
+
+kategori:
+document.getElementById("kategori").value,
+
+aciklama:
+document.getElementById("aciklama").value.trim(),
+
+durum:
+"beklemede"
+
+};
+
+
+try{
+
+const response =
+await fetch(
+SUPABASE_URL +
+"/rest/v1/uretici_basvurulari",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json",
+
+"apikey":
+SUPABASE_KEY,
+
+"Authorization":
+"Bearer " + SUPABASE_KEY,
+
+"Prefer":
+"return=minimal"
+
+},
+
+body:
+JSON.stringify(data)
+
 });
+
+
+if(!response.ok){
+
+const errorText =
+await response.text();
+
+throw new Error(
+errorText ||
+"Başvuru kaydedilemedi."
+);
+
+}
+
+
+form.reset();
+
+showMessage(
+"Başvurunuz başarıyla alındı. Ekibimiz bilgilerinizi inceleyip sizinle iletişime geçecek. ✓",
+"success"
+);
+
+
+}catch(error){
+
+console.error(error);
+
+showMessage(
+"Başvuru gönderilemedi. Supabase tablo izinlerini kontrol etmemiz gerekiyor.",
+"error"
+);
+
+}finally{
+
+btn.disabled = false;
+
+btn.textContent =
+"Başvuruyu Gönder →";
+
+}
+
+});
+
 </script>
+
 </body>
 </html>
