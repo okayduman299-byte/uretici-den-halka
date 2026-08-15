@@ -6,7 +6,13 @@
 <div class="stats"><div class="stat">Toplam<b id="total">0</b></div><div class="stat">Beklemede<b id="pending">0</b></div><div class="stat">Onaylanan<b id="approved">0</b></div></div>
 <div class="card"><div class="toolbar"><input id="search" placeholder="Üretici, yetkili, telefon, ilçe ara..."><select id="filter"><option value="all">Tümü</option><option>Beklemede</option><option>Onaylandı</option><option>Reddedildi</option></select></div><div class="tablewrap"><table class="table"><thead><tr><th>Üretici</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Açıklama</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="rows"></tbody></table></div><div id="empty" class="empty" style="display:none">Başvuru bulunamadı.</div></div></section>
 </div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu",db=window.supabase.createClient(URL,KEY);let data=[];
+const SUPABASE_URL = "https://bzudwfyxgbkzvfjhhywy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 const $=id=>document.getElementById(id);function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 async function load(){let r=await db.from("uretici_basvurulari").select("*").order("id",{ascending:false});if(r.error)return alert(r.error.message);data=r.data||[];render()}
 function render(){let q=$("search").value.toLocaleLowerCase("tr-TR"),f=$("filter").value;let a=data.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));$("total").textContent=data.length;$("pending").textContent=data.filter(x=>x.durum==="Beklemede").length;$("approved").textContent=data.filter(x=>x.durum==="Onaylandı").length;$("empty").style.display=a.length?"none":"block";$("rows").innerHTML=a.map(x=>{let c=x.durum==="Onaylandı"?"approved":x.durum==="Reddedildi"?"rejected":"pending";return `<tr><td><b>${esc(x.uretici_adi)}</b><br>#${esc(x.id)}</td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td>${esc(x.aciklama)}</td><td><span class="badge ${c}">${esc(x.durum)}</span></td><td><div class="actions"><button class="approve" onclick="status(${x.id},'Onaylandı')">Onayla</button><button class="reject" onclick="status(${x.id},'Reddedildi')">Reddet</button></div></td></tr>`}).join("")}
