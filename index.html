@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="tr">
 <head>
@@ -17,7 +18,7 @@ header{background:#fff;border-bottom:1px solid #e5e9e5;position:sticky;top:0;z-i
 .btn{display:inline-block;padding:13px 18px;border-radius:11px;font-weight:800;margin:10px 8px 0 0}.primary{background:#fff;color:#14532d}.secondary{border:1px solid #ffffff55;color:#fff;background:#ffffff12}
 section{padding:35px 0}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.head h2{margin:0;font-size:25px}.head p{margin:6px 0;color:#78837b;font-size:13px}
 .cats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.cat{background:#fff;border:1px solid #e1e7e1;border-radius:16px;padding:18px 8px;text-align:center;font-weight:700;cursor:pointer}.cat div{font-size:28px;margin-bottom:8px}.cat small{display:block;color:#879189;margin-top:4px;font-weight:400}
-.products{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.product{background:#fff;border:1px solid #e1e7e1;border-radius:17px;overflow:hidden}.pic{height:190px;background:#eef2ec;display:grid;place-items:center;font-size:70px}.pic img{width:100%;height:100%;object-fit:cover}.body{padding:14px}.body small{color:#778279}.body h3{font-size:14px;margin:7px 0}.price{font-size:17px;font-weight:800}.add{float:right;border:0;background:#166534;color:#fff;border-radius:9px;width:36px;height:36px;font-size:20px;cursor:pointer}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.product{background:#fff;border:1px solid #e1e7e1;border-radius:17px;overflow:hidden;transition:transform .18s,box-shadow .18s}.product:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(25,50,32,.10)}.pic{height:190px;background:#eef2ec;display:grid;place-items:center;font-size:70px}.pic img{width:100%;height:100%;object-fit:cover}.body{padding:14px}.body small{color:#778279}.body h3{font-size:14px;margin:7px 0}.price{font-size:17px;font-weight:800}.add{float:right;border:0;background:#166534;color:#fff;border-radius:9px;width:36px;height:36px;font-size:20px;cursor:pointer}
 .loading,.empty{background:#fff;border:1px solid #e1e7e1;border-radius:15px;padding:30px;text-align:center;color:#718078;grid-column:1/-1}
 .cta{background:#edf6eb;border-radius:22px;padding:28px;display:flex;justify-content:space-between;align-items:center}.cta h2{margin:0 0 6px}.cta p{margin:0;color:#69756d}.green{background:#166534;color:white}
 footer{margin-top:40px;background:#13231a;color:#dbe6de;padding:35px 0}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footergrid a{display:block;color:#a9b8ae;font-size:12px;margin:9px 0}
@@ -94,6 +95,8 @@ function renderProducts(list){
  list.forEach(p=>{
   const d=document.createElement("div");
   d.className="product";
+  d.style.cursor="pointer";
+  d.onclick=(ev)=>{ if(ev.target.closest("button")) return; location.href="urun.html?id="+encodeURIComponent(p.id); };
   d.dataset.search=((p.urun_adi||"")+" "+(p.kategori||"")+" "+(p.aciklama||"")).toLocaleLowerCase("tr-TR");
   d.innerHTML=`
    <div class="pic">${p.gorsel_url?`<img src="${esc(p.gorsel_url)}" alt="${esc(p.urun_adi)}">`:"🧺"}</div>
