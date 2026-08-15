@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Üreticiden Halka</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#17211b;background:#f7faf7}a{text-decoration:none}
+.container{width:min(1150px,calc(100% - 28px));margin:auto}
+header{background:#fff;border-bottom:1px solid #e5e9e5;position:sticky;top:0;z-index:10}
+.nav{height:72px;display:flex;align-items:center;gap:20px}.logo{font-size:20px;font-weight:800;color:#166534;white-space:nowrap}.logo span{color:#17211b}
+.search{flex:1}.search input{width:100%;height:44px;border:1px solid #dce3dc;border-radius:12px;padding:0 15px;outline:0;background:#fafcf9}
+.navbtn{border:1px solid #dce3dc;background:#fff;border-radius:11px;padding:11px 14px;font-weight:700;cursor:pointer}
+.hero{padding:35px 0}.heroBox{border-radius:25px;padding:55px;background:linear-gradient(120deg,#123d25,#2f7d45);color:white;min-height:380px}
+.hero h1{font-size:52px;line-height:1.05;max-width:650px;margin:15px 0}.hero h1 span{color:#bef264}
+.hero p{max-width:570px;line-height:1.7;color:#e2eee5}.eyebrow{font-size:12px;font-weight:800;background:#ffffff1c;padding:8px 12px;border-radius:20px}
+.btn{display:inline-block;padding:13px 18px;border-radius:11px;font-weight:800;margin:10px 8px 0 0}.primary{background:#fff;color:#14532d}.secondary{border:1px solid #ffffff55;color:#fff;background:#ffffff12}
+section{padding:35px 0}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.head h2{margin:0;font-size:25px}.head p{margin:6px 0;color:#78837b;font-size:13px}
+.cats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.cat{background:#fff;border:1px solid #e1e7e1;border-radius:16px;padding:18px 8px;text-align:center;font-weight:700;cursor:pointer}.cat div{font-size:28px;margin-bottom:8px}.cat small{display:block;color:#879189;margin-top:4px;font-weight:400}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.product{background:#fff;border:1px solid #e1e7e1;border-radius:17px;overflow:hidden;transition:transform .18s,box-shadow .18s}.product:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(25,50,32,.10)}.pic{height:190px;background:#eef2ec;display:grid;place-items:center;font-size:70px}.pic img{width:100%;height:100%;object-fit:cover}.body{padding:14px}.body small{color:#778279}.body h3{font-size:14px;margin:7px 0}.price{font-size:17px;font-weight:800}.add{float:right;border:0;background:#166534;color:#fff;border-radius:9px;width:36px;height:36px;font-size:20px;cursor:pointer}
+.loading,.empty{background:#fff;border:1px solid #e1e7e1;border-radius:15px;padding:30px;text-align:center;color:#718078;grid-column:1/-1}
+.cta{background:#edf6eb;border-radius:22px;padding:28px;display:flex;justify-content:space-between;align-items:center}.cta h2{margin:0 0 6px}.cta p{margin:0;color:#69756d}.green{background:#166534;color:white}
+footer{margin-top:40px;background:#13231a;color:#dbe6de;padding:35px 0}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footergrid a{display:block;color:#a9b8ae;font-size:12px;margin:9px 0}
+@media(max-width:850px){.cats{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:42px}.footergrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.nav{height:auto;padding:12px 0;flex-wrap:wrap}.search{order:3;flex-basis:100%}.heroBox{padding:32px 22px}.hero h1{font-size:37px}.cats{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:1fr 1fr}.pic{height:145px}.cta{display:block}.cta .btn{margin-top:15px}}
+</style>
+</head>
+<body>
+<header><div class="container nav">
+<a class="logo" href="index.html">Üreticiden <span>Halka</span></a>
+<div class="search"><input id="search" placeholder="Ürün, üretici veya kategori ara..."></div>
+<button class="navbtn" onclick="alert('Favoriler yakında aktif olacak.')">♡</button>
+<button class="navbtn" onclick="alert('Sepetiniz boş.')">🛒</button>
+</div></header>
+
+<main>
+<div class="container">
+<section class="hero"><div class="heroBox">
+<div class="eyebrow">✦ YENİ NESİL ÜRETİCİ PAZARYERİ</div>
+<h1>Üreticiden <span>doğrudan</span> sofrana.</h1>
+<p>Yerel üreticilerin emeğini aracısız keşfet. Taze gıda, doğal ürünler ve el emeği ürünleri güvenle satın al.</p>
+<a class="btn primary" href="#urunler">Ürünleri Keşfet →</a>
+<a class="btn secondary" href="#ureticiler">Üreticileri Gör</a>
+</div></section>
+
+<section><div class="head"><div><h2>Kategoriler</h2><p>Aradığın ürünü kolayca keşfet.</p></div></div>
+<div class="cats">
+<button class="cat" onclick="filterCat('Meyve & Sebze')"><div>🥬</div>Meyve & Sebze</button>
+<button class="cat" onclick="filterCat('Süt & Kahvaltılık')"><div>🧀</div>Süt & Kahvaltılık</button>
+<button class="cat" onclick="filterCat('Bal & Reçel')"><div>🍯</div>Bal & Reçel</button>
+<button class="cat" onclick="filterCat('Zeytin & Zeytinyağı')"><div>🫒</div>Zeytin & Yağ</button>
+<button class="cat" onclick="filterCat('Et & Yöresel Ürünler')"><div>🥩</div>Et & Yöresel</button>
+<button class="cat" onclick="filterCat('El Emeği')"><div>🧺</div>El Emeği</button>
+</div></section>
+
+<section id="urunler"><div class="head"><div><h2>Ürünler</h2><p>Üreticilerin mağazalarında yayınladığı güncel ürünler.</p></div></div>
+<div class="products" id="products"><div class="loading">Ürünler yükleniyor...</div></div></section>
+
+<section id="ureticiler"><div class="head"><div><h2>Üreticiler</h2><p>Doğrudan üreticiden alışveriş yap.</p></div></div>
+<div class="products" id="producers"><div class="loading">Üreticiler yükleniyor...</div></div></section>
+
+<section><div class="cta"><div><h2>Sen de üretimini sat.</h2><p>Ürünlerini müşterilere ulaştır, emeğinin karşılığını doğrudan kazan.</p></div>
+<a class="btn green" href="uretici-ol.html">Üretici Ol →</a></div></section>
+</div>
+</main>
+
+<footer><div class="container footergrid">
+<div><b style="font-size:18px;color:#fff">Üreticiden Halka</b><p style="color:#9dad9f;font-size:12px;line-height:1.7">Üreticiyi tüketiciyle buluşturan yeni nesil yerel pazaryeri.</p></div>
+<div><b>Keşfet</b><a href="#urunler">Ürünler</a><a href="#ureticiler">Üreticiler</a></div>
+<div><b>Üreticiler</b><a href="uretici-ol.html">Üretici ol</a><a href="uretici-panel.html">Üretici giriş</a></div>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";
+const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+const db=window.supabase.createClient(SUPABASE_URL.trim(),SUPABASE_KEY.trim());
+let allProducts=[];
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+
+async function loadProducts(){
+ const box=document.getElementById("products");
+ const r=await db.from("urunler").select("id,urun_adi,aciklama,kategori,fiyat,stok,gorsel_url,aktif,uretici_id").eq("aktif",true).gt("stok",0).order("id",{ascending:false});
+ if(r.error){box.innerHTML='<div class="empty">Ürünler şu anda yüklenemedi.</div>';console.error(r.error);return;}
+ allProducts=r.data||[];
+ renderProducts(allProducts);
+}
+
+function renderProducts(list){
+ const box=document.getElementById("products");
+ if(!list.length){box.innerHTML='<div class="empty">Henüz yayınlanmış ürün bulunmuyor.</div>';return;}
+ box.innerHTML="";
+ list.forEach(p=>{
+  const d=document.createElement("div");
+  d.className="product";
+  d.style.cursor="pointer";
+  d.onclick=(ev)=>{ if(ev.target.closest("button")) return; location.href="urun.html?id="+encodeURIComponent(p.id); };
+  d.dataset.search=((p.urun_adi||"")+" "+(p.kategori||"")+" "+(p.aciklama||"")).toLocaleLowerCase("tr-TR");
+  d.innerHTML=`
+   <div class="pic">${p.gorsel_url?`<img src="${esc(p.gorsel_url)}" alt="${esc(p.urun_adi)}">`:"🧺"}</div>
+   <div class="body">
+    <small>${esc(p.kategori||"Ürün")}</small>
+    <h3>${esc(p.urun_adi)}</h3>
+    <div class="price">${Number(p.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</div>
+    <small>Stok: ${esc(p.stok)}</small>
+    <button class="add" onclick="alert('${esc(p.urun_adi).replace(/'/g,"\\'")} sepete eklendi ✓')">+</button>
+   </div>`;
+  box.appendChild(d);
+ });
+}
+
+async function loadProducers(){
+ const box=document.getElementById("producers");
+ const r=await db.from("ureticiler").select("id,firma_adi,yetkili,il,ilce,kategori").eq("durum","Aktif").order("id",{ascending:false});
+ if(r.error){box.innerHTML='<div class="empty">Üreticiler şu anda yüklenemedi.</div>';console.error(r.error);return;}
+ if(!r.data.length){box.innerHTML='<div class="empty">Henüz aktif üretici bulunmuyor.</div>';return;}
+ box.innerHTML="";
+ r.data.forEach(p=>{
+  const d=document.createElement("div");d.className="product";
+  d.innerHTML=`<div class="pic">👩‍🌾</div><div class="body"><h3>${esc(p.firma_adi)}</h3><small>${esc(p.il)} / ${esc(p.ilce)} • ✓ Doğrulanmış</small><br><small>${esc(p.kategori||"")}</small></div>`;
+  box.appendChild(d);
+ });
+}
+
+function filterCat(q){
+ document.getElementById("search").value=q;
+ const x=q.toLocaleLowerCase("tr-TR");
+ renderProducts(allProducts.filter(p=>((p.urun_adi||"")+" "+(p.kategori||"")+" "+(p.aciklama||"")).toLocaleLowerCase("tr-TR").includes(x)));
+ document.getElementById("urunler").scrollIntoView({behavior:"smooth"});
+}
+
+document.getElementById("search").addEventListener("input",function(){
+ const q=this.value.toLocaleLowerCase("tr-TR").trim();
+ renderProducts(!q?allProducts:allProducts.filter(p=>((p.urun_adi||"")+" "+(p.kategori||"")+" "+(p.aciklama||"")).toLocaleLowerCase("tr-TR").includes(q)));
+});
+
+loadProducts();
+loadProducers();
+</script>
+</body>
+</html>
