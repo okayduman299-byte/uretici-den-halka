@@ -50,11 +50,12 @@ async function placeOrder(){
      p_customer_phone:phone,
      p_customer_email:email||null,
      p_address:address,
-     p_items:c.map(x=>({product_id:x.id,quantity:x.qty}))
+     p_items:c.map(x=>({product_id:x.id,quantity:x.qty})),
+     p_payment_method:payment
    });
    if(error) throw error;
    localStorage.setItem("uh_last_payment",payment);localStorage.removeItem("uh_cart");
-   main.innerHTML=`<div class="box success"><b>✓ Siparişiniz başarıyla alındı</b><p>Sipariş numaranız: <strong>${esc(data)}</strong></p><p>En kısa sürede sizinle iletişime geçeceğiz.</p><a href="index.html" style="color:#166534;font-weight:800">Alışverişe devam et →</a></div>`;
+   location.href="siparis-sonuc.html?no="+encodeURIComponent(data);
  }catch(error){
    console.error("Sipariş hatası:",error);
    err.textContent="Sipariş oluşturulamadı: "+(error.message||"Bilinmeyen hata");
