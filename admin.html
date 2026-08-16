@@ -34,7 +34,14 @@ async function load(){
 function render(){
  const q=$("search").value.toLocaleLowerCase("tr-TR"),f=$("filter").value;
  const list=applications.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));
- $("rows").innerHTML=list.map(x=>`<tr><td><b>${esc(x.uretici_adi)}</b><br>#${x.id}</td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td><span class="badge ${x.durum==="Onaylandı"?"approved":""}">${esc(x.durum)}</span></td><td><button class="btn green approveBtn" data-id="${x.id}">Onayla</button> <button class="btn red rejectBtn" data-id="${x.id}">Reddet</button></td></tr>`).join("");
+ $("rows").innerHTML=list.map(x=>{
+ const action=x.durum==="Onaylandı"
+   ? '<span class="badge approved">✓ Onaylandı</span>'
+   : x.durum==="Reddedildi"
+     ? '<span class="badge" style="background:#fee2e2;color:#991b1b">✕ Reddedildi</span>'
+     : `<button class="btn green approveBtn" data-id="${x.id}">Onayla</button> <button class="btn red rejectBtn" data-id="${x.id}">Reddet</button>`;
+ return `<tr><td><b>${esc(x.uretici_adi)}</b><br>#${x.id}</td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td><span class="badge ${x.durum==="Onaylandı"?"approved":""}">${esc(x.durum)}</span></td><td>${action}</td></tr>`;
+}).join("");
 }
 async function updateApplicationStatus(id,newStatus){
  const btn=[...document.querySelectorAll("[data-id]")].find(b=>b.dataset.id===String(id));
