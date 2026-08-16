@@ -25,60 +25,10 @@
 </div>
 </div></div></section></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu",db=window.supabase.createClient(URL,KEY);let user,producer;
-const $=x=>document.getElementById(x);function showErr(x,m){$(x).textContent=m;$(x).style.display="block"}
-async function load(){
- const s=await db.auth.getSession();if(!s.data.session)return;user=s.data.session.user;
- $("login").style.display="none";$("panel").style.display="block";$("logout").style.display="block";
- const r=await db.from("ureticiler").select("*").eq("user_id",user.id).eq("durum","Aktif").maybeSingle();
- if(r.error||!r.data){showErr("err",r.error?.message||"Bu hesaba bağlı aktif üretici bulunamadı.");return}
- producer=r.data;$("welcome").textContent=producer.firma_adi;$("storeName").textContent=producer.firma_adi;$("storeInfo").innerHTML=producer.il+" / "+producer.ilce+"<br>"+producer.kategori+"<br>"+producer.email;products();orders();
-}
-async function products(){const r=await db.from("urunler").select("*").eq("user_id",user.id).order("id",{ascending:false});if(r.error)return showErr("err",r.error.message);$("products").innerHTML="";$("empty").style.display=r.data.length?"none":"block";r.data.forEach(p=>{let d=document.createElement("div");d.className="product";d.innerHTML='<div class="pic">'+(p.gorsel_url?'<img src="'+p.gorsel_url+'">':'🧺')+'</div><div class="pb"><b>'+p.urun_adi+'</b><p class="muted">'+p.kategori+'</p><strong>'+Number(p.fiyat).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</strong><p class="muted">Stok: '+p.stok+'</p><div class="actions"><button class="btn '+(p.aktif?"red":"green")+'" onclick="toggle('+p.id+','+p.aktif+')">'+(p.aktif?"Yayından kaldır":"Yayınla")+'</button><button class="btn light" onclick="del('+p.id+')">Sil</button></div></div>';$("products").appendChild(d)})}
-async function orders(){
- const r=await db.from("siparisler").select("id,siparis_no,durum,created_at").order("created_at",{ascending:false});
- if(r.error)return showErr("err",r.error.message);
- const box=$("producerOrders"),empty=$("ordersEmpty");
- box.innerHTML="";
- empty.style.display=r.data.length?"none":"block";
- if(!r.data.length)return;
- for(const o of r.data){
-   const ir=await db.from("siparis_urunleri").select("urun_adi,fiyat,adet,ara_toplam").eq("siparis_id",o.id);
-   if(ir.error)continue;
-   if(!ir.data.length)continue;
-   const d=document.createElement("div");
-   d.className="product";
-   d.style.marginTop="10px";
-   d.innerHTML='<div class="pb"><b>'+esc(o.siparis_no)+'</b><p class="muted">'+new Date(o.created_at).toLocaleString("tr-TR")+'</p><p><span class="badge">'+esc(o.durum)+'</span></p>'+
-     ir.data.map(x=>'<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0"><span>'+esc(x.urun_adi)+' × '+esc(x.adet)+'</span><b>'+Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>').join("")+
-     '</div>';
-   box.appendChild(d);
- }
-}
-async function upload(f){
- if(!f)return null;
- if(f.size>5242880)throw Error("Fotoğraf 5 MB'dan büyük olamaz.");
- if(!f.type.startsWith("image/"))throw Error("Lütfen bir görsel dosyası seç.");
- const ext=(f.name.split(".").pop()||"jpg").toLowerCase();
- const safeExt=["jpg","jpeg","png","webp","gif"].includes(ext)?ext:"jpg";
- const path=user.id+"/"+crypto.randomUUID()+"."+safeExt;
- $("imageStatus").textContent="Fotoğraf yükleniyor...";
- const r=await db.storage.from("product-images").upload(path,f,{contentType:f.type,upsert:false});
- if(r.error)throw r.error;
- const publicUrl=db.storage.from("product-images").getPublicUrl(path).data.publicUrl;
- $("imageStatus").textContent="Fotoğraf başarıyla yüklendi ✓";
- return publicUrl
-}
-$("form").onsubmit=async e=>{e.preventDefault();$("err").style.display="none";$("save").disabled=true;try{let url=await upload($("image").files[0]);let r=await db.from("urunler").insert([{user_id:user.id,uretici_id:producer.id,urun_adi:$("name").value.trim(),kategori:$("cat").value,fiyat:Number($("price").value),stok:Number($("stock").value),aciklama:$("desc").value.trim(),gorsel_url:url,aktif:true}]);if(r.error)throw r.error;e.target.reset();$("preview").removeAttribute("src");$("preview").style.display="none";$("imageStatus").textContent="JPG, PNG veya WebP • En fazla 5 MB.";await products();alert("Ürün başarıyla yayınlandı ✓")}catch(x){showErr("err",x.message)}finally{$("save").disabled=false}}
-$("image").onchange=()=>{
- let f=$("image").files[0];
- if(!f){$("preview").style.display="none";$("imageStatus").textContent="JPG, PNG veya WebP • En fazla 5 MB.";return}
- if(f.size>5242880){$("image").value="";$("preview").style.display="none";return showErr("err","Fotoğraf 5 MB'dan büyük olamaz.")}
- $("preview").src=window.URL.createObjectURL(f);
- $("preview").style.display="block";
- $("imageStatus").textContent="Fotoğraf seçildi ✓ Yayınla'ya bastığında yüklenir.";
-}
-async function toggle(id,a){let r=await db.from("urunler").update({aktif:!a}).eq("id",id).eq("user_id",user.id);if(r.error)alert(r.error.message);else products()}
-async function del(id){if(!confirm("Ürün silinsin mi?"))return;let r=await db.from("urunler").delete().eq("id",id).eq("user_id",user.id);if(r.error)alert(r.error.message);else products()}
-$("refreshOrders").onclick=orders;$("loginBtn").onclick=async()=>{let r=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("pass").value});if(r.error)return showErr("loginErr",r.error.message);load()};$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};$("refresh").onclick=products;load();
+const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let user=null,producer=null;const $=id=>document.getElementById(id);
+function show(id,msg){const e=$(id);e.textContent=msg;e.style.display="block"}
+async function producerLogin(){const btn=$("loginBtn");const email=$("email").value.trim();const password=$("pass").value;$("loginErr").style.display="none";if(!email||!password){show("loginErr","E-posta ve şifreyi girin.");return}btn.disabled=true;btn.textContent="Giriş yapılıyor...";try{const r=await db.auth.signInWithPassword({email,password});if(r.error)throw r.error;user=r.data.user;const p=await db.from("ureticiler").select("*").eq("user_id",user.id).eq("durum","Aktif").maybeSingle();if(p.error)throw p.error;if(!p.data)throw new Error("Bu hesaba bağlı aktif üretici bulunamadı.");producer=p.data;$("login").style.display="none";$("panel").style.display="block";$("logout").style.display="block";$("welcome").textContent=producer.firma_adi;$("storeName").textContent=producer.firma_adi;$("storeInfo").innerHTML=(producer.il||"")+" / "+(producer.ilce||"")+"<br>"+(producer.kategori||"")+"<br>"+(producer.email||"");await products();await orders()}catch(e){console.error(e);show("loginErr","Giriş başarısız: "+(e.message||"Bilinmeyen hata"));await db.auth.signOut()}finally{btn.disabled=false;btn.textContent="Giriş Yap"}}
+async function products(){const r=await db.from("urunler").select("*").eq("user_id",user.id).order("id",{ascending:false});if(r.error)return show("err",r.error.message);$("products").innerHTML="";$("empty").style.display=r.data.length?"none":"block";r.data.forEach(p=>{const d=document.createElement("div");d.className="product";d.innerHTML='<div class="pic">'+(p.gorsel_url?'<img src="'+p.gorsel_url+'">':'🧺')+'</div><div class="pb"><b>'+String(p.urun_adi||"")+'</b><p class="muted">'+String(p.kategori||"")+'</p><strong>'+Number(p.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</strong><p class="muted">Stok: '+p.stok+'</p></div>';$("products").appendChild(d)})}
+async function orders(){const r=await db.from("siparisler").select("id,siparis_no,durum,created_at").order("id",{ascending:false});if(r.error)return;const box=$("producerOrders");if(!box)return;box.innerHTML=""}
+$("loginBtn").addEventListener("click",producerLogin);$("pass").addEventListener("keydown",e=>{if(e.key==="Enter")producerLogin()});$("email").addEventListener("keydown",e=>{if(e.key==="Enter")producerLogin()});$("logout").addEventListener("click",async()=>{await db.auth.signOut();location.reload()});$("refresh").addEventListener("click",products);if($("refreshOrders"))$("refreshOrders").addEventListener("click",orders);
 </script></body></html>
