@@ -8,6 +8,26 @@ body{font-family:Arial;margin:0;background:#f5f8f4;color:#17211b}.container{widt
 <section id="panel" style="display:none"><div style="display:flex;justify-content:space-between;align-items:center"><h1>Üretici Başvuruları</h1><button id="refresh" class="btn green">↻ Yenile</button></div>
 <div class="card"><div class="toolbar"><input id="search" placeholder="Ara..."><select id="filter"><option value="all">Tümü</option><option>Beklemede</option><option>Onaylandı</option><option>Reddedildi</option></select></div>
 <div class="tablewrap"><table class="table"><thead><tr><th>Üretici</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="rows"></tbody></table></div></div></section>
+
+<section id="ordersSection" style="margin-top:28px">
+  <h2>📦 Sipariş Yönetimi</h2>
+  <div class="card">
+    <div class="toolbar">
+      <input id="orderSearch" placeholder="Sipariş no, müşteri veya telefon ara...">
+      <select id="orderFilter">
+        <option value="all">Tüm durumlar</option>
+        <option>Yeni</option>
+        <option>Hazırlanıyor</option>
+        <option>Kargoda</option>
+        <option>Tamamlandı</option>
+        <option>İptal</option>
+      </select>
+    </div>
+    <div id="ordersAdmin"></div>
+    <div id="ordersEmpty" style="display:none;text-align:center;padding:30px;color:#718078">Henüz sipariş bulunmuyor.</div>
+  </div>
+</section>
+
 </div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -29,7 +49,7 @@ async function login(){
 async function load(){
  const r=await db.from("uretici_basvurulari").select("*").order("id",{ascending:false});
  if(r.error){alert("Başvurular yüklenemedi: "+r.error.message);return}
- applications=r.data||[];render();
+ applications=r.data||[];render();await loadAdminOrders();
 }
 function render(){
  const q=$("search").value.toLocaleLowerCase("tr-TR"),f=$("filter").value;
@@ -59,4 +79,73 @@ $("rows").addEventListener("click",e=>{
  if(b.classList.contains("approveBtn"))updateApplicationStatus(id,"Onaylandı");
  if(b.classList.contains("rejectBtn"))updateApplicationStatus(id,"Reddedildi");
 });
+
+let adminOrders=[];
+
+async function loadAdminOrders(){
+ const r=await db.from("siparisler")
+   .select("id,siparis_no,musteri_adi,musteri_telefon,musteri_email,teslimat_adresi,toplam,durum,created_at")
+   .order("created_at",{ascending:false});
+ if(r.error){alert("Siparişler yüklenemedi: "+r.error.message);return}
+ adminOrders=r.data||[];
+ renderAdminOrders();
+}
+
+async function loadOrderItems(orderId){
+ const r=await db.from("siparis_urunleri")
+   .select("urun_adi,uretici_id,fiyat,adet,ara_toplam")
+   .eq("siparis_id",orderId);
+ if(r.error) return [];
+ return r.data||[];
+}
+
+async function renderAdminOrders(){
+ const q=$("orderSearch").value.trim().toLocaleLowerCase("tr-TR");
+ const f=$("orderFilter").value;
+ const list=adminOrders.filter(o=>
+   (f==="all"||o.durum===f) &&
+   (!q || [o.siparis_no,o.musteri_adi,o.musteri_telefon].join(" ").toLocaleLowerCase("tr-TR").includes(q))
+ );
+ const box=$("ordersAdmin");
+ box.innerHTML="";
+ $("ordersEmpty").style.display=list.length?"none":"block";
+
+ for(const o of list){
+   const items=await loadOrderItems(o.id);
+   const el=document.createElement("div");
+   el.className="card";
+   el.style.marginBottom="14px";
+   el.innerHTML=`
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+      <div><b>${esc(o.siparis_no)}</b><div class="muted">${new Date(o.created_at).toLocaleString("tr-TR")}</div></div>
+      <span class="badge ${o.durum==="Tamamlandı"?"approved":""}">${esc(o.durum)}</span>
+    </div>
+    <div style="margin:12px 0;padding:12px;background:#f7faf7;border-radius:10px">
+      <b>${esc(o.musteri_adi)}</b> • ${esc(o.musteri_telefon)}
+      ${o.musteri_email?"<br>"+esc(o.musteri_email):""}
+      <br><b>Adres:</b> ${esc(o.teslimat_adresi)}
+    </div>
+    ${items.map(x=>`<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0">
+      <span>${esc(x.urun_adi)} × ${x.adet}</span>
+      <b>${Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</b>
+    </div>`).join("")}
+    <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #e1e7e1">
+      <b>Toplam</b><b>${Number(o.toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</b>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+      ${["Yeni","Hazırlanıyor","Kargoda","Tamamlandı","İptal"].map(s=>`<button class="btn ${o.durum===s?"green":s==="İptal"?"red":""}" onclick="setAdminOrderStatus(${o.id},'${s}')">${s}</button>`).join("")}
+    </div>`;
+   box.appendChild(el);
+ }
+}
+
+async function setAdminOrderStatus(id,status){
+ const r=await db.from("siparisler").update({durum:status}).eq("id",id).select("id,durum");
+ if(r.error){alert("Durum güncellenemedi: "+r.error.message);return}
+ if(!r.data?.length){alert("Sipariş güncellenemedi.");return}
+ await loadAdminOrders();
+}
+
+$("orderSearch").addEventListener("input",renderAdminOrders);
+$("orderFilter").addEventListener("change",renderAdminOrders);
 </script></body></html>
