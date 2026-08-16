@@ -1,151 +1,83 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yönetim Paneli</title>
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yönetim Merkezi | Üreticiden Halka</title>
 <style>
-body{font-family:Arial;margin:0;background:#f5f8f4;color:#17211b}.container{width:min(1150px,calc(100% - 30px));margin:auto}header{background:#fff;border-bottom:1px solid #e1e7e1;padding:20px 0}.logo{font-size:20px;font-weight:800;color:#166534}.logo span{color:#17211b}.page{padding:30px 0}.card{background:#fff;border:1px solid #e1e7e1;border-radius:18px;padding:20px}.login{max-width:420px;margin:60px auto}input,select{width:100%;padding:12px;margin:7px 0;border:1px solid #dce3dc;border-radius:10px;box-sizing:border-box}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer}.green{background:#166534;color:#fff}.red{background:#fee2e2;color:#991b1b}.error{display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:9px;margin-top:10px}.toolbar{display:flex;gap:10px;margin-bottom:15px}.toolbar input{flex:1}.tablewrap{overflow:auto}.table{width:100%;min-width:900px;border-collapse:collapse}.table th,.table td{padding:11px;border-bottom:1px solid #edf1ed;text-align:left;font-size:13px}.badge{padding:5px 9px;border-radius:20px;background:#fff7d6;color:#876900;font-size:11px;font-weight:800}.approved{background:#e5f6e7;color:#166534}
-</style></head><body>
-<header><div class="container"><span class="logo">Üreticiden <span>Halka</span></span></div></header>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f8f4;color:#17211b}
+.container{width:min(1250px,calc(100% - 28px));margin:auto}header{height:70px;background:#fff;border-bottom:1px solid #e1e8e1;display:flex;align-items:center;position:sticky;top:0;z-index:10}
+.top{display:flex;align-items:center;justify-content:space-between}.logo{font-size:21px;font-weight:900;color:#166534;text-decoration:none}.logo span{color:#17211b}.actions-top{display:flex;gap:8px}
+.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.green{background:#166534;color:#fff}.light{background:#edf3ed;color:#25452e}.red{background:#fee2e2;color:#991b1b}
+.page{padding:26px 0}.login{max-width:430px;margin:70px auto}.card{background:#fff;border:1px solid #e0e7e0;border-radius:18px;padding:20px;box-shadow:0 8px 30px #1932200a}.login input{display:block;width:100%;padding:13px;margin:9px 0;border:1px solid #d9e2da;border-radius:10px}.login .btn{width:100%;margin-top:7px}.error{display:none;background:#fee2e2;color:#991b1b;padding:11px;border-radius:9px;margin-top:12px;font-size:13px}
+.dashboard-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.muted{color:#718078;font-size:13px}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.stat{background:#fff;border:1px solid #e0e7e0;border-radius:15px;padding:16px}.stat span{font-size:12px;color:#718078}.stat b{display:block;font-size:27px;margin-top:5px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.tab{background:#fff;border:1px solid #dce5dc;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer}.tab.active{background:#166534;color:#fff;border-color:#166534}
+.section{display:none}.section.active{display:block}.toolbar{display:flex;gap:10px;margin-bottom:14px}.toolbar input,.toolbar select{padding:11px;border:1px solid #d9e2da;border-radius:10px}.toolbar input{flex:1}.tablewrap{overflow:auto}.table{width:100%;min-width:900px;border-collapse:collapse}.table th,.table td{padding:12px 9px;border-bottom:1px solid #edf1ed;text-align:left;font-size:13px;vertical-align:top}.table th{font-size:11px;color:#718078}.badge{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap}.pending{background:#fff7d6;color:#8a6200}.approved,.active{background:#e5f6e7;color:#166534}.rejected,.passive{background:#fee8e8;color:#991b1b}.new{background:#e9f2ff;color:#1557a6}.actions{display:flex;gap:5px;flex-wrap:wrap}.actions button{border:0;border-radius:8px;padding:7px 9px;font-weight:800;cursor:pointer}.empty{text-align:center;padding:38px;color:#718078}.toast{position:fixed;right:18px;bottom:18px;background:#17211b;color:#fff;padding:13px 16px;border-radius:11px;display:none;z-index:30}.danger-note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px;border-radius:10px;margin-bottom:14px;font-size:13px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.dashboard-head{display:block}.stats{grid-template-columns:1fr 1fr}.toolbar{flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div class="container top"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><div class="actions-top"><button id="refresh" class="btn light">↻ Yenile</button><button id="logout" class="btn light" style="display:none">Çıkış</button></div></div></header>
 <main class="page"><div class="container">
-<section id="login" class="login card"><h1>Yönetim Paneli</h1><input id="email" type="email" placeholder="Yönetici e-postası"><input id="pass" type="password" placeholder="Şifre"><button id="loginBtn" class="btn green" style="width:100%">Giriş Yap</button><div id="loginErr" class="error"></div></section>
-<section id="panel" style="display:none"><div style="display:flex;justify-content:space-between;align-items:center"><h1>Üretici Başvuruları</h1><button id="refresh" class="btn green">↻ Yenile</button></div>
-<div class="card"><div class="toolbar"><input id="search" placeholder="Ara..."><select id="filter"><option value="all">Tümü</option><option>Beklemede</option><option>Onaylandı</option><option>Reddedildi</option></select></div>
-<div class="tablewrap"><table class="table"><thead><tr><th>Üretici</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="rows"></tbody></table></div></div></section>
+<section id="login" class="login card"><h1>Yönetim Merkezi</h1><p class="muted">Yetkili Supabase hesabınızla giriş yapın.</p><input id="email" type="email" placeholder="Yönetici e-postası"><input id="pass" type="password" placeholder="Şifre"><button id="loginBtn" class="btn green">Giriş Yap</button><div id="loginErr" class="error"></div></section>
 
-<section id="ordersSection" style="margin-top:28px">
-  <h2>📦 Sipariş Yönetimi</h2>
-  <div class="card">
-    <div class="toolbar">
-      <input id="orderSearch" placeholder="Sipariş no, müşteri veya telefon ara...">
-      <select id="orderFilter">
-        <option value="all">Tüm durumlar</option>
-        <option>Yeni</option>
-        <option>Hazırlanıyor</option>
-        <option>Kargoda</option>
-        <option>Tamamlandı</option>
-        <option>İptal</option>
-      </select>
-    </div>
-    <div id="ordersAdmin"></div>
-    <div id="ordersEmpty" style="display:none;text-align:center;padding:30px;color:#718078">Henüz sipariş bulunmuyor.</div>
-  </div>
+<section id="panel" style="display:none">
+<div class="dashboard-head"><div><h1 style="margin:0 0 5px">Yönetim Merkezi</h1><div class="muted">Üreticiler, ürünler, başvurular ve siparişler tek panelde.</div></div></div>
+<div class="stats">
+<div class="stat"><span>Başvuru</span><b id="sApplications">0</b></div><div class="stat"><span>Bekleyen</span><b id="sPending">0</b></div><div class="stat"><span>Aktif üretici</span><b id="sProducers">0</b></div><div class="stat"><span>Aktif ürün</span><b id="sProducts">0</b></div><div class="stat"><span>Sipariş</span><b id="sOrders">0</b></div>
+</div>
+<div class="tabs">
+<button class="tab active" data-tab="applications">Başvurular</button><button class="tab" data-tab="producers">Üreticiler</button><button class="tab" data-tab="products">Ürünler</button><button class="tab" data-tab="orders">Siparişler</button>
+</div>
+
+<section id="applications" class="section active"><div class="card"><div class="toolbar"><input id="appSearch" placeholder="Üretici, yetkili, telefon, ilçe ara..."><select id="appFilter"><option value="all">Tüm durumlar</option><option>Beklemede</option><option>Onaylandı</option><option>Reddedildi</option></select></div><div class="tablewrap"><table class="table"><thead><tr><th>Üretici</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appRows"></tbody></table></div><div id="appEmpty" class="empty" style="display:none">Başvuru bulunamadı.</div></div></section>
+
+<section id="producers" class="section"><div class="card"><div class="toolbar"><input id="prodSearch" placeholder="Üretici ara..."><select id="prodFilter"><option value="all">Tüm üreticiler</option><option>Aktif</option><option>Pasif</option></select></div><div class="tablewrap"><table class="table"><thead><tr><th>Firma</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="prodRows"></tbody></table></div></div></section>
+
+<section id="products" class="section"><div class="card"><div class="toolbar"><input id="productSearch" placeholder="Ürün veya üretici ara..."><select id="productFilter"><option value="all">Tüm ürünler</option><option value="true">Yayında</option><option value="false">Pasif</option></select></div><div class="tablewrap"><table class="table"><thead><tr><th>Ürün</th><th>Üretici</th><th>Kategori</th><th>Fiyat</th><th>Stok</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="productRows"></tbody></table></div></div></section>
+
+<section id="orders" class="section"><div class="card"><div class="danger-note">Sipariş durumunu değiştirmek üretici ve müşteri akışını etkiler. Yönetici işlemleri kayıtlı veritabanı politikaları üzerinden yapılır.</div><div class="toolbar"><input id="orderSearch" placeholder="Sipariş no, müşteri, telefon ara..."><select id="orderFilter"><option value="all">Tüm siparişler</option><option>Yeni</option><option>Hazırlanıyor</option><option>Kargoda</option><option>Teslim Edildi</option><option>İptal</option></select></div><div class="tablewrap"><table class="table"><thead><tr><th>Sipariş</th><th>Müşteri</th><th>Adres</th><th>Toplam</th><th>Tarih</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="orderRows"></tbody></table></div></div></section>
 </section>
+</div></main><div id="toast" class="toast"></div>
 
-</div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
-let applications=[];
-const $=id=>document.getElementById(id);
-const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-function err(m){$("loginErr").textContent=m;$("loginErr").style.display="block"}
-async function login(){
- const email=$("email").value.trim(),password=$("pass").value;
- if(!email||!password)return err("E-posta ve şifreyi girin.");
- $("loginBtn").disabled=true;$("loginBtn").textContent="Giriş yapılıyor...";
- try{
-  const r=await db.auth.signInWithPassword({email,password});if(r.error)throw r.error;
-  const a=await db.rpc("is_admin");if(a.error)throw a.error;if(a.data!==true)throw new Error("Bu hesap admin değil.");
-  $("login").style.display="none";$("panel").style.display="block";await load();
- }catch(e){err(e.message||"Giriş başarısız");$("loginBtn").disabled=false;$("loginBtn").textContent="Giriş Yap"}
-}
-async function load(){
- const r=await db.from("uretici_basvurulari").select("*").order("id",{ascending:false});
- if(r.error){alert("Başvurular yüklenemedi: "+r.error.message);return}
- applications=r.data||[];render();await loadAdminOrders();
-}
-function render(){
- const q=$("search").value.toLocaleLowerCase("tr-TR"),f=$("filter").value;
- const list=applications.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));
- $("rows").innerHTML=list.map(x=>{
- const action=x.durum==="Onaylandı"
-   ? '<span class="badge approved">✓ Onaylandı</span>'
-   : x.durum==="Reddedildi"
-     ? '<span class="badge" style="background:#fee2e2;color:#991b1b">✕ Reddedildi</span>'
-     : `<button class="btn green approveBtn" data-id="${x.id}">Onayla</button> <button class="btn red rejectBtn" data-id="${x.id}">Reddet</button>`;
- return `<tr><td><b>${esc(x.uretici_adi)}</b><br>#${x.id}</td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td><span class="badge ${x.durum==="Onaylandı"?"approved":""}">${esc(x.durum)}</span></td><td>${action}</td></tr>`;
-}).join("");
-}
-async function updateApplicationStatus(id,newStatus){
- const btn=[...document.querySelectorAll("[data-id]")].find(b=>b.dataset.id===String(id));
- if(btn){btn.disabled=true;btn.textContent="İşleniyor..."}
- const r=await db.from("uretici_basvurulari").update({durum:newStatus}).eq("id",id).select("id,durum");
- if(r.error){alert("Onaylama başarısız: "+r.error.message);if(btn){btn.disabled=false;btn.textContent="Onayla"};return}
- if(!r.data||!r.data.length){alert("Güncelleme yapılmadı. RLS yetkisini kontrol et.");return}
- alert("Başvuru "+newStatus+" olarak güncellendi.");
- await load();
-}
-$("loginBtn").onclick=login;$("refresh").onclick=load;$("search").oninput=render;$("filter").onchange=render;
-$("rows").addEventListener("click",e=>{
- const b=e.target.closest("button");if(!b)return;
- const id=Number(b.dataset.id);
- if(b.classList.contains("approveBtn"))updateApplicationStatus(id,"Onaylandı");
- if(b.classList.contains("rejectBtn"))updateApplicationStatus(id,"Reddedildi");
-});
+const $=id=>document.getElementById(id);let applications=[],producers=[],products=[],orders=[];
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function money(v){return Number(v||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+" ₺"}
+function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",2500)}
+function badge(s){const c=s==="Onaylandı"||s==="Aktif"||s==="Teslim Edildi"?"approved":s==="Reddedildi"||s==="Pasif"||s==="İptal"?"rejected":s==="Yeni"?"new":"pending";return `<span class="badge ${c}">${esc(s||"—")}</span>`}
 
-let adminOrders=[];
-
-async function loadAdminOrders(){
- const r=await db.from("siparisler")
-   .select("id,siparis_no,musteri_adi,musteri_telefon,musteri_email,teslimat_adresi,toplam,durum,created_at")
-   .order("created_at",{ascending:false});
- if(r.error){alert("Siparişler yüklenemedi: "+r.error.message);return}
- adminOrders=r.data||[];
- renderAdminOrders();
+async function loadAll(){
+ const [a,p,pr,o]=await Promise.all([
+  db.from("uretici_basvurulari").select("*").order("id",{ascending:false}),
+  db.from("ureticiler").select("*").order("id",{ascending:false}),
+  db.from("urunler").select("*,ureticiler(firma_adi)").order("id",{ascending:false}),
+  db.from("siparisler").select("*").order("id",{ascending:false})
+ ]);
+ if(a.error){toast(a.error.message);return} if(p.error){toast(p.error.message);return} if(pr.error){toast(pr.error.message);return} if(o.error){toast(o.error.message);return}
+ applications=a.data||[];producers=p.data||[];products=pr.data||[];orders=o.data||[];updateStats();renderAll();
 }
+function updateStats(){$("sApplications").textContent=applications.length;$("sPending").textContent=applications.filter(x=>x.durum==="Beklemede").length;$("sProducers").textContent=producers.filter(x=>x.durum==="Aktif").length;$("sProducts").textContent=products.filter(x=>x.aktif===true).length;$("sOrders").textContent=orders.length}
 
-async function loadOrderItems(orderId){
- const r=await db.from("siparis_urunleri")
-   .select("urun_adi,uretici_id,fiyat,adet,ara_toplam")
-   .eq("siparis_id",orderId);
- if(r.error) return [];
- return r.data||[];
-}
+function renderApps(){let q=$("appSearch").value.toLocaleLowerCase("tr-TR"),f=$("appFilter").value;a=applications.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));$("appRows").innerHTML=a.map(x=>`<tr><td><b>${esc(x.uretici_adi)}</b><br><span class="muted">#${x.id}</span></td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td>${badge(x.durum)}</td><td><div class="actions">${x.durum!=="Onaylandı"?`<button class="approve" onclick="setApplication(${x.id},'Onaylandı')">Onayla</button>`:""}${x.durum!=="Reddedildi"?`<button class="red" onclick="setApplication(${x.id},'Reddedildi')">Reddet</button>`:""}</div></td></tr>`).join("")||"";$("appEmpty").style.display=a.length?"none":"block"}
+async function setApplication(id,status){if(!confirm(status+" olarak işaretlensin mi?"))return;const r=await db.from("uretici_basvurulari").update({durum:status}).eq("id",id);if(r.error){toast(r.error.message);return}toast("Başvuru güncellendi");loadAll()}
 
-async function renderAdminOrders(){
- const q=$("orderSearch").value.trim().toLocaleLowerCase("tr-TR");
- const f=$("orderFilter").value;
- const list=adminOrders.filter(o=>
-   (f==="all"||o.durum===f) &&
-   (!q || [o.siparis_no,o.musteri_adi,o.musteri_telefon].join(" ").toLocaleLowerCase("tr-TR").includes(q))
- );
- const box=$("ordersAdmin");
- box.innerHTML="";
- $("ordersEmpty").style.display=list.length?"none":"block";
+function renderProducers(){let q=$("prodSearch").value.toLocaleLowerCase("tr-TR"),f=$("prodFilter").value;let a=producers.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));$("prodRows").innerHTML=a.map(x=>`<tr><td><b>${esc(x.firma_adi)}</b><br><span class="muted">#${x.id}</span></td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td>${badge(x.durum)}</td><td><div class="actions"><button class="light" onclick="toggleProducer(${x.id},'${x.durum==="Aktif"?"Pasif":"Aktif"}')">${x.durum==="Aktif"?"Pasifleştir":"Aktifleştir"}</button></div></td></tr>`).join("")||""}
+async function toggleProducer(id,status){if(!confirm(status+" yapılsın mı?"))return;const r=await db.from("ureticiler").update({durum:status}).eq("id",id);if(r.error){toast(r.error.message);return}toast("Üretici güncellendi");loadAll()}
 
- for(const o of list){
-   const items=await loadOrderItems(o.id);
-   const el=document.createElement("div");
-   el.className="card";
-   el.style.marginBottom="14px";
-   el.innerHTML=`
-    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-      <div><b>${esc(o.siparis_no)}</b><div class="muted">${new Date(o.created_at).toLocaleString("tr-TR")}</div></div>
-      <span class="badge ${o.durum==="Tamamlandı"?"approved":""}">${esc(o.durum)}</span>
-    </div>
-    <div style="margin:12px 0;padding:12px;background:#f7faf7;border-radius:10px">
-      <b>${esc(o.musteri_adi)}</b> • ${esc(o.musteri_telefon)}
-      ${o.musteri_email?"<br>"+esc(o.musteri_email):""}
-      <br><b>Adres:</b> ${esc(o.teslimat_adresi)}
-    </div>
-    ${items.map(x=>`<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0">
-      <span>${esc(x.urun_adi)} × ${x.adet}</span>
-      <b>${Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</b>
-    </div>`).join("")}
-    <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #e1e7e1">
-      <b>Toplam</b><b>${Number(o.toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</b>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
-      ${["Yeni","Hazırlanıyor","Kargoda","Tamamlandı","İptal"].map(s=>`<button class="btn ${o.durum===s?"green":s==="İptal"?"red":""}" onclick="setAdminOrderStatus(${o.id},'${s}')">${s}</button>`).join("")}
-    </div>`;
-   box.appendChild(el);
- }
-}
+function renderProducts(){let q=$("productSearch").value.toLocaleLowerCase("tr-TR"),f=$("productFilter").value;let a=products.filter(x=>(f==="all"||String(x.aktif)===f)&&(!q||[x.urun_adi,x.kategori,x.ureticiler?.firma_adi].join(" ").toLocaleLowerCase("tr-TR").includes(q)));$("productRows").innerHTML=a.map(x=>`<tr><td><b>${esc(x.urun_adi)}</b><br><span class="muted">#${x.id}</span></td><td>${esc(x.ureticiler?.firma_adi||"—")}</td><td>${esc(x.kategori)}</td><td>${money(x.fiyat)}</td><td>${x.stok}</td><td>${badge(x.aktif?"Aktif":"Pasif")}</td><td><div class="actions"><button class="light" onclick="toggleProduct(${x.id},${!x.aktif})">${x.aktif?"Yayından kaldır":"Yayınla"}</button></div></td></tr>`).join("")||""}
+async function toggleProduct(id,active){const r=await db.from("urunler").update({aktif:active}).eq("id",id);if(r.error){toast(r.error.message);return}toast("Ürün durumu güncellendi");loadAll()}
 
-async function setAdminOrderStatus(id,status){
- const r=await db.from("siparisler").update({durum:status}).eq("id",id).select("id,durum");
- if(r.error){alert("Durum güncellenemedi: "+r.error.message);return}
- if(!r.data?.length){alert("Sipariş güncellenemedi.");return}
- await loadAdminOrders();
-}
+function renderOrders(){let q=$("orderSearch").value.toLocaleLowerCase("tr-TR"),f=$("orderFilter").value;let a=orders.filter(x=>(f==="all"||x.durum===f)&&(!q||[x.siparis_no,x.musteri_adi,x.musteri_telefon,x.teslimat_adresi].join(" ").toLocaleLowerCase("tr-TR").includes(q)));$("orderRows").innerHTML=a.map(x=>`<tr><td><b>${esc(x.siparis_no)}</b><br><span class="muted">#${x.id}</span></td><td>${esc(x.musteri_adi)}<br>${esc(x.musteri_telefon)}</td><td>${esc(x.teslimat_adresi)}</td><td><b>${money(x.toplam)}</b></td><td>${x.created_at?new Date(x.created_at).toLocaleString("tr-TR"):"—"}</td><td>${badge(x.durum)}</td><td><select onchange="setOrder(${x.id},this.value)" style="padding:7px;border:1px solid #d9e2da;border-radius:8px"><option ${x.durum==="Yeni"?"selected":""}>Yeni</option><option ${x.durum==="Hazırlanıyor"?"selected":""}>Hazırlanıyor</option><option ${x.durum==="Kargoda"?"selected":""}>Kargoda</option><option ${x.durum==="Teslim Edildi"?"selected":""}>Teslim Edildi</option><option ${x.durum==="İptal"?"selected":""}>İptal</option></select></td></tr>`).join("")||""}
+async function setOrder(id,status){const r=await db.from("siparisler").update({durum:status}).eq("id",id);if(r.error){toast(r.error.message);loadAll();return}toast("Sipariş durumu güncellendi");loadAll()}
 
-$("orderSearch").addEventListener("input",renderAdminOrders);
-$("orderFilter").addEventListener("change",renderAdminOrders);
-</script></body></html>
+function renderAll(){renderApps();renderProducers();renderProducts();renderOrders()}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.tab).classList.add("active")});
+["appSearch","appFilter","prodSearch","prodFilter","productSearch","productFilter","orderSearch","orderFilter"].forEach(id=>{const e=$(id);e.addEventListener("input",renderAll);e.addEventListener("change",renderAll)});
+$("loginBtn").onclick=async()=>{const r=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("pass").value});if(r.error){$("loginErr").textContent="Giriş başarısız: "+r.error.message;$("loginErr").style.display="block";return}show()};
+async function show(){const r=await db.rpc("is_admin");if(r.error||r.data!==true){await db.auth.signOut();$("loginErr").textContent="Bu hesap yönetici yetkisine sahip değil.";$("loginErr").style.display="block";$("login").style.display="block";return}$("login").style.display="none";$("panel").style.display="block";$("logout").style.display="block";loadAll()}
+$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};$("refresh").onclick=loadAll;
+db.auth.getSession().then(r=>{if(r.data.session)show()});
+</script>
+</body></html>
