@@ -5,57 +5,175 @@
 <section id="panel" style="display:none"><div class="title"><div><h1>Üretici Başvuruları</h1><div class="muted">Başvuruları incele, onayla veya reddet.</div></div><button id="refresh" class="btn green">↻ Yenile</button></div>
 <div class="stats"><div class="stat">Toplam<b id="total">0</b></div><div class="stat">Beklemede<b id="pending">0</b></div><div class="stat">Onaylanan<b id="approved">0</b></div></div>
 <div class="card"><div class="toolbar"><input id="search" placeholder="Üretici, yetkili, telefon, ilçe ara..."><select id="filter"><option value="all">Tümü</option><option>Beklemede</option><option>Onaylandı</option><option>Reddedildi</option></select></div><div class="tablewrap"><table class="table"><thead><tr><th>Üretici</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Açıklama</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="rows"></tbody></table></div><div id="empty" class="empty" style="display:none">Başvuru bulunamadı.</div></div></section>
-</div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu",db=window.supabase.createClient(URL,KEY);let data=[];
-const $=id=>document.getElementById(id);function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-async function load(){let r=await db.from("uretici_basvurulari").select("*").order("id",{ascending:false});if(r.error)return alert(r.error.message);data=r.data||[];render()}
-function render(){let q=$("search").value.toLocaleLowerCase("tr-TR"),f=$("filter").value;let a=data.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));$("total").textContent=data.length;$("pending").textContent=data.filter(x=>x.durum==="Beklemede").length;$("approved").textContent=data.filter(x=>x.durum==="Onaylandı").length;$("empty").style.display=a.length?"none":"block";$("rows").innerHTML=a.map(x=>{let c=x.durum==="Onaylandı"?"approved":x.durum==="Reddedildi"?"rejected":"pending";return `<tr><td><b>${esc(x.uretici_adi)}</b><br>#${esc(x.id)}</td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td>${esc(x.aciklama)}</td><td><span class="badge ${c}">${esc(x.durum)}</span></td><td><div class="actions"><button class="approve" onclick="status(${x.id},'Onaylandı')">Onayla</button><button class="reject" onclick="status(${x.id},'Reddedildi')">Reddet</button></div></td></tr>`}).join("")}
-async function status(id,s){let r=await db.from("uretici_basvurulari").update({durum:s}).eq("id",id);if(r.error)return alert(r.error.message);load()}
-$("loginBtn").onclick=async()=>{
- const btn=$("loginBtn"),box=$("loginErr");
- box.style.display="none"; box.textContent="";
- const email=$("email").value.trim(), pass=$("pass").value;
- if(!email||!pass){box.textContent="E-posta ve şifreyi girin.";box.style.display="block";return}
- btn.disabled=true; btn.textContent="Giriş yapılıyor...";
+</div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";
+const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const $=id=>document.getElementById(id);
+let data=[];
+
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function showError(msg){
+ $("loginErr").textContent=msg;
+ $("loginErr").style.display="block";
+}
+
+async function login(){
+ const email=$("email").value.trim();
+ const password=$("pass").value;
+ const btn=$("loginBtn");
+
+ $("loginErr").style.display="none";
+ $("loginErr").textContent="";
+
+ if(!email||!password){
+   showError("E-posta ve şifre alanlarını doldurun.");
+   return;
+ }
+
+ btn.disabled=true;
+ btn.textContent="Giriş yapılıyor...";
+
  try{
-   const r=await db.auth.signInWithPassword({email,password:pass});
-   if(r.error) throw r.error;
-   const a=await db.rpc("is_admin");
-   if(a.error) throw new Error("Yönetici yetkisi kontrol edilemedi: "+a.error.message);
-   if(a.data!==true){
-     await db.auth.signOut();
-     throw new Error("Bu hesap yönetici yetkisine sahip değil.");
+   const result=await db.auth.signInWithPassword({email:email,password:password});
+
+   if(result.error){
+     throw new Error(result.error.message);
    }
+
+   const session=result.data.session;
+   if(!session){
+     throw new Error("Oturum oluşturulamadı.");
+   }
+
+   // Admin kontrolü.
+   const check=await db.rpc("is_admin");
+
+   if(check.error){
+     throw new Error("Admin yetkisi kontrol edilemedi: "+check.error.message);
+   }
+
+   if(check.data!==true){
+     await db.auth.signOut();
+     throw new Error("Bu e-posta admin olarak tanımlı değil.");
+   }
+
    $("login").style.display="none";
    $("panel").style.display="block";
    $("logout").style.display="block";
+
    await load();
- }catch(e){
-   console.error(e);
-   box.textContent="Giriş başarısız: "+(e.message||"Bilinmeyen hata");
-   box.style.display="block";
+
+ }catch(err){
+   console.error("ADMIN LOGIN ERROR:",err);
+   showError("Giriş başarısız: "+(err.message||"Bilinmeyen hata"));
  }finally{
-   btn.disabled=false; btn.textContent="Giriş Yap";
+   btn.disabled=false;
+   btn.textContent="Giriş Yap";
  }
-};
-async function show(){
- const s=await db.auth.getSession();
- if(!s.data.session)return;
- const a=await db.rpc("is_admin");
- if(a.error || a.data!==true){
-   $("loginErr").textContent="Bu hesap yönetici yetkisine sahip değil.";
-   $("loginErr").style.display="block";
-   await db.auth.signOut();
+}
+
+$("loginBtn").addEventListener("click",login);
+
+$("pass").addEventListener("keydown",e=>{
+ if(e.key==="Enter") login();
+});
+
+$("email").addEventListener("keydown",e=>{
+ if(e.key==="Enter") login();
+});
+
+$("logout").addEventListener("click",async()=>{
+ await db.auth.signOut();
+ location.reload();
+});
+
+async function load(){
+ const r=await db
+   .from("uretici_basvurulari")
+   .select("*")
+   .order("created_at",{ascending:false});
+
+ if(r.error){
+   $("rows").innerHTML="";
+   $("empty").style.display="block";
+   $("empty").textContent="Veriler yüklenemedi: "+r.error.message;
    return;
  }
- $("login").style.display="none";
- $("panel").style.display="block";
- $("logout").style.display="block";
- load();
+
+ data=r.data||[];
+ render();
 }
-$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};
-$("refresh").onclick=load;
-$("search").oninput=render;
-$("filter").onchange=render;
-db.auth.getSession().then(r=>r.data.session?show():null);
-</script></body></html>
+
+function render(){
+ const q=($("search").value||"").toLocaleLowerCase("tr-TR");
+ const f=$("filter").value;
+
+ const list=data.filter(x=>{
+   const text=[
+     x.uretici_adi,x.yetkili,x.telefon,x.email,x.il,x.ilce,x.kategori
+   ].join(" ").toLocaleLowerCase("tr-TR");
+
+   return (!q||text.includes(q)) && (f==="all"||x.durum===f);
+ });
+
+ $("total").textContent=data.length;
+ $("pending").textContent=data.filter(x=>x.durum==="Beklemede").length;
+ $("approved").textContent=data.filter(x=>x.durum==="Onaylandı").length;
+
+ $("empty").style.display=list.length?"none":"block";
+
+ $("rows").innerHTML=list.map(x=>`
+ <tr>
+  <td><b>${esc(x.uretici_adi)}</b></td>
+  <td>${esc(x.yetkili)}</td>
+  <td>${esc(x.telefon)}<br>${esc(x.email)}</td>
+  <td>${esc(x.il)} / ${esc(x.ilce)}</td>
+  <td>${esc(x.kategori)}</td>
+  <td>${esc(x.aciklama||"-")}</td>
+  <td>${esc(x.durum)}</td>
+  <td>
+   <button class="btn green" onclick="changeStatus(${x.id},'Onaylandı')">Onayla</button>
+   <button class="btn" onclick="changeStatus(${x.id},'Reddedildi')">Reddet</button>
+  </td>
+ </tr>`).join("");
+}
+
+async function changeStatus(id,status){
+ const r=await db
+   .from("uretici_basvurulari")
+   .update({durum:status})
+   .eq("id",id);
+
+ if(r.error){
+   alert("İşlem başarısız: "+r.error.message);
+   return;
+ }
+
+ await load();
+}
+
+$("refresh").addEventListener("click",load);
+$("search").addEventListener("input",render);
+$("filter").addEventListener("change",render);
+
+// Sayfa açıldığında mevcut oturumu kontrol et.
+(async()=>{
+ const s=await db.auth.getSession();
+ if(s.data.session){
+   const check=await db.rpc("is_admin");
+   if(!check.error && check.data===true){
+     $("login").style.display="none";
+     $("panel").style.display="block";
+     $("logout").style.display="block";
+     await load();
+   }
+ }
+})();
+</script>
+</body></html>
