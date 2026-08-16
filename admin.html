@@ -1,176 +1,55 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yönetim Paneli | Üreticiden Halka</title><style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f5f8f4;color:#17211b}.container{width:min(1200px,calc(100% - 28px));margin:auto}header{height:72px;background:#fff;border-bottom:1px solid #e2e8e2;display:flex;align-items:center}.top{display:flex;justify-content:space-between}.logo{font-size:20px;font-weight:800;color:#166534;text-decoration:none}.logo span{color:#17211b}.page{padding:28px 0}.card{background:#fff;border:1px solid #e0e7e0;border-radius:18px;padding:20px;box-shadow:0 8px 30px #1932200d}h1{margin:0 0 6px}.muted{color:#718078;font-size:13px}.login{max-width:430px;margin:70px auto}.login input{display:block;width:100%;padding:12px;margin:8px 0;border:1px solid #d9e2da;border-radius:10px}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.green{background:#166534;color:#fff}.light{background:#eef3ee}.login .btn{width:100%;margin-top:6px}.error{display:none;background:#fee2e2;color:#991b1b;padding:11px;border-radius:9px;margin-top:12px;font-size:13px}.title{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.stat{background:#fff;border:1px solid #e0e7e0;border-radius:15px;padding:16px}.stat b{display:block;font-size:28px;margin-top:5px}.toolbar{display:flex;gap:10px;margin-bottom:15px}.toolbar input,.toolbar select{padding:11px;border:1px solid #d9e2da;border-radius:10px}.toolbar input{flex:1}.tablewrap{overflow:auto}.table{width:100%;min-width:950px;border-collapse:collapse}.table th,.table td{padding:12px 9px;border-bottom:1px solid #edf1ed;text-align:left;font-size:13px}.table th{font-size:11px;color:#718078}.badge{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}.pending{background:#fff7d6;color:#8a6200}.approved{background:#e5f6e7;color:#166534}.rejected{background:#fee8e8;color:#991b1b}.actions{display:flex;gap:5px}.actions button{border:0;border-radius:8px;padding:7px;font-weight:800;cursor:pointer}.approve{background:#dcf4df;color:#166534}.reject{background:#fee2e2;color:#991b1b}.empty{text-align:center;padding:35px;color:#718078}@media(max-width:700px){.stats{grid-template-columns:1fr}.title{display:block}.toolbar{flex-direction:column}}
-</style></head><body><header><div class="container top"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><button id="logout" class="btn light" style="display:none">Çıkış Yap</button></div></header><main class="page"><div class="container">
-<section id="login" class="login card"><h1>Yönetim Paneli</h1><div class="muted">Yalnızca yetkili yönetici hesabı bu panele erişebilir.</div><input id="email" type="email" placeholder="Yönetici e-postası"><input id="pass" type="password" placeholder="Şifre"><button id="loginBtn" class="btn green">Giriş Yap</button><div id="loginErr" class="error"></div></section>
-<section id="panel" style="display:none"><div class="title"><div><h1>Üretici Başvuruları</h1><div class="muted">Başvuruları incele, onayla veya reddet.</div></div><button id="refresh" class="btn green">↻ Yenile</button></div>
-<div class="stats"><div class="stat">Toplam<b id="total">0</b></div><div class="stat">Beklemede<b id="pending">0</b></div><div class="stat">Onaylanan<b id="approved">0</b></div></div>
-<div class="card"><div class="toolbar"><input id="search" placeholder="Üretici, yetkili, telefon, ilçe ara..."><select id="filter"><option value="all">Tümü</option><option>Beklemede</option><option>Onaylandı</option><option>Reddedildi</option></select></div><div class="tablewrap"><table class="table"><thead><tr><th>Üretici</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Açıklama</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="rows"></tbody></table></div><div id="empty" class="empty" style="display:none">Başvuru bulunamadı.</div></div></section>
-</div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yönetim Paneli</title>
+<style>
+body{font-family:Arial;margin:0;background:#f5f8f4;color:#17211b}.container{width:min(1150px,calc(100% - 30px));margin:auto}header{background:#fff;border-bottom:1px solid #e1e7e1;padding:20px 0}.logo{font-size:20px;font-weight:800;color:#166534}.logo span{color:#17211b}.page{padding:30px 0}.card{background:#fff;border:1px solid #e1e7e1;border-radius:18px;padding:20px}.login{max-width:420px;margin:60px auto}input,select{width:100%;padding:12px;margin:7px 0;border:1px solid #dce3dc;border-radius:10px;box-sizing:border-box}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer}.green{background:#166534;color:#fff}.red{background:#fee2e2;color:#991b1b}.error{display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:9px;margin-top:10px}.toolbar{display:flex;gap:10px;margin-bottom:15px}.toolbar input{flex:1}.tablewrap{overflow:auto}.table{width:100%;min-width:900px;border-collapse:collapse}.table th,.table td{padding:11px;border-bottom:1px solid #edf1ed;text-align:left;font-size:13px}.badge{padding:5px 9px;border-radius:20px;background:#fff7d6;color:#876900;font-size:11px;font-weight:800}.approved{background:#e5f6e7;color:#166534}
+</style></head><body>
+<header><div class="container"><span class="logo">Üreticiden <span>Halka</span></span></div></header>
+<main class="page"><div class="container">
+<section id="login" class="login card"><h1>Yönetim Paneli</h1><input id="email" type="email" placeholder="Yönetici e-postası"><input id="pass" type="password" placeholder="Şifre"><button id="loginBtn" class="btn green" style="width:100%">Giriş Yap</button><div id="loginErr" class="error"></div></section>
+<section id="panel" style="display:none"><div style="display:flex;justify-content:space-between;align-items:center"><h1>Üretici Başvuruları</h1><button id="refresh" class="btn green">↻ Yenile</button></div>
+<div class="card"><div class="toolbar"><input id="search" placeholder="Ara..."><select id="filter"><option value="all">Tümü</option><option>Beklemede</option><option>Onaylandı</option><option>Reddedildi</option></select></div>
+<div class="tablewrap"><table class="table"><thead><tr><th>Üretici</th><th>Yetkili</th><th>İletişim</th><th>Konum</th><th>Kategori</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="rows"></tbody></table></div></div></section>
+</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";
-const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
+const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
+let applications=[];
 const $=id=>document.getElementById(id);
-let data=[];
-
-function esc(v){
- return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-}
-
-function showError(msg){
- $("loginErr").textContent=msg;
- $("loginErr").style.display="block";
-}
-
+const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+function err(m){$("loginErr").textContent=m;$("loginErr").style.display="block"}
 async function login(){
- const email=$("email").value.trim();
- const password=$("pass").value;
- const btn=$("loginBtn");
-
- $("loginErr").style.display="none";
- $("loginErr").textContent="";
-
- if(!email||!password){
-   showError("E-posta ve şifre alanlarını doldurun.");
-   return;
- }
-
- btn.disabled=true;
- btn.textContent="Giriş yapılıyor...";
-
+ const email=$("email").value.trim(),password=$("pass").value;
+ if(!email||!password)return err("E-posta ve şifreyi girin.");
+ $("loginBtn").disabled=true;$("loginBtn").textContent="Giriş yapılıyor...";
  try{
-   const result=await db.auth.signInWithPassword({email:email,password:password});
-
-   if(result.error){
-     throw new Error(result.error.message);
-   }
-
-   const session=result.data.session;
-   if(!session){
-     throw new Error("Oturum oluşturulamadı.");
-   }
-
-   // Admin kontrolü.
-   const check=await db.rpc("is_admin");
-
-   if(check.error){
-     throw new Error("Admin yetkisi kontrol edilemedi: "+check.error.message);
-   }
-
-   if(check.data!==true){
-     await db.auth.signOut();
-     throw new Error("Bu e-posta admin olarak tanımlı değil.");
-   }
-
-   $("login").style.display="none";
-   $("panel").style.display="block";
-   $("logout").style.display="block";
-
-   await load();
-
- }catch(err){
-   console.error("ADMIN LOGIN ERROR:",err);
-   showError("Giriş başarısız: "+(err.message||"Bilinmeyen hata"));
- }finally{
-   btn.disabled=false;
-   btn.textContent="Giriş Yap";
- }
+  const r=await db.auth.signInWithPassword({email,password});if(r.error)throw r.error;
+  const a=await db.rpc("is_admin");if(a.error)throw a.error;if(a.data!==true)throw new Error("Bu hesap admin değil.");
+  $("login").style.display="none";$("panel").style.display="block";await load();
+ }catch(e){err(e.message||"Giriş başarısız");$("loginBtn").disabled=false;$("loginBtn").textContent="Giriş Yap"}
 }
-
-$("loginBtn").addEventListener("click",login);
-
-$("pass").addEventListener("keydown",e=>{
- if(e.key==="Enter") login();
-});
-
-$("email").addEventListener("keydown",e=>{
- if(e.key==="Enter") login();
-});
-
-$("logout").addEventListener("click",async()=>{
- await db.auth.signOut();
- location.reload();
-});
-
 async function load(){
- const r=await db.from("uretici_basvurulari").select("*");
-
- if(r.error){
-   $("rows").innerHTML="";
-   $("empty").style.display="block";
-   $("empty").textContent="Veriler yüklenemedi: "+r.error.message;
-   return;
- }
-
- data=r.data||[];
- render();
+ const r=await db.from("uretici_basvurulari").select("*").order("id",{ascending:false});
+ if(r.error){alert("Başvurular yüklenemedi: "+r.error.message);return}
+ applications=r.data||[];render();
 }
-
 function render(){
- const q=($("search").value||"").toLocaleLowerCase("tr-TR");
- const f=$("filter").value;
-
- const list=data.filter(x=>{
-   const text=[
-     x.uretici_adi,x.yetkili,x.telefon,x.email,x.il,x.ilce,x.kategori
-   ].join(" ").toLocaleLowerCase("tr-TR");
-
-   return (!q||text.includes(q)) && (f==="all"||x.durum===f);
- });
-
- $("total").textContent=data.length;
- $("pending").textContent=data.filter(x=>x.durum==="Beklemede").length;
- $("approved").textContent=data.filter(x=>x.durum==="Onaylandı").length;
-
- $("empty").style.display=list.length?"none":"block";
-
- $("rows").innerHTML=list.map(x=>`
- <tr>
-  <td><b>${esc(x.uretici_adi)}</b></td>
-  <td>${esc(x.yetkili)}</td>
-  <td>${esc(x.telefon)}<br>${esc(x.email)}</td>
-  <td>${esc(x.il)} / ${esc(x.ilce)}</td>
-  <td>${esc(x.kategori)}</td>
-  <td>${esc(x.aciklama||"-")}</td>
-  <td>${esc(x.durum)}</td>
-  <td>
-   <button class="btn green" onclick="changeStatus(${x.id},'Onaylandı')">Onayla</button>
-   <button class="btn" onclick="changeStatus(${x.id},'Reddedildi')">Reddet</button>
-  </td>
- </tr>`).join("");
+ const q=$("search").value.toLocaleLowerCase("tr-TR"),f=$("filter").value;
+ const list=applications.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));
+ $("rows").innerHTML=list.map(x=>`<tr><td><b>${esc(x.uretici_adi)}</b><br>#${x.id}</td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td><span class="badge ${x.durum==="Onaylandı"?"approved":""}">${esc(x.durum)}</span></td><td><button class="btn green approveBtn" data-id="${x.id}">Onayla</button> <button class="btn red rejectBtn" data-id="${x.id}">Reddet</button></td></tr>`).join("");
 }
-
-async function changeStatus(id,status){
- const r=await db
-   .from("uretici_basvurulari")
-   .update({durum:status})
-   .eq("id",id);
-
- if(r.error){
-   alert("İşlem başarısız: "+r.error.message);
-   return;
- }
-
+async function updateApplicationStatus(id,newStatus){
+ const btn=[...document.querySelectorAll("[data-id]")].find(b=>b.dataset.id===String(id));
+ if(btn){btn.disabled=true;btn.textContent="İşleniyor..."}
+ const r=await db.from("uretici_basvurulari").update({durum:newStatus}).eq("id",id).select("id,durum");
+ if(r.error){alert("Onaylama başarısız: "+r.error.message);if(btn){btn.disabled=false;btn.textContent="Onayla"};return}
+ if(!r.data||!r.data.length){alert("Güncelleme yapılmadı. RLS yetkisini kontrol et.");return}
+ alert("Başvuru "+newStatus+" olarak güncellendi.");
  await load();
 }
-
-$("refresh").addEventListener("click",load);
-$("search").addEventListener("input",render);
-$("filter").addEventListener("change",render);
-
-// Sayfa açıldığında mevcut oturumu kontrol et.
-(async()=>{
- const s=await db.auth.getSession();
- if(s.data.session){
-   const check=await db.rpc("is_admin");
-   if(!check.error && check.data===true){
-     $("login").style.display="none";
-     $("panel").style.display="block";
-     $("logout").style.display="block";
-     await load();
-   }
- }
-})();
-</script>
-</body></html>
+$("loginBtn").onclick=login;$("refresh").onclick=load;$("search").oninput=render;$("filter").onchange=render;
+$("rows").addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b)return;
+ const id=Number(b.dataset.id);
+ if(b.classList.contains("approveBtn"))updateApplicationStatus(id,"Onaylandı");
+ if(b.classList.contains("rejectBtn"))updateApplicationStatus(id,"Reddedildi");
+});
+</script></body></html>
