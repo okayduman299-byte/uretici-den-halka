@@ -94,10 +94,7 @@ $("logout").addEventListener("click",async()=>{
 });
 
 async function load(){
- const r=await db
-   .from("uretici_basvurulari")
-   .select("*")
-   .order("id",{ascending:false});
+ const r=await db.from("uretici_basvurulari").select("*");
 
  if(r.error){
    $("rows").innerHTML="";
