@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Üreticiden Halka üretici mağazası">
+<title>Üretici Mağazası | Üreticiden Halka</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f8f5;color:#17211b}a{text-decoration:none;color:inherit}
+.container{width:min(1180px,calc(100% - 30px));margin:auto}
+header{height:72px;background:#fff;border-bottom:1px solid #e2e8e2;display:flex;align-items:center;position:sticky;top:0;z-index:20}
+.nav{display:flex;align-items:center;gap:20px}.logo{font-size:21px;font-weight:900;color:#166534}.logo span{color:#17211b}.back{margin-left:auto;color:#166534;font-weight:800}
+.hero{padding:42px 0 28px;background:linear-gradient(135deg,#edf7ec,#fff)}
+.profile{display:flex;gap:22px;align-items:center}.avatar{width:92px;height:92px;border-radius:24px;background:#166534;color:#fff;display:grid;place-items:center;font-size:38px;font-weight:900;box-shadow:0 10px 30px #16653425}
+h1{margin:0 0 8px;font-size:34px}.meta{color:#66736b;font-size:14px}.verified{display:inline-flex;align-items:center;gap:5px;background:#e6f5e8;color:#166534;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:800;margin-top:10px}
+.content{padding:28px 0 60px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.toolbar h2{margin:0}.search{width:300px;padding:12px 14px;border:1px solid #d9e1da;border-radius:11px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:#fff;border:1px solid #e1e7e1;border-radius:18px;overflow:hidden;transition:.2s}.card:hover{transform:translateY(-3px);box-shadow:0 12px 30px #17211b12}.pic{height:215px;background:#edf2eb;display:grid;place-items:center;font-size:55px;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.body{padding:15px}.cat{font-size:11px;color:#748078}.name{font-weight:850;font-size:17px;margin:5px 0}.desc{font-size:12px;color:#758078;line-height:1.45;min-height:34px}.bottom{display:flex;justify-content:space-between;align-items:end;margin-top:14px}.price{font-size:20px;font-weight:900}.stock{font-size:11px;color:#166534;margin-top:3px}.buy{border:0;background:#166534;color:#fff;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}.buy:disabled{background:#aab3ad}
+.empty{background:#fff;border:1px dashed #cfd8d0;border-radius:18px;text-align:center;padding:55px;color:#718078;grid-column:1/-1}
+.error{background:#fff0f0;border:1px solid #ffd2d2;color:#991b1b;border-radius:14px;padding:18px}
+@media(max-width:950px){.grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}.profile{align-items:flex-start}}@media(max-width:480px){.grid{grid-template-columns:1fr}.toolbar{flex-direction:column;align-items:stretch}.search{width:100%}.profile{gap:14px}.avatar{width:70px;height:70px;font-size:28px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<header><div class="container nav"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><a class="back" href="index.html">← Alışverişe dön</a></div></header>
+<section class="hero"><div class="container" id="profile"><div class="profile"><div class="avatar">🏡</div><div><h1>Üretici yükleniyor...</h1></div></div></div></section>
+<main class="content"><div class="container"><div class="toolbar"><h2>Ürünler</h2><input id="search" class="search" placeholder="Bu mağazada ara..."></div><div id="grid" class="grid"><div class="empty">Ürünler yükleniyor...</div></div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+let products=[];
+function cart(){try{return JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch{return[]}}
+function save(c){localStorage.setItem("uh_cart",JSON.stringify(c))}
+function add(p){
+ let c=cart(),x=c.find(i=>i.id===p.id);
+ if(x){if(x.qty>=p.stok)return alert("Stok sınırına ulaştınız.");x.qty++}
+ else c.push({id:p.id,name:p.urun_adi,category:p.kategori,price:Number(p.fiyat),stock:p.stok,image:p.gorsel_url,qty:1});
+ save(c);alert("Ürün sepete eklendi ✓");
+}
+async function load(){
+ const id=new URLSearchParams(location.search).get("id");
+ if(!id){$("profile").innerHTML='<div class="error">Üretici bulunamadı.</div>';return}
+ const r=await db.from("ureticiler").select("id,firma_adi,yetkili,il,ilce,kategori,durum").eq("id",id).eq("durum","Aktif").maybeSingle();
+ if(r.error||!r.data){$("profile").innerHTML='<div class="error">Üretici bulunamadı veya mağaza aktif değil.</div>';return}
+ const p=r.data;
+ $("profile").innerHTML='<div class="profile"><div class="avatar">'+esc((p.firma_adi||"Ü").charAt(0).toUpperCase())+'</div><div><h1>'+esc(p.firma_adi)+'</h1><div class="meta">📍 '+esc([p.il,p.ilce].filter(Boolean).join(" / "))+' • '+esc(p.kategori||"Yerel üretici")+'</div><div class="verified">✓ Doğrulanmış üretici</div></div></div>';
+ const pr=await db.from("urunler").select("id,uretici_id,urun_adi,aciklama,kategori,fiyat,stok,gorsel_url,aktif").eq("uretici_id",p.id).eq("aktif",true).order("created_at",{ascending:false});
+ if(pr.error){$("grid").innerHTML='<div class="error">'+esc(pr.error.message)+'</div>';return}
+ products=pr.data||[];render();
+}
+function render(){
+ const q=$("search").value.trim().toLocaleLowerCase("tr-TR");
+ const list=products.filter(p=>[p.urun_adi,p.kategori,p.aciklama].join(" ").toLocaleLowerCase("tr-TR").includes(q));
+ if(!list.length){$("grid").innerHTML='<div class="empty">Bu mağazada aradığınız ürün bulunamadı.</div>';return}
+ $("grid").innerHTML=list.map(p=>'<article class="card"><a href="urun.html?id='+p.id+'"><div class="pic">'+(p.gorsel_url?'<img src="'+esc(p.gorsel_url)+'" alt="'+esc(p.urun_adi)+'">':'🧺')+'</div></a><div class="body"><div class="cat">'+esc(p.kategori||"Ürün")+'</div><div class="name">'+esc(p.urun_adi)+'</div><div class="desc">'+esc(p.aciklama||"Doğrudan üreticiden.")+'</div><div class="bottom"><div><div class="price">'+Number(p.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</div><div class="stock">'+(p.stok>0?"Stokta • "+p.stok+" adet":"Stok tükendi")+'</div></div><button class="buy" '+(p.stok<1?"disabled":"")+' onclick="event.preventDefault();add('+JSON.stringify(p).replace(/"/g,"&quot;")+')">Sepete ekle</button></div></div></article>').join("");
+}
+$("search").addEventListener("input",render);load();
+</script>
+</body>
+</html>
