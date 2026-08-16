@@ -11,7 +11,33 @@ const $=id=>document.getElementById(id);function esc(v){return String(v??"").rep
 async function load(){let r=await db.from("uretici_basvurulari").select("*").order("id",{ascending:false});if(r.error)return alert(r.error.message);data=r.data||[];render()}
 function render(){let q=$("search").value.toLocaleLowerCase("tr-TR"),f=$("filter").value;let a=data.filter(x=>(f==="all"||x.durum===f)&&(!q||Object.values(x).join(" ").toLocaleLowerCase("tr-TR").includes(q)));$("total").textContent=data.length;$("pending").textContent=data.filter(x=>x.durum==="Beklemede").length;$("approved").textContent=data.filter(x=>x.durum==="Onaylandı").length;$("empty").style.display=a.length?"none":"block";$("rows").innerHTML=a.map(x=>{let c=x.durum==="Onaylandı"?"approved":x.durum==="Reddedildi"?"rejected":"pending";return `<tr><td><b>${esc(x.uretici_adi)}</b><br>#${esc(x.id)}</td><td>${esc(x.yetkili)}</td><td>${esc(x.telefon)}<br>${esc(x.email)}</td><td>${esc(x.il)} / ${esc(x.ilce)}</td><td>${esc(x.kategori)}</td><td>${esc(x.aciklama)}</td><td><span class="badge ${c}">${esc(x.durum)}</span></td><td><div class="actions"><button class="approve" onclick="status(${x.id},'Onaylandı')">Onayla</button><button class="reject" onclick="status(${x.id},'Reddedildi')">Reddet</button></div></td></tr>`}).join("")}
 async function status(id,s){let r=await db.from("uretici_basvurulari").update({durum:s}).eq("id",id);if(r.error)return alert(r.error.message);load()}
-$("loginBtn").onclick=async()=>{let r=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("pass").value});if(r.error){$("loginErr").textContent="Giriş başarısız: "+r.error.message;$("loginErr").style.display="block";return}show()};
+$("loginBtn").onclick=async()=>{
+ const btn=$("loginBtn"),box=$("loginErr");
+ box.style.display="none"; box.textContent="";
+ const email=$("email").value.trim(), pass=$("pass").value;
+ if(!email||!pass){box.textContent="E-posta ve şifreyi girin.";box.style.display="block";return}
+ btn.disabled=true; btn.textContent="Giriş yapılıyor...";
+ try{
+   const r=await db.auth.signInWithPassword({email,password:pass});
+   if(r.error) throw r.error;
+   const a=await db.rpc("is_admin");
+   if(a.error) throw new Error("Yönetici yetkisi kontrol edilemedi: "+a.error.message);
+   if(a.data!==true){
+     await db.auth.signOut();
+     throw new Error("Bu hesap yönetici yetkisine sahip değil.");
+   }
+   $("login").style.display="none";
+   $("panel").style.display="block";
+   $("logout").style.display="block";
+   await load();
+ }catch(e){
+   console.error(e);
+   box.textContent="Giriş başarısız: "+(e.message||"Bilinmeyen hata");
+   box.style.display="block";
+ }finally{
+   btn.disabled=false; btn.textContent="Giriş Yap";
+ }
+};
 async function show(){
  const s=await db.auth.getSession();
  if(!s.data.session)return;
