@@ -4,135 +4,69 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sipariş Yönetimi | Üreticiden Halka</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f8f4;color:#17211b}
-.container{width:min(1180px,calc(100% - 28px));margin:auto}header{height:72px;background:#fff;border-bottom:1px solid #e1e7e1;display:flex;align-items:center}
-.top{display:flex;justify-content:space-between;align-items:center}.logo{font-size:20px;font-weight:800;color:#166534}.logo span{color:#17211b}
-.back{color:#166534;font-weight:800;text-decoration:none}.page{padding:28px 0 60px}
-h1{margin:0 0 6px}.muted{color:#718078;font-size:13px}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0}
-.stat{background:#fff;border:1px solid #e0e7e0;border-radius:15px;padding:17px}.stat b{font-size:25px;display:block;margin-top:6px}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f8f4;color:#17211b}.container{width:min(1180px,calc(100% - 28px));margin:auto}
+header{height:72px;background:#fff;border-bottom:1px solid #e1e7e1;display:flex;align-items:center}.top{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:20px;font-weight:800;color:#166534}.logo span{color:#17211b}.back{color:#166534;font-weight:800;text-decoration:none}.page{padding:28px 0 60px}
+h1{margin:0 0 6px}.muted{color:#718078;font-size:13px}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0}.stat{background:#fff;border:1px solid #e0e7e0;border-radius:15px;padding:17px}.stat b{font-size:25px;display:block;margin-top:6px}
 .card{background:#fff;border:1px solid #e0e7e0;border-radius:18px;padding:20px}.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:15px}
-input,select{border:1px solid #dce3dc;border-radius:10px;padding:11px;background:#fff}.search{flex:1}
-.orders{display:grid;gap:10px}.order{border:1px solid #e1e7e1;border-radius:14px;padding:15px;display:grid;grid-template-columns:1.3fr 1fr auto auto;gap:15px;align-items:center;cursor:pointer}
-.order:hover{box-shadow:0 8px 22px rgba(25,50,32,.07)}.order strong{display:block;margin-bottom:5px}.price{font-weight:900;font-size:17px}
-.badge{display:inline-block;padding:6px 9px;border-radius:20px;font-size:11px;font-weight:800}.new{background:#fff7d6;color:#876900}.prep{background:#e7f0ff;color:#245ca6}.ship{background:#eee7ff;color:#6941a5}.done{background:#e6f6e8;color:#166534}.cancel{background:#fee2e2;color:#991b1b}
+input,select{border:1px solid #dce3dc;border-radius:10px;padding:11px;background:#fff}.search{flex:1}.orders{display:grid;gap:10px}
+.order{border:1px solid #e1e7e1;border-radius:14px;padding:15px;display:grid;grid-template-columns:1.3fr 1fr auto auto;gap:15px;align-items:center;cursor:pointer}.order:hover{box-shadow:0 8px 22px rgba(25,50,32,.07)}
+.order strong{display:block;margin-bottom:5px}.price{font-weight:900;font-size:17px}.badge{display:inline-block;padding:6px 9px;border-radius:20px;font-size:11px;font-weight:800}
+.new{background:#fff7d6;color:#876900}.prep{background:#e7f0ff;color:#245ca6}.ship{background:#eee7ff;color:#6941a5}.done{background:#e6f6e8;color:#166534}.cancel{background:#fee2e2;color:#991b1b}
 .btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer}.light{background:#eef3ee}.green{background:#166534;color:#fff}.danger{background:#fee2e2;color:#991b1b}
-.err{display:none;background:#fee2e2;color:#991b1b;padding:12px;border-radius:10px;margin:12px 0}
-.empty{text-align:center;padding:45px;color:#718078}.detail{display:none;margin-top:18px}.detailgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}.line{padding:12px 0;border-bottom:1px solid #edf0ed}.line:last-child{border-bottom:0}.items{margin-top:8px}
+.err{display:none;background:#fee2e2;color:#991b1b;padding:12px;border-radius:10px;margin:12px 0}.empty{text-align:center;padding:45px;color:#718078}
+.detail{display:none;margin-top:18px}.detailgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}.line{padding:12px 0;border-bottom:1px solid #edf0ed}.line:last-child{border-bottom:0}.items{margin-top:8px}
 .item{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #edf0ed}.statusbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 @media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}.order{grid-template-columns:1fr 1fr}.detailgrid{grid-template-columns:1fr}}
 @media(max-width:550px){.stats{grid-template-columns:1fr 1fr}.toolbar{flex-wrap:wrap}.search{flex-basis:100%}.order{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
+</style></head><body>
 <header><div class="container top"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><a class="back" href="admin.html">← Admin Paneli</a></div></header>
 <main class="page"><div class="container">
 <h1>Sipariş Yönetimi</h1><div class="muted">Gelen siparişleri görüntüle ve durumlarını yönet.</div>
-
-<div class="stats">
-<div class="stat">Toplam<b id="sTotal">0</b></div>
-<div class="stat">Yeni<b id="sNew">0</b></div>
-<div class="stat">Hazırlanıyor<b id="sPrep">0</b></div>
-<div class="stat">Kargoda<b id="sShip">0</b></div>
-<div class="stat">Tamamlandı<b id="sDone">0</b></div>
-</div>
-
-<div class="card">
-<div class="toolbar">
-<input id="search" class="search" placeholder="Sipariş no, müşteri veya telefon ara...">
-<select id="filter"><option value="">Tüm durumlar</option><option>Yeni</option><option>Hazırlanıyor</option><option>Kargoda</option><option>Tamamlandı</option><option>İptal</option></select>
-<button class="btn light" onclick="load()">↻ Yenile</button>
-</div>
-<div id="err" class="err"></div>
-<div id="orders" class="orders"><div class="empty">Siparişler yükleniyor...</div></div>
-</div>
-
+<div class="stats"><div class="stat">Toplam<b id="sTotal">0</b></div><div class="stat">Yeni<b id="sNew">0</b></div><div class="stat">Hazırlanıyor<b id="sPrep">0</b></div><div class="stat">Kargoda<b id="sShip">0</b></div><div class="stat">Teslim Edildi<b id="sDone">0</b></div></div>
+<div class="card"><div class="toolbar"><input id="search" class="search" placeholder="Sipariş no, müşteri veya telefon ara..."><select id="filter"><option value="">Tüm durumlar</option><option>Yeni</option><option>Hazırlanıyor</option><option>Kargoda</option><option>Teslim Edildi</option><option>Tamamlandı</option><option>İptal</option></select><button class="btn light" onclick="load()">↻ Yenile</button></div>
+<div id="err" class="err"></div><div id="ordersBox" class="orders"><div class="empty">Siparişler yükleniyor...</div></div></div>
 <div id="detail" class="detail"></div>
 </div></main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";
-const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
-const db=window.supabase.createClient(SUPABASE_URL.trim(),SUPABASE_KEY.trim());
-let orders=[];
-
-function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-function cls(s){return s==="Yeni"?"new":s==="Hazırlanıyor"?"prep":s==="Kargoda"?"ship":s==="Tamamlandı"?"done":"cancel";}
-function money(n){return Number(n||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+" ₺";}
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");let orders=[];
+const $=id=>document.getElementById(id),ordersBox=$("ordersBox"),detail=$("detail"),search=$("search"),filter=$("filter"),err=$("err");
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function cls(s){return s==="Yeni"?"new":s==="Hazırlanıyor"?"prep":s==="Kargoda"?"ship":s==="Teslim Edildi"||s==="Tamamlandı"?"done":"cancel"}
+function money(n){return Number(n||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+" ₺"}
 async function load(){
- document.getElementById("err").style.display="none";
+ err.style.display="none";
  const session=await db.auth.getSession();
- if(!session.data.session){
-   document.getElementById("orders").innerHTML='<div class="empty">Yönetici girişi gerekiyor.</div>';
-   return;
- }
+ if(!session.data.session){ordersBox.innerHTML='<div class="empty">Yönetici girişi gerekiyor.</div>';return}
  const admin=await db.rpc("is_admin");
- if(admin.error || admin.data!==true){
-   document.getElementById("orders").innerHTML='<div class="empty">Bu sayfa yalnızca yönetici hesabına açıktır.</div>';
-   return;
- }
+ if(admin.error||admin.data!==true){ordersBox.innerHTML='<div class="empty">Bu sayfa yalnızca yönetici hesabına açıktır.</div>';return}
  const r=await db.from("siparisler").select("*").order("created_at",{ascending:false});
- if(r.error){showErr(r.error.message);return}
- orders=r.data||[];stats();render();
+ if(r.error){showErr(r.error.message);return}orders=r.data||[];stats();render()
 }
 function stats(){
- sTotal.textContent=orders.length;
- sNew.textContent=orders.filter(x=>x.durum==="Yeni").length;
- sPrep.textContent=orders.filter(x=>x.durum==="Hazırlanıyor").length;
- sShip.textContent=orders.filter(x=>x.durum==="Kargoda").length;
- sDone.textContent=orders.filter(x=>x.durum==="Tamamlandı").length;
+ $("sTotal").textContent=orders.length;$("sNew").textContent=orders.filter(x=>x.durum==="Yeni").length;$("sPrep").textContent=orders.filter(x=>x.durum==="Hazırlanıyor").length;
+ $("sShip").textContent=orders.filter(x=>x.durum==="Kargoda").length;$("sDone").textContent=orders.filter(x=>x.durum==="Teslim Edildi"||x.durum==="Tamamlandı").length;
 }
 function render(){
- const q=search.value.toLocaleLowerCase("tr-TR").trim(), f=filter.value;
- const list=orders.filter(o=>(!f||o.durum===f)&&(!q||((o.siparis_no||"")+" "+(o.musteri_adi||"")+" "+(o.telefon||"")).toLocaleLowerCase("tr-TR").includes(q)));
+ const q=search.value.toLocaleLowerCase("tr-TR").trim(),f=filter.value;
+ const list=orders.filter(o=>(!f||o.durum===f)&&(!q||[o.siparis_no,o.musteri_adi,o.musteri_telefon].join(" ").toLocaleLowerCase("tr-TR").includes(q)));
  if(!list.length){ordersBox.innerHTML='<div class="empty">Sipariş bulunamadı.</div>';return}
- ordersBox.innerHTML=list.map(o=>`<div class="order" onclick="openOrder('${o.id}')">
- <div><strong>${esc(o.siparis_no||("Sipariş #"+o.id))}</strong><span class="muted">${new Date(o.created_at).toLocaleString("tr-TR")}</span></div>
- <div><strong>${esc(o.musteri_adi)}</strong><span class="muted">${esc(o.telefon)}</span></div>
- <div><span class="badge ${cls(o.durum)}">${esc(o.durum)}</span></div>
- <div class="price">${money(o.toplam)}</div>
- </div>`).join("");
+ ordersBox.innerHTML=list.map(o=>`<div class="order" onclick="openOrder('${o.id}')"><div><strong>${esc(o.siparis_no||("Sipariş #"+o.id))}</strong><span class="muted">${new Date(o.created_at).toLocaleString("tr-TR")}</span></div><div><strong>${esc(o.musteri_adi)}</strong><span class="muted">${esc(o.musteri_telefon)}</span></div><div><span class="badge ${cls(o.durum)}">${esc(o.durum)}</span></div><div class="price">${money(o.toplam)}</div></div>`).join("")
 }
-const ordersBox=document.getElementById("orders");
 search.oninput=render;filter.onchange=render;
-
 async function openOrder(id){
  const o=orders.find(x=>String(x.id)===String(id));if(!o)return;
- const r=await db.from("siparis_urunleri").select("*").eq("siparis_id",o.id);
- const items=r.data||[];
+ const r=await db.from("siparis_urunleri").select("urun_adi,fiyat,adet,ara_toplam").eq("siparis_id",o.id);const items=r.data||[];
  detail.style.display="block";
- detail.innerHTML=`<div class="detailgrid">
- <div class="card">
- <h2>${esc(o.siparis_no||"Sipariş")}</h2>
- <div class="muted">${new Date(o.created_at).toLocaleString("tr-TR")}</div>
- <div class="line"><b>Müşteri</b><br>${esc(o.musteri_adi)}</div>
- <div class="line"><b>Telefon</b><br>${esc(o.telefon)}</div>
- <div class="line"><b>E-posta</b><br>${esc(o.email||"-")}</div>
- <div class="line"><b>Teslimat adresi</b><br>${esc(o.adres)}</div>
- <div class="line"><b>Ürünler</b><div class="items">${items.length?items.map(x=>`<div class="item"><span>${esc(x.urun_adi)} × ${esc(x.adet)}</span><b>${money(x.urun_fiyat*x.adet)}</b></div>`).join(""):"Ürün bilgisi bulunamadı."}</div></div>
- <div class="line"><b>Toplam</b><span style="float:right" class="price">${money(o.toplam)}</span></div>
- </div>
- <div class="card">
- <h2>Sipariş durumu</h2><div class="muted">Durumu değiştir:</div>
- <div class="statusbar">
- <button class="btn ${o.durum==="Yeni"?"green":"light"}" onclick="setStatus(${o.id},'Yeni')">Yeni</button>
- <button class="btn ${o.durum==="Hazırlanıyor"?"green":"light"}" onclick="setStatus(${o.id},'Hazırlanıyor')">Hazırlanıyor</button>
- <button class="btn ${o.durum==="Kargoda"?"green":"light"}" onclick="setStatus(${o.id},'Kargoda')">Kargoda</button>
- <button class="btn ${o.durum==="Tamamlandı"?"green":"light"}" onclick="setStatus(${o.id},'Tamamlandı')">Tamamlandı</button>
- <button class="btn ${o.durum==="İptal"?"danger":"light"}" onclick="setStatus(${o.id},'İptal')">İptal</button>
- </div>
- <div style="margin-top:25px"><button class="btn light" onclick="detail.style.display='none'">Kapat</button></div>
- </div></div>`;
+ detail.innerHTML=`<div class="detailgrid"><div class="card"><h2>${esc(o.siparis_no||"Sipariş")}</h2><div class="muted">${new Date(o.created_at).toLocaleString("tr-TR")}</div>
+ <div class="line"><b>Müşteri</b><br>${esc(o.musteri_adi)}</div><div class="line"><b>Telefon</b><br>${esc(o.musteri_telefon)}</div><div class="line"><b>E-posta</b><br>${esc(o.musteri_email||"-")}</div><div class="line"><b>Teslimat adresi</b><br>${esc(o.teslimat_adresi)}</div>
+ <div class="line"><b>Ürünler</b><div class="items">${items.length?items.map(x=>`<div class="item"><span>${esc(x.urun_adi)} × ${esc(x.adet)}</span><b>${money(x.ara_toplam)}</b></div>`).join(""):"Ürün bilgisi bulunamadı."}</div></div><div class="line"><b>Toplam</b><span style="float:right" class="price">${money(o.toplam)}</span></div></div>
+ <div class="card"><h2>Sipariş durumu</h2><div class="muted">Durumu değiştir:</div><div class="statusbar">${["Yeni","Hazırlanıyor","Kargoda","Teslim Edildi","İptal"].map(st=>`<button class="btn ${o.durum===st?"green":"light"}" onclick="setStatus(${o.id},'${st}')">${st}</button>`).join("")}</div><div style="margin-top:25px"><button class="btn light" onclick="detail.style.display='none'">Kapat</button></div></div></div>`;
  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
 }
 async function setStatus(id,status){
- const r=await db.from("siparisler").update({durum:status}).eq("id",id);
- if(r.error){showErr(r.error.message);return}
- await load();openOrder(id);
+ const r=await db.from("siparisler").update({durum:status}).eq("id",id);if(r.error){showErr(r.error.message);return}await load();openOrder(id)
 }
-function showErr(m){err.textContent=m;err.style.display="block";}
+function showErr(m){err.textContent=m;err.style.display="block"}
 load();
-</script>
-</body>
-</html>
+</script></body></html>
