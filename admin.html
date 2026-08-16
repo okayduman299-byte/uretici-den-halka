@@ -97,7 +97,7 @@ async function load(){
  const r=await db
    .from("uretici_basvurulari")
    .select("*")
-   .order("created_at",{ascending:false});
+   .order("id",{ascending:false});
 
  if(r.error){
    $("rows").innerHTML="";
