@@ -1,6 +1,6 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Üretici Paneli</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f5f8f4;color:#17211b}.c{width:min(1100px,calc(100% - 28px));margin:auto}header{height:70px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center}.top{display:flex;justify-content:space-between}.logo{font-size:20px;font-weight:800;color:#166534;text-decoration:none}.logo span{color:#17211b}.page{padding:28px 0}.card{background:#fff;border:1px solid #e0e7e0;border-radius:18px;padding:22px}.login{max-width:420px;margin:70px auto}input,select,textarea{width:100%;padding:12px;border:1px solid #dce3dc;border-radius:10px;margin-top:6px}textarea{min-height:100px}label{display:block;font-size:12px;font-weight:800;margin-top:12px}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.green{background:#166534;color:#fff}.light{background:#eef3ee}.red{background:#fee2e2;color:#991b1b}.err{display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:9px;margin-top:12px}.grid{display:grid;grid-template-columns:320px 1fr;gap:18px}.store{background:linear-gradient(145deg,#123d25,#2f7d45);color:#fff;border-radius:20px;padding:24px}.store p{color:#dcece0;line-height:1.6}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product{border:1px solid #e0e7e0;border-radius:14px;overflow:hidden}.pic{height:150px;background:#eef2ec;display:grid;place-items:center;font-size:50px}.pic img{width:100%;height:100%;object-fit:cover}.pb{padding:12px}.actions{display:flex;gap:6px;margin-top:10px}.muted{color:#718078;font-size:13px}.preview{display:none;max-width:120px;margin-top:8px;border-radius:8px}@media(max-width:800px){.grid{grid-template-columns:1fr}.products{grid-template-columns:1fr 1fr}}@media(max-width:550px){.formgrid,.products{grid-template-columns:1fr}.full{grid-column:auto}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f5f8f4;color:#17211b}.c{width:min(1100px,calc(100% - 28px));margin:auto}header{height:70px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center}.top{display:flex;justify-content:space-between}.logo{font-size:20px;font-weight:800;color:#166534;text-decoration:none}.logo span{color:#17211b}.page{padding:28px 0}.card{background:#fff;border:1px solid #e0e7e0;border-radius:18px;padding:22px}.login{max-width:420px;margin:70px auto}input,select,textarea{width:100%;padding:12px;border:1px solid #dce3dc;border-radius:10px;margin-top:6px}textarea{min-height:100px}label{display:block;font-size:12px;font-weight:800;margin-top:12px}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.green{background:#166534;color:#fff}.light{background:#eef3ee}.red{background:#fee2e2;color:#991b1b}.badge{display:inline-block;background:#eaf5ea;color:#166534;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:800}.err{display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:9px;margin-top:12px}.grid{display:grid;grid-template-columns:320px 1fr;gap:18px}.store{background:linear-gradient(145deg,#123d25,#2f7d45);color:#fff;border-radius:20px;padding:24px}.store p{color:#dcece0;line-height:1.6}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product{border:1px solid #e0e7e0;border-radius:14px;overflow:hidden}.pic{height:150px;background:#eef2ec;display:grid;place-items:center;font-size:50px}.pic img{width:100%;height:100%;object-fit:cover}.pb{padding:12px}.actions{display:flex;gap:6px;margin-top:10px}.muted{color:#718078;font-size:13px}.preview{display:none;max-width:120px;margin-top:8px;border-radius:8px}@media(max-width:800px){.grid{grid-template-columns:1fr}.products{grid-template-columns:1fr 1fr}}@media(max-width:550px){.formgrid,.products{grid-template-columns:1fr}.full{grid-column:auto}}
 </style></head><body>
 <header><div class="c top"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><button id="logout" class="btn light" style="display:none">Çıkış Yap</button></div></header>
 <main class="page"><div class="c">
@@ -15,6 +15,14 @@
 <div class="full"><label>Fotoğraf<input id="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><img id="preview" class="preview"><div id="imageStatus" class="muted">JPG, PNG veya WebP • En fazla 5 MB.</div></div>
 <div class="full"><label>Açıklama<textarea id="desc"></textarea></label></div></div><button id="save" class="btn green" style="margin-top:15px">Ürünü Yayınla →</button><div id="err" class="err"></div></form></div>
 <div class="card" style="margin-top:18px"><div style="display:flex;justify-content:space-between"><div><h2>Ürünlerim</h2><p class="muted">Yayınlanan ürünler.</p></div><button id="refresh" class="btn light">↻ Yenile</button></div><div id="products" class="products"></div><div id="empty" class="muted" style="text-align:center;padding:30px;display:none">Henüz ürün yok.</div></div>
+<div class="card" style="margin-top:18px">
+ <div style="display:flex;justify-content:space-between;align-items:center">
+  <div><h2>Siparişlerim</h2><p class="muted">Mağazanızdaki ürünlerden gelen siparişler.</p></div>
+  <button id="refreshOrders" class="btn light">↻ Yenile</button>
+ </div>
+ <div id="producerOrders"></div>
+ <div id="ordersEmpty" class="muted" style="text-align:center;padding:30px;display:none">Henüz sipariş yok.</div>
+</div>
 </div></div></section></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu",db=window.supabase.createClient(URL,KEY);let user,producer;
@@ -24,9 +32,29 @@ async function load(){
  $("login").style.display="none";$("panel").style.display="block";$("logout").style.display="block";
  const r=await db.from("ureticiler").select("*").eq("user_id",user.id).eq("durum","Aktif").maybeSingle();
  if(r.error||!r.data){showErr("err",r.error?.message||"Bu hesaba bağlı aktif üretici bulunamadı.");return}
- producer=r.data;$("welcome").textContent=producer.firma_adi;$("storeName").textContent=producer.firma_adi;$("storeInfo").innerHTML=producer.il+" / "+producer.ilce+"<br>"+producer.kategori+"<br>"+producer.email;products();
+ producer=r.data;$("welcome").textContent=producer.firma_adi;$("storeName").textContent=producer.firma_adi;$("storeInfo").innerHTML=producer.il+" / "+producer.ilce+"<br>"+producer.kategori+"<br>"+producer.email;products();orders();
 }
 async function products(){const r=await db.from("urunler").select("*").eq("user_id",user.id).order("id",{ascending:false});if(r.error)return showErr("err",r.error.message);$("products").innerHTML="";$("empty").style.display=r.data.length?"none":"block";r.data.forEach(p=>{let d=document.createElement("div");d.className="product";d.innerHTML='<div class="pic">'+(p.gorsel_url?'<img src="'+p.gorsel_url+'">':'🧺')+'</div><div class="pb"><b>'+p.urun_adi+'</b><p class="muted">'+p.kategori+'</p><strong>'+Number(p.fiyat).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</strong><p class="muted">Stok: '+p.stok+'</p><div class="actions"><button class="btn '+(p.aktif?"red":"green")+'" onclick="toggle('+p.id+','+p.aktif+')">'+(p.aktif?"Yayından kaldır":"Yayınla")+'</button><button class="btn light" onclick="del('+p.id+')">Sil</button></div></div>';$("products").appendChild(d)})}
+async function orders(){
+ const r=await db.from("siparisler").select("id,siparis_no,durum,created_at").order("created_at",{ascending:false});
+ if(r.error)return showErr("err",r.error.message);
+ const box=$("producerOrders"),empty=$("ordersEmpty");
+ box.innerHTML="";
+ empty.style.display=r.data.length?"none":"block";
+ if(!r.data.length)return;
+ for(const o of r.data){
+   const ir=await db.from("siparis_urunleri").select("urun_adi,fiyat,adet,ara_toplam").eq("siparis_id",o.id);
+   if(ir.error)continue;
+   if(!ir.data.length)continue;
+   const d=document.createElement("div");
+   d.className="product";
+   d.style.marginTop="10px";
+   d.innerHTML='<div class="pb"><b>'+esc(o.siparis_no)+'</b><p class="muted">'+new Date(o.created_at).toLocaleString("tr-TR")+'</p><p><span class="badge">'+esc(o.durum)+'</span></p>'+
+     ir.data.map(x=>'<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0"><span>'+esc(x.urun_adi)+' × '+esc(x.adet)+'</span><b>'+Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>').join("")+
+     '</div>';
+   box.appendChild(d);
+ }
+}
 async function upload(f){
  if(!f)return null;
  if(f.size>5242880)throw Error("Fotoğraf 5 MB'dan büyük olamaz.");
@@ -52,5 +80,5 @@ $("image").onchange=()=>{
 }
 async function toggle(id,a){let r=await db.from("urunler").update({aktif:!a}).eq("id",id).eq("user_id",user.id);if(r.error)alert(r.error.message);else products()}
 async function del(id){if(!confirm("Ürün silinsin mi?"))return;let r=await db.from("urunler").delete().eq("id",id).eq("user_id",user.id);if(r.error)alert(r.error.message);else products()}
-$("loginBtn").onclick=async()=>{let r=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("pass").value});if(r.error)return showErr("loginErr",r.error.message);load()};$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};$("refresh").onclick=products;load();
+$("refreshOrders").onclick=orders;$("loginBtn").onclick=async()=>{let r=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("pass").value});if(r.error)return showErr("loginErr",r.error.message);load()};$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};$("refresh").onclick=products;load();
 </script></body></html>
