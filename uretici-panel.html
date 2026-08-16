@@ -36,24 +36,63 @@ async function load(){
 }
 async function products(){const r=await db.from("urunler").select("*").eq("user_id",user.id).order("id",{ascending:false});if(r.error)return showErr("err",r.error.message);$("products").innerHTML="";$("empty").style.display=r.data.length?"none":"block";r.data.forEach(p=>{let d=document.createElement("div");d.className="product";d.innerHTML='<div class="pic">'+(p.gorsel_url?'<img src="'+p.gorsel_url+'">':'🧺')+'</div><div class="pb"><b>'+p.urun_adi+'</b><p class="muted">'+p.kategori+'</p><strong>'+Number(p.fiyat).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</strong><p class="muted">Stok: '+p.stok+'</p><div class="actions"><button class="btn '+(p.aktif?"red":"green")+'" onclick="toggle('+p.id+','+p.aktif+')">'+(p.aktif?"Yayından kaldır":"Yayınla")+'</button><button class="btn light" onclick="del('+p.id+')">Sil</button></div></div>';$("products").appendChild(d)})}
 async function orders(){
- const r=await db.from("siparisler").select("id,siparis_no,durum,created_at").order("created_at",{ascending:false});
- if(r.error)return showErr("err",r.error.message);
+ const ir=await db.from("siparis_urunleri")
+   .select("siparis_id,urun_adi,fiyat,adet,ara_toplam")
+   .eq("uretici_id",producer.id);
+ if(ir.error)return showErr("err",ir.error.message);
+
  const box=$("producerOrders"),empty=$("ordersEmpty");
  box.innerHTML="";
- empty.style.display=r.data.length?"none":"block";
- if(!r.data.length)return;
+ if(!ir.data.length){empty.style.display="block";return}
+ empty.style.display="none";
+
+ const ids=[...new Set(ir.data.map(x=>x.siparis_id))];
+ const r=await db.from("siparisler")
+   .select("id,siparis_no,musteri_adi,musteri_telefon,musteri_email,teslimat_adresi,toplam,durum,created_at")
+   .in("id",ids)
+   .order("created_at",{ascending:false});
+ if(r.error)return showErr("err",r.error.message);
+
  for(const o of r.data){
-   const ir=await db.from("siparis_urunleri").select("urun_adi,fiyat,adet,ara_toplam").eq("siparis_id",o.id);
-   if(ir.error)continue;
-   if(!ir.data.length)continue;
+   const items=ir.data.filter(x=>x.siparis_id===o.id);
    const d=document.createElement("div");
    d.className="product";
    d.style.marginTop="10px";
-   d.innerHTML='<div class="pb"><b>'+esc(o.siparis_no)+'</b><p class="muted">'+new Date(o.created_at).toLocaleString("tr-TR")+'</p><p><span class="badge">'+esc(o.durum)+'</span></p>'+
-     ir.data.map(x=>'<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0"><span>'+esc(x.urun_adi)+' × '+esc(x.adet)+'</span><b>'+Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>').join("")+
-     '</div>';
+
+   const statusButtons=o.durum==="Tamamlandı"
+     ? '<span class="badge">✓ Tamamlandı</span>'
+     : '<div class="actions" style="flex-wrap:wrap">'+
+       '<button class="btn '+(o.durum==="Yeni"?"green":"light")+'" onclick="setOrderStatus('+o.id+',\'Yeni\')">Yeni</button>'+
+       '<button class="btn '+(o.durum==="Hazırlanıyor"?"green":"light")+'" onclick="setOrderStatus('+o.id+',\'Hazırlanıyor\')">Hazırlanıyor</button>'+
+       '<button class="btn '+(o.durum==="Kargoda"?"green":"light")+'" onclick="setOrderStatus('+o.id+',\'Kargoda\')">Kargoda</button>'+
+       '<button class="btn '+(o.durum==="Tamamlandı"?"green":"light")+'" onclick="setOrderStatus('+o.id+',\'Tamamlandı\')">Tamamlandı</button>'+
+       '<button class="btn red" onclick="setOrderStatus('+o.id+',\'İptal\')">İptal</button>'+
+       '</div>';
+
+   d.innerHTML='<div class="pb">'+
+     '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b>'+esc(o.siparis_no)+'</b><span class="badge">'+esc(o.durum)+'</span></div>'+
+     '<p class="muted">'+new Date(o.created_at).toLocaleString("tr-TR")+'</p>'+
+     '<div style="background:#f7faf7;border-radius:10px;padding:10px;margin:10px 0">'+
+       '<b>Müşteri</b><br>'+esc(o.musteri_adi)+' • '+esc(o.musteri_telefon)+
+       (o.musteri_email?'<br>'+esc(o.musteri_email):'')+
+       '<br><b>Adres:</b> '+esc(o.teslimat_adresi)+
+     '</div>'+
+     items.map(x=>'<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0"><span>'+esc(x.urun_adi)+' × '+esc(x.adet)+'</span><b>'+Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>').join("")+
+     '<div style="display:flex;justify-content:space-between;padding-top:10px"><b>Sipariş toplamı</b><b>'+Number(o.toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>'+
+     statusButtons+
+   '</div>';
    box.appendChild(d);
  }
+}
+
+async function setOrderStatus(id,status){
+ if(!producer)return;
+ const allowed=["Yeni","Hazırlanıyor","Kargoda","Tamamlandı","İptal"];
+ if(!allowed.includes(status))return;
+ const r=await db.from("siparisler").update({durum:status}).eq("id",id).select("id,durum");
+ if(r.error)return alert("Sipariş durumu güncellenemedi: "+r.error.message);
+ if(!r.data?.length)return alert("Sipariş güncellenemedi. Yetki veya sipariş bağlantısını kontrol edin.");
+ await orders();
 }
 async function upload(f){
  if(!f)return null;
