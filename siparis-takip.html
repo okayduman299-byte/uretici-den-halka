@@ -1,0 +1,35 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sipariş Takip | Üreticiden Halka</title><style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f8f4;color:#17211b}.container{width:min(850px,calc(100% - 28px));margin:auto}
+header{height:70px;background:#fff;border-bottom:1px solid #e1e7e1}.nav{height:100%;display:flex;justify-content:space-between;align-items:center}.logo{font-size:21px;font-weight:900;color:#166534;text-decoration:none}.logo span{color:#17211b}.link{color:#166534;font-weight:800;text-decoration:none}
+.page{padding:42px 0}.hero{text-align:center;margin-bottom:25px}.hero h1{font-size:36px;margin:0 0 10px}.muted{color:#718078;font-size:13px;line-height:1.6}.card{background:#fff;border:1px solid #e0e7e0;border-radius:20px;padding:24px;box-shadow:0 8px 30px #19322008}
+.search{display:flex;gap:9px;margin-top:18px}.search input{flex:1;padding:14px;border:1px solid #d7e0d7;border-radius:11px;font-size:16px}.btn{border:0;border-radius:11px;background:#166534;color:#fff;padding:0 20px;font-weight:900;cursor:pointer}.err{display:none;background:#fff0f0;color:#991b1b;padding:12px;border-radius:10px;margin-top:12px}.result{display:none;margin-top:18px}.head{display:flex;justify-content:space-between;gap:12px;align-items:start;border-bottom:1px solid #edf0ed;padding-bottom:16px}.orderNo{font-size:20px;font-weight:900}.badge{display:inline-block;padding:7px 10px;border-radius:20px;font-size:11px;font-weight:900;background:#e7f0ff;color:#245ca6}.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:25px 0}.step{height:7px;border-radius:20px;background:#e3e8e3}.step.on{background:#166534}.steps{display:grid;grid-template-columns:repeat(4,1fr);font-size:11px;color:#718078}.steps b{color:#17211b}.items{margin-top:18px}.item{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #edf0ed}.total{display:flex;justify-content:space-between;padding-top:17px;font-size:18px;font-weight:900}.empty{text-align:center;color:#718078;padding:28px}
+@media(max-width:600px){.hero h1{font-size:30px}.search{flex-direction:column}.btn{height:48px}.timeline,.steps{grid-template-columns:1fr 1fr;row-gap:10px}.head{display:block}.head .badge{margin-top:10px}}
+</style></head><body><header><div class="container nav"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><a class="link" href="index.html">← Alışverişe dön</a></div></header>
+<main class="page"><div class="container"><div class="hero"><h1>Siparişini Takip Et</h1><div class="muted">Sipariş numaranı girerek güncel durumunu görüntüle.</div></div>
+<div class="card"><div class="search"><input id="no" placeholder="Örn. UDH-2026-0001"><button id="btn" class="btn">Siparişi Bul</button></div><div id="err" class="err"></div></div>
+<div id="result" class="result"></div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
+const $=id=>document.getElementById(id);function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function money(v){return Number(v||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+" ₺"}
+function showErr(t){$("err").textContent=t;$("err").style.display="block"}
+async function find(){
+ $("err").style.display="none";$("result").style.display="none";const no=$("no").value.trim();if(!no)return showErr("Sipariş numaranı gir.");
+ $("btn").disabled=true;$("btn").textContent="Aranıyor...";
+ try{
+  const r=await db.from("siparisler").select("id,siparis_no,durum,created_at,toplam,musteri_adi").eq("siparis_no",no).maybeSingle();
+  if(r.error)throw r.error;if(!r.data)return showErr("Bu sipariş numarasıyla kayıt bulunamadı.");
+  const o=r.data;const ir=await db.from("siparis_urunleri").select("urun_adi,adet,ara_toplam").eq("siparis_id",o.id);if(ir.error)throw ir.error;
+  render(o,ir.data||[]);
+ }catch(e){showErr(e.message||"Sipariş bulunamadı.")}finally{$("btn").disabled=false;$("btn").textContent="Siparişi Bul"}
+}
+function render(o,items){
+ const states=["Yeni","Hazırlanıyor","Kargoda","Teslim Edildi"];let idx=states.indexOf(o.durum);if(idx<0&&o.durum==="Tamamlandı")idx=3;
+ const bars=states.map((x,i)=>`<div class="step ${i<=idx?"on":""}"></div>`).join("");
+ const labels=states.map((x,i)=>`<div>${i<=idx?"✓ ":""}<b>${x}</b></div>`).join("");
+ $("result").innerHTML=`<div class="card"><div class="head"><div><div class="orderNo">${esc(o.siparis_no)}</div><div class="muted">${new Date(o.created_at).toLocaleString("tr-TR")}</div></div><span class="badge">${esc(o.durum)}</span></div><div class="timeline">${bars}</div><div class="steps">${labels}</div><div class="items">${items.length?items.map(x=>`<div class="item"><span>${esc(x.urun_adi)} × ${esc(x.adet)}</span><b>${money(x.ara_toplam)}</b></div>`).join(""):"<div class='empty'>Ürün bilgisi bulunamadı.</div>"}</div><div class="total"><span>Toplam</span><span>${money(o.toplam)}</span></div></div>`;
+ $("result").style.display="block";
+}
+$("btn").onclick=find;$("no").addEventListener("keydown",e=>{if(e.key==="Enter")find()});
+</script></body></html>
