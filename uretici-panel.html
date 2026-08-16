@@ -39,21 +39,23 @@ async function orders(){
  const r=await db.from("siparisler").select("id,siparis_no,durum,created_at").order("created_at",{ascending:false});
  if(r.error)return showErr("err",r.error.message);
  const box=$("producerOrders"),empty=$("ordersEmpty");
- box.innerHTML="";
- empty.style.display=r.data.length?"none":"block";
+ box.innerHTML=""; empty.style.display=r.data.length?"none":"block";
  if(!r.data.length)return;
  for(const o of r.data){
-   const ir=await db.from("siparis_urunleri").select("urun_adi,fiyat,adet,ara_toplam").eq("siparis_id",o.id);
-   if(ir.error)continue;
-   if(!ir.data.length)continue;
-   const d=document.createElement("div");
-   d.className="product";
-   d.style.marginTop="10px";
-   d.innerHTML='<div class="pb"><b>'+esc(o.siparis_no)+'</b><p class="muted">'+new Date(o.created_at).toLocaleString("tr-TR")+'</p><p><span class="badge">'+esc(o.durum)+'</span></p>'+
+   const ir=await db.from("siparis_urunleri").select("urun_adi,fiyat,adet,ara_toplam,uretici_id").eq("siparis_id",o.id).eq("uretici_id",producer.id);
+   if(ir.error||!ir.data.length)continue;
+   const d=document.createElement("div"); d.className="product"; d.style.marginTop="10px";
+   const statusOptions=["Yeni","Hazırlanıyor","Kargoda","Teslim Edildi","İptal"];
+   d.innerHTML='<div class="pb"><div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><div><b>'+esc(o.siparis_no)+'</b><p class="muted">'+new Date(o.created_at).toLocaleString("tr-TR")+'</p></div><select class="orderStatus" data-id="'+o.id+'" style="width:auto;margin:0;padding:7px">'+statusOptions.map(st=>'<option '+(o.durum===st?'selected':'')+'>'+st+'</option>').join("")+'</select></div>'+
      ir.data.map(x=>'<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0"><span>'+esc(x.urun_adi)+' × '+esc(x.adet)+'</span><b>'+Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>').join("")+
      '</div>';
    box.appendChild(d);
  }
+ box.querySelectorAll(".orderStatus").forEach(sel=>sel.addEventListener("change",async()=>{
+   const id=Number(sel.dataset.id),status=sel.value;
+   const r=await db.from("siparisler").update({durum:status}).eq("id",id);
+   if(r.error){alert(r.error.message);orders()}else{alert("Sipariş durumu güncellendi ✓");orders()}
+ }));
 }
 async function upload(f){
  if(!f)return null;
