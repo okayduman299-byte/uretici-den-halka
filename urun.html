@@ -21,6 +21,7 @@ h1{font-size:38px;line-height:1.1;margin:15px 0 10px}.price{font-size:30px;font-
 <script>
 const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
 const db=window.supabase.createClient(SUPABASE_URL.trim(),SUPABASE_KEY.trim()),id=new URLSearchParams(location.search).get("id"),content=document.getElementById("content");
+let currentProduct=null;
 const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 
 function getCart(){try{return JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch(e){return[]}}
@@ -34,6 +35,28 @@ function addDetailToCart(){
  alert("Sepete eklendi ✓");
 }
 
+function addToCart(){
+ if(!currentProduct)return;
+ const item={
+   id:currentProduct.id,
+   name:currentProduct.urun_adi,
+   price:Number(currentProduct.fiyat||0),
+   stock:Number(currentProduct.stok||0),
+   category:currentProduct.kategori||"",
+   image:currentProduct.gorsel_url||"",
+   qty:1
+ };
+ let c=[];
+ try{c=JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch(e){c=[]}
+ const i=c.findIndex(x=>String(x.id)===String(item.id));
+ if(i>=0){
+   if(c[i].qty>=c[i].stock){alert("Stok sınırına ulaştınız.");return}
+   c[i].qty++;
+ }else c.push(item);
+ localStorage.setItem("uh_cart",JSON.stringify(c));
+ alert("Ürün sepete eklendi ✓");
+ location.href="sepet.html";
+}
 async function load(){
  if(!id){content.innerHTML='<div class="error">Ürün bulunamadı.</div>';return}
  const r=await db.from("urunler").select("id,urun_adi,aciklama,kategori,fiyat,stok,gorsel_url,aktif,uretici_id").eq("id",id).eq("aktif",true).single();
@@ -42,7 +65,7 @@ async function load(){
  if(p.uretici_id){const s=await db.from("ureticiler").select("id,firma_adi,yetkili,il,ilce,kategori,durum").eq("id",p.uretici_id).eq("durum","Aktif").single();if(!s.error)seller=s.data}
  if(seller){const o=await db.from("urunler").select("id,urun_adi,fiyat,gorsel_url").eq("uretici_id",seller.id).eq("aktif",true).neq("id",p.id).gt("stok",0).limit(4);if(!o.error)others=o.data||[]}
  content.className="";
- content.innerHTML=`<div class="card"><div class="photo">${p.gorsel_url?`<img src="${esc(p.gorsel_url)}" alt="${esc(p.urun_adi)}">`:"🧺"}</div><div><span class="badge">${esc(p.kategori||"Ürün")}</span><h1>${esc(p.urun_adi)}</h1><div class="price">${Number(p.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</div><div class="stock">Stok: <b>${esc(p.stok)}</b></div><div class="desc">${esc(p.aciklama||"Bu ürün için henüz açıklama eklenmemiş.")}</div><div class="buy"><button class="cart" onclick="addDetailToCart()">🛒 Sepete Ekle</button><button class="home" onclick="location.href='index.html'">Ana Sayfa</button></div></div></div>
+ content.innerHTML=`<div class="card"><div class="photo">${p.gorsel_url?`<img src="${esc(p.gorsel_url)}" alt="${esc(p.urun_adi)}">`:"🧺"}</div><div><span class="badge">${esc(p.kategori||"Ürün")}</span><h1>${esc(p.urun_adi)}</h1><div class="price">${Number(p.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</div><div class="stock">Stok: <b>${esc(p.stok)}</b></div><div class="desc">${esc(p.aciklama||"Bu ürün için henüz açıklama eklenmemiş.")}</div><div class="buy"><button class="cart" onclick="addToCart()">🛒 Sepete Ekle</button><button class="home" onclick="location.href='index.html'">Ana Sayfa</button></div></div></div>
  ${seller?`<div class="seller"><h2>${esc(seller.firma_adi)}</h2><div class="muted">✓ Aktif üretici • ${esc(seller.il||"")} / ${esc(seller.ilce||"")}</div><div class="muted" style="margin-top:8px">${esc(seller.kategori||"")}</div></div>`:""}
  ${others.length?`<h2 style="margin-bottom:15px">Bu üreticinin diğer ürünleri</h2><div class="products">${others.map(x=>`<a class="mini" href="urun.html?id=${encodeURIComponent(x.id)}"><div class="p">${x.gorsel_url?`<img src="${esc(x.gorsel_url)}" alt="${esc(x.urun_adi)}">`:"🧺"}</div><div><h3>${esc(x.urun_adi)}</h3><b>${Number(x.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</b></div></a>`).join("")}</div>`:""}`;
 }
