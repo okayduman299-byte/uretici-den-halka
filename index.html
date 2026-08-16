@@ -31,7 +31,7 @@ footer{margin-top:40px;background:#13231a;color:#dbe6de;padding:35px 0}.footergr
 <a class="logo" href="index.html">Üreticiden <span>Halka</span></a>
 <div class="search"><input id="search" placeholder="Ürün, üretici veya kategori ara..."></div>
 <button class="navbtn" onclick="alert('Favoriler yakında aktif olacak.')">♡</button>
-<button class="navbtn" onclick="alert('Sepetiniz boş.')">🛒</button>
+<a class="navbtn" href="sepet.html">🛒 <span id="cartCount">0</span></a>
 </div></header>
 
 <main>
@@ -105,7 +105,7 @@ function renderProducts(list){
     <h3>${esc(p.urun_adi)}</h3>
     <div class="price">${Number(p.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</div>
     <small>Stok: ${esc(p.stok)}</small>
-    <button class="add" onclick="alert('${esc(p.urun_adi).replace(/'/g,"\\'")} sepete eklendi ✓')">+</button>
+    <button class="add" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
    </div>`;
   box.appendChild(d);
  });
@@ -135,6 +135,23 @@ document.getElementById("search").addEventListener("input",function(){
  const q=this.value.toLocaleLowerCase("tr-TR").trim();
  renderProducts(!q?allProducts:allProducts.filter(p=>((p.urun_adi||"")+" "+(p.kategori||"")+" "+(p.aciklama||"")).toLocaleLowerCase("tr-TR").includes(q)));
 });
+
+
+function getCart(){try{return JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch(e){return[]}}
+function saveCart(c){localStorage.setItem("uh_cart",JSON.stringify(c));updateCartCount()}
+function updateCartCount(){const el=document.getElementById("cartCount");if(el)el.textContent=getCart().reduce((n,x)=>n+Number(x.qty||0),0)}
+async function addToCart(id){
+ const p=allProducts.find(x=>Number(x.id)===Number(id));
+ if(!p){const r=await db.from("urunler").select("id,urun_adi,kategori,fiyat,stok,gorsel_url,uretici_id").eq("id",id).single();if(r.error)return alert("Ürün bulunamadı.");return addProductToCart(r.data)}
+ addProductToCart(p)
+}
+function addProductToCart(p){
+ const c=getCart(), existing=c.find(x=>Number(x.id)===Number(p.id));
+ if(existing){if(existing.qty>=Number(p.stok)){return alert("Stokta yeterli ürün yok.")}existing.qty++}
+ else c.push({id:p.id,name:p.urun_adi,category:p.kategori||"",price:Number(p.fiyat||0),stock:Number(p.stok||0),image:p.gorsel_url||"",producer_id:p.uretici_id||null,qty:1});
+ saveCart(c); alert("Sepete eklendi ✓");
+}
+updateCartCount();
 
 loadProducts();
 loadProducers();
