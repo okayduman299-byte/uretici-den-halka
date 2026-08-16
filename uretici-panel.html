@@ -25,7 +25,9 @@
 </div>
 </div></div></section></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu",db=window.supabase.createClient(URL,KEY);let user,producer;
+const SUPABASE_URL = "https://bzudwfyxgbkzvfjhhywy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $=x=>document.getElementById(x);function showErr(x,m){$(x).textContent=m;$(x).style.display="block"}
 async function load(){
  const s=await db.auth.getSession();if(!s.data.session)return;user=s.data.session.user;
