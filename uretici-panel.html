@@ -7,13 +7,13 @@
 <section id="login" class="login card"><h1>Üretici Paneli</h1><p class="muted">Mağazanı ve ürünlerini yönet.</p><label>E-posta<input id="email" type="email"></label><label>Şifre<input id="pass" type="password"></label><button id="loginBtn" class="btn green" style="width:100%;margin-top:15px">Giriş Yap</button><div id="loginErr" class="err"></div></section>
 <section id="panel" style="display:none"><h1 id="welcome">Mağazam</h1><p class="muted">Ürünlerini ekle ve yayına al.</p>
 <div class="grid"><aside class="store"><h2 id="storeName">Mağaza</h2><p id="storeInfo"></p></aside><div>
-<div class="card"><h2>Yeni ürün ekle</h2><form id="form"><div class="formgrid">
+<div class="card"><h2>Yeni ürün ekle</h2><form id="form" onsubmit="return false;"><div class="formgrid">
 <div><label>Ürün adı *<input id="name" required placeholder="Soğuk Sıkım Zeytinyağı"></label></div>
 <div><label>Kategori *<select id="cat" required><option value="">Seçin</option><option>Meyve & Sebze</option><option>Süt & Kahvaltılık</option><option>Bal & Reçel</option><option>Zeytin & Zeytinyağı</option><option>Et & Yöresel Ürünler</option><option>El Emeği</option><option>Diğer</option></select></label></div>
 <div><label>Fiyat (₺) *<input id="price" type="number" min="0" step=".01" required></label></div>
 <div><label>Stok *<input id="stock" type="number" min="0" required></label></div>
 <div class="full"><label>Fotoğraf<input id="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><img id="preview" class="preview"><div id="imageStatus" class="muted">JPG, PNG veya WebP • En fazla 5 MB.</div></div>
-<div class="full"><label>Açıklama<textarea id="desc"></textarea></label></div></div><button id="save" class="btn green" style="margin-top:15px">Ürünü Yayınla →</button><div id="err" class="err"></div></form></div>
+<div class="full"><label>Açıklama<textarea id="desc"></textarea></label></div></div><button id="save" type="button" class="btn green" style="margin-top:15px">Ürünü Yayınla →</button><div id="err" class="err"></div></form></div>
 <div class="card" style="margin-top:18px"><div style="display:flex;justify-content:space-between"><div><h2>Ürünlerim</h2><p class="muted">Yayınlanan ürünler.</p></div><button id="refresh" class="btn light">↻ Yenile</button></div><div id="products" class="products"></div><div id="empty" class="muted" style="text-align:center;padding:30px;display:none">Henüz ürün yok.</div></div>
 <div class="card" style="margin-top:18px">
  <div style="display:flex;justify-content:space-between;align-items:center">
@@ -69,26 +69,33 @@ async function upload(f){
  $("imageStatus").textContent="Fotoğraf başarıyla yüklendi ✓";
  return publicUrl
 }
-$("form").onsubmit=async e=>{
- e.preventDefault();
- e.stopPropagation();
+async function publishProduct(){
  $("err").style.display="none";
  $("save").disabled=true;
  $("save").textContent="Yayınlanıyor...";
  try{
    const session=await db.auth.getSession();
-   if(!session.data.session) throw new Error("Oturum süresi dolmuş. Lütfen üretici hesabınızla tekrar giriş yapın.");
+   if(!session.data.session) throw new Error("Oturum yok. Üretici hesabıyla tekrar giriş yapın.");
    user=session.data.session.user;
 
    const pr=await db.from("ureticiler").select("*").eq("user_id",user.id).eq("durum","Aktif").maybeSingle();
    if(pr.error) throw pr.error;
-   if(!pr.data) throw new Error("Bu hesaba bağlı aktif üretici mağazası bulunamadı.");
+   if(!pr.data) throw new Error("Bu hesaba bağlı aktif üretici bulunamadı.");
    producer=pr.data;
 
-   const name=$("name").value.trim(), cat=$("cat").value, price=Number($("price").value), stock=Number($("stock").value);
-   if(!name||!cat||!Number.isFinite(price)||!Number.isFinite(stock)) throw new Error("Ürün bilgilerini eksiksiz doldurun.");
+   const name=$("name").value.trim();
+   const cat=$("cat").value;
+   const price=Number($("price").value);
+   const stock=Number($("stock").value);
 
-   let url=await upload($("image").files[0]);
+   if(!name) throw new Error("Ürün adını girin.");
+   if(!cat) throw new Error("Kategori seçin.");
+   if(!Number.isFinite(price)) throw new Error("Geçerli bir fiyat girin.");
+   if(!Number.isInteger(stock)||stock<0) throw new Error("Geçerli bir stok girin.");
+
+   let imageUrl=null;
+   const file=$("image").files[0];
+   if(file) imageUrl=await upload(file);
 
    const r=await db.from("urunler").insert([{
      user_id:user.id,
@@ -98,26 +105,27 @@ $("form").onsubmit=async e=>{
      fiyat:price,
      stok:stock,
      aciklama:$("desc").value.trim(),
-     gorsel_url:url,
+     gorsel_url:imageUrl,
      aktif:true
-   }]).select("id,urun_adi").single();
+   }]);
 
    if(r.error) throw r.error;
 
-   e.target.reset();
-   $("preview").removeAttribute("src");
+   $("form").reset();
    $("preview").style.display="none";
-   $("imageStatus").textContent="JPG, PNG veya WebP • En fazla 5 MB.";
    await products();
    alert("Ürün başarıyla yayınlandı ✓");
- }catch(x){
-   console.error("ÜRÜN EKLEME HATASI:",x);
-   showErr("err",x.message||"Ürün eklenemedi.");
+ }catch(e){
+   console.error(e);
+   showErr("err",e.message||"Ürün eklenemedi.");
  }finally{
    $("save").disabled=false;
    $("save").textContent="Ürünü Yayınla →";
  }
 }
+
+$("save").addEventListener("click",publishProduct);
+
 $("image").onchange=()=>{
  let f=$("image").files[0];
  if(!f){$("preview").style.display="none";$("imageStatus").textContent="JPG, PNG veya WebP • En fazla 5 MB.";return}
