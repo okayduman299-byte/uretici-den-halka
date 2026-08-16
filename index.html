@@ -7,61 +7,59 @@ header{background:#fff;border-bottom:1px solid #e3e8e3;position:sticky;top:0;z-i
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:#fff;border:1px solid #e1e7e1;border-radius:18px;overflow:hidden;transition:.2s}.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px #17211b12}.pic{height:220px;background:#edf2eb;display:grid;place-items:center;font-size:55px;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.body{padding:15px}.producer{font-size:12px;color:#708078;margin-bottom:7px}.producer a{color:#166534;font-weight:800}.name{font-weight:850;font-size:17px;margin-bottom:7px}.desc{font-size:12px;color:#758078;line-height:1.45;min-height:34px}.bottom{display:flex;justify-content:space-between;align-items:end;margin-top:14px}.price{font-size:20px;font-weight:900}.stock{font-size:11px;color:#166534;margin-top:3px}.buy{border:0;background:#166534;color:#fff;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}.buy:disabled{background:#aab3ad;cursor:not-allowed}.empty{background:#fff;border:1px dashed #cfd8d0;border-radius:18px;text-align:center;padding:50px;color:#718078;grid-column:1/-1}
 footer{background:#17211b;color:#dce7df;padding:30px 0;font-size:13px}@media(max-width:950px){.grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.navlinks{display:none}.grid{grid-template-columns:repeat(2,1fr)}.hero{padding-top:35px}.search{flex-direction:column}.search button{height:48px}}@media(max-width:480px){.grid{grid-template-columns:1fr}.pic{height:240px}}
 </style></head><body>
-<header><div class="container nav"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><nav class="navlinks"><a href="#urunler">Ürünler</a><a href="#ureticiler">Üreticiler</a><a href="uretici-ol.html">Üretici Ol</a></nav><a class="cart" href="sepet.html">🛒 Sepet <span id="cartCount">0</span></a></div></header>
+<header><div class="container nav"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><nav class="navlinks"><a href="#urunler">Ürünler</a><a href="ureticiler.html">Üreticiler</a><a href="uretici-ol.html">Üretici Ol</a></nav><a class="cart" href="sepet.html">🛒 Sepet <span id="cartCount">0</span></a></div></header>
 <section class="hero"><div class="container"><h1>Üreticiden doğrudan sofranıza.</h1><p>Yerel üreticilerin ürünlerini keşfedin, üreticiden doğrudan satın alın.</p><div class="search"><input id="search" placeholder="Ürün, kategori veya üretici ara..."><button onclick="render()">Ara</button></div></div></section>
 <section class="section" id="urunler"><div class="container"><div class="top"><h2>Öne Çıkan Ürünler</h2><div class="filters" id="filters"></div></div><div class="grid" id="grid"><div class="empty">Ürünler yükleniyor...</div></div></div></section>
 <footer><div class="container">© 2026 Üreticiden Halka • Üreticiden tüketiciye doğrudan.</div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co",SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu",db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";
+const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let products=[],category="all";const $=id=>document.getElementById(id);
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function cart(){try{return JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch{return[]}}function saveCart(c){localStorage.setItem("uh_cart",JSON.stringify(c));updateCart()}function updateCart(){$("cartCount").textContent=cart().reduce((s,x)=>s+(x.qty||0),0)}
+function cart(){try{return JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch{return[]}}
+function saveCart(c){localStorage.setItem("uh_cart",JSON.stringify(c));updateCart()}
+function updateCart(){$("cartCount").textContent=cart().reduce((s,x)=>s+(x.qty||0),0)}
 async function load(){
  try{
-  const r=await db.from("urunler")
-    .select("id,uretici_id,urun_adi,aciklama,kategori,fiyat,stok,gorsel_url,aktif")
-    .eq("aktif",true)
-    .order("created_at",{ascending:false});
-
-  if(r.error) throw r.error;
-
+  const r=await db.from("urunler").select("id,uretici_id,urun_adi,aciklama,kategori,fiyat,stok,gorsel_url,aktif").eq("aktif",true).order("created_at",{ascending:false});
+  if(r.error)throw r.error;
   products=r.data||[];
-
-  // Üretici adlarını ayrı çekiyoruz; böylece ilişki tanımı bozuk olsa bile
-  // ana ürün listesi çalışmaya devam eder.
   const ids=[...new Set(products.map(x=>x.uretici_id).filter(Boolean))];
-
+  const producers={};
   if(ids.length){
-    const pr=await db.from("ureticiler")
-      .select("id,firma_adi,durum")
-      .in("id",ids);
-
-    if(!pr.error){
-      const producers={};
-      (pr.data||[]).forEach(x=>producers[x.id]=x);
-      products=products
-        .filter(x=>!x.uretici_id || !producers[x.uretici_id] || producers[x.uretici_id].durum==="Aktif")
-        .map(x=>({...x,ureticiler:producers[x.uretici_id]||null}));
-    }
+   const pr=await db.from("ureticiler").select("id,firma_adi,durum").in("id",ids);
+   if(pr.error)throw pr.error;
+   (pr.data||[]).forEach(x=>producers[x.id]=x);
   }
-
-  buildFilters();
-  render();
+  products=products.filter(x=>x.uretici_id && producers[x.uretici_id]?.durum==="Aktif").map(x=>({...x,ureticiler:producers[x.uretici_id]}));
+  buildFilters();render();
  }catch(e){
   console.error("Ürün yükleme hatası:",e);
   $("grid").innerHTML='<div class="empty"><b>Ürünler yüklenemedi.</b><br><br>'+esc(e.message||"Bilinmeyen hata")+'<br><br><button onclick="load()" style="border:0;background:#166534;color:#fff;padding:11px 16px;border-radius:10px;font-weight:800;cursor:pointer">Tekrar Dene</button></div>';
  }
 }
-function buildFilters(){const cats=[...new Set(products.map(x=>x.kategori).filter(Boolean))];$("filters").innerHTML='<button class="active" data-cat="all">Tümü</button>'+cats.map(c=>'<button data-cat="'+esc(c)+'">'+esc(c)+'</button>').join("");document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{category=b.dataset.cat;document.querySelectorAll("[data-cat]").forEach(x=>x.classList.toggle("active",x===b));render()})}
+function buildFilters(){
+ const cats=[...new Set(products.map(x=>x.kategori).filter(Boolean))];
+ $("filters").innerHTML='<button class="active" data-cat="all">Tümü</button>'+cats.map(c=>'<button data-cat="'+esc(c)+'">'+esc(c)+'</button>').join("");
+ document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{category=b.dataset.cat;document.querySelectorAll("[data-cat]").forEach(x=>x.classList.toggle("active",x===b));render()});
+}
 function render(){
  const q=$("search").value.trim().toLocaleLowerCase("tr-TR");
  const list=products.filter(x=>(category==="all"||x.kategori===category)&&(!q||[x.urun_adi,x.kategori,x.aciklama,x.ureticiler?.firma_adi].join(" ").toLocaleLowerCase("tr-TR").includes(q)));
  if(!list.length){$("grid").innerHTML='<div class="empty">Aradığınız kriterlere uygun ürün bulunamadı.</div>';return}
  $("grid").innerHTML=list.map(x=>{
   const stock=Number(x.stok||0),producer=x.ureticiler?.firma_adi||"Yerel üretici";
-  return '<article class="card"><a href="urun.html?id='+encodeURIComponent(x.id)+'"><div class="pic">'+(x.gorsel_url?'<img src="'+esc(x.gorsel_url)+'" alt="'+esc(x.urun_adi)+'">':'🧺')+'</div></a><div class="body"><div class="producer">🏡 <a href="uretici-magaza.html?id='+encodeURIComponent(x.uretici_id)+'" style="color:#166534;font-weight:900;text-decoration:underline;text-underline-offset:3px" onclick="event.stopPropagation()">'+esc(producer)+'</a></div><div class="name">'+esc(x.urun_adi)+'</div><div class="desc">'+esc(x.aciklama||"Doğrudan üreticiden.")+'</div><div class="bottom"><div><div class="price">'+Number(x.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</div><div class="stock">'+(stock>0?"Stokta • "+stock+" adet":"Stok tükendi")+'</div></div><button class="buy" '+(stock<1?"disabled":"")+' onclick="event.preventDefault();add('+x.id+')">Sepete ekle</button></div></div></article>';
+  return '<article class="card"><a href="urun.html?id='+encodeURIComponent(x.id)+'"><div class="pic">'+(x.gorsel_url?'<img src="'+esc(x.gorsel_url)+'" alt="'+esc(x.urun_adi)+'">':'🧺')+'</div></a><div class="body"><div class="producer">🏡 <a href="uretici-magaza.html?id='+encodeURIComponent(x.uretici_id)+'" style="color:#166534;font-weight:900;text-decoration:underline;text-underline-offset:3px">'+esc(producer)+'</a></div><div class="name">'+esc(x.urun_adi)+'</div><div class="desc">'+esc(x.aciklama||"Doğrudan üreticiden.")+'</div><div class="bottom"><div><div class="price">'+Number(x.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</div><div class="stock">'+(stock>0?"Stokta • "+stock+" adet":"Stok tükendi")+'</div></div><button class="buy" '+(stock<1?"disabled":"")+' onclick="event.preventDefault();event.stopPropagation();add('+x.id+')">Sepete ekle</button></div></div></article>';
  }).join("");
 }
-function add(id){const p=products.find(x=>x.id===id);if(!p||!p.stok)return;let c=cart(),item=c.find(x=>x.id===id);if(item){if(item.qty>=p.stok){alert("Stok sınırına ulaştınız.");return}item.qty++}else c.push({id:p.id,name:p.urun_adi,category:p.kategori,price:Number(p.fiyat),stock:p.stok,image:p.gorsel_url,qty:1});saveCart(c);alert("Ürün sepete eklendi ✓")}
-$("search").addEventListener("keydown",e=>{if(e.key==="Enter")render()});updateCart();load();
+function add(id){
+ const p=products.find(x=>x.id===id);if(!p||!p.stok)return;
+ let c=cart(),item=c.find(x=>x.id===id);
+ if(item){if(item.qty>=p.stok){alert("Stok sınırına ulaştınız.");return}item.qty++}
+ else c.push({id:p.id,name:p.urun_adi,category:p.kategori,price:Number(p.fiyat),stock:p.stok,image:p.gorsel_url,qty:1});
+ saveCart(c);alert("Ürün sepete eklendi ✓");
+}
+$("search").addEventListener("keydown",e=>{if(e.key==="Enter")render()});
+updateCart();load();
 </script></body></html>
