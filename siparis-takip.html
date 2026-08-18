@@ -7,7 +7,7 @@ header{height:70px;background:#fff;border-bottom:1px solid #e1e7e1}.nav{height:1
 @media(max-width:600px){.hero h1{font-size:30px}.search{flex-direction:column}.btn{height:48px}.timeline,.steps{grid-template-columns:1fr 1fr;row-gap:10px}.head{display:block}.head .badge{margin-top:10px}}
 </style></head><body><header><div class="container nav"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><a class="link" href="index.html">← Alışverişe dön</a></div></header>
 <main class="page"><div class="container"><div class="hero"><h1>Siparişini Takip Et</h1><div class="muted">Sipariş numaranı girerek güncel durumunu görüntüle.</div></div>
-<div class="card"><div class="search"><input id="no" placeholder="Örn. UDH-2026-0001"><button id="btn" class="btn">Siparişi Bul</button></div><div id="err" class="err"></div></div>
+<div class="card"><div class="search"><input id="no" placeholder="Sipariş no (Örn. UDH-2026-0001)"><input id="phone" placeholder="Siparişteki telefon numarası"><button id="btn" class="btn">Siparişi Bul</button></div><div id="err" class="err"></div></div>
 <div id="result" class="result"></div></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
@@ -15,10 +15,10 @@ const $=id=>document.getElementById(id);function esc(v){return String(v??"").rep
 function money(v){return Number(v||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+" ₺"}
 function showErr(t){$("err").textContent=t;$("err").style.display="block"}
 async function find(){
- $("err").style.display="none";$("result").style.display="none";const no=$("no").value.trim();if(!no)return showErr("Sipariş numaranı gir.");
+ $("err").style.display="none";$("result").style.display="none";const no=$("no").value.trim(),phone=$("phone").value.trim();if(!no||!phone)return showErr("Sipariş numarası ve telefon numarası zorunludur.");
  $("btn").disabled=true;$("btn").textContent="Aranıyor...";
  try{
-  const r=await db.from("siparisler").select("id,siparis_no,durum,created_at,toplam,musteri_adi,odeme_yontemi,odeme_durumu").eq("siparis_no",no).maybeSingle();
+  const r=await db.from("siparisler").select("id,siparis_no,durum,created_at,toplam,musteri_adi,odeme_yontemi,odeme_durumu").eq("siparis_no",no).eq("musteri_telefon",phone).maybeSingle();
   if(r.error)throw r.error;if(!r.data)return showErr("Bu sipariş numarasıyla kayıt bulunamadı.");
   const o=r.data;const ir=await db.from("siparis_urunleri").select("urun_adi,adet,ara_toplam").eq("siparis_id",o.id);if(ir.error)throw ir.error;
   render(o,ir.data||[]);
