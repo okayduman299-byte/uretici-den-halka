@@ -22,7 +22,7 @@ button,input{font:inherit}
 .topline strong{color:#fff}.toplinks{display:flex;gap:18px;color:#b9c9be}
 header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(225,231,225,.9)}
 .nav{min-height:76px;display:flex;align-items:center;gap:16px}
-.logo{font-size:22px;font-weight:950;letter-spacing:-.6px;color:var(--green2);white-space:nowrap}
+.logo{font-size:22px;font-weight:950;letter-spacing:-.6px;color:var(--green2);white-space:nowrap}.logo-img{display:flex;align-items:center}.logo-img img{display:block;width:205px;height:auto;max-height:58px;object-fit:contain}.footer-logo img{width:190px}
 .logo span{color:var(--ink)}
 .search{flex:1;position:relative;max-width:610px;margin:auto}
 .search input{width:100%;height:46px;border:1px solid #d9e2d9;border-radius:13px;padding:0 46px 0 16px;outline:0;background:#f8faf7;transition:.2s}
@@ -94,7 +94,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdro
 footer{margin-top:45px;background:#102219;color:#dce8df;padding:42px 0 25px}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:35px}.footer-brand .logo{color:#b8ee86}.footer-brand .logo span{color:#fff}.footer-brand p{max-width:360px;color:#9eafa4;font-size:12px;line-height:1.8}.footer-col b{font-size:12px;color:#fff}.footer-col a{display:block;color:#9eafa4;font-size:11px;margin-top:11px}.copyright{border-top:1px solid #ffffff12;margin-top:30px;padding-top:18px;color:#7f9186;font-size:10px;display:flex;justify-content:space-between}
 .toast{position:fixed;right:18px;bottom:18px;z-index:100;background:#102219;color:#fff;padding:13px 16px;border-radius:12px;box-shadow:0 15px 35px rgba(0,0,0,.18);font-size:12px;font-weight:800;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}.toast.show{transform:none;opacity:1}
 @media(max-width:1000px){.hero-grid{grid-template-columns:1fr}.hero-visual{min-height:290px}.categories{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(3,1fr)}.feature-strip{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:2fr 1fr 1fr}}
-@media(max-width:700px){.toplinks{display:none}.nav{flex-wrap:wrap;padding:12px 0}.logo{font-size:19px}.search{order:3;flex-basis:100%;max-width:none}.nav-actions{margin-left:auto}.navbtn.track{display:none}.hero-copy{padding:38px 25px}.hero h1{font-size:43px;letter-spacing:-2px}.hero-visual{min-height:260px}.hero-orb{width:220px;height:220px;font-size:90px}.hero-card{left:14px;bottom:14px}.hero-card.right{right:14px;top:14px}.products{grid-template-columns:repeat(2,1fr)}.producers,.story{grid-template-columns:1fr}.seller-cta{display:block}.seller-cta .btn{margin-top:14px}.footer-grid{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}}
+@media(max-width:700px){.toplinks{display:none}.nav{flex-wrap:wrap;padding:12px 0}.logo{font-size:19px}.logo-img img{width:175px;max-height:48px}.search{order:3;flex-basis:100%;max-width:none}.nav-actions{margin-left:auto}.navbtn.track{display:none}.hero-copy{padding:38px 25px}.hero h1{font-size:43px;letter-spacing:-2px}.hero-visual{min-height:260px}.hero-orb{width:220px;height:220px;font-size:90px}.hero-card{left:14px;bottom:14px}.hero-card.right{right:14px;top:14px}.products{grid-template-columns:repeat(2,1fr)}.producers,.story{grid-template-columns:1fr}.seller-cta{display:block}.seller-cta .btn{margin-top:14px}.footer-grid{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}}
 @media(max-width:450px){.container{width:min(100% - 22px,1180px)}.hero{padding-top:15px}.categories{grid-template-columns:repeat(2,1fr)}.products{gap:10px}.product-media{height:160px}.product-body{padding:12px}.price{font-size:16px}.feature-strip{grid-template-columns:1fr}.nav-actions .navbtn{padding:0 10px}.hero-note{gap:12px}.footer-grid{grid-template-columns:1fr}.copyright{display:block;line-height:1.7}}
 </style>
 </head>
@@ -104,7 +104,7 @@ footer{margin-top:45px;background:#102219;color:#dce8df;padding:42px 0 25px}.foo
 
 <header>
 <div class="container nav">
-<a class="logo" href="index.html">Üreticiden <span>Halka</span></a>
+<a class="logo logo-img" href="index.html"><img src="logo (1).png" alt="Üreticiden Halka"></a>
 <div class="search"><input id="search" placeholder="Ürün, üretici veya kategori ara..." autocomplete="off"><button onclick="document.getElementById('search').focus()">⌕</button></div>
 <div class="nav-actions">
 <a class="navbtn track" href="siparis-takip.html">📦 Sipariş</a>
@@ -193,7 +193,7 @@ footer{margin-top:45px;background:#102219;color:#dce8df;padding:42px 0 25px}.foo
 <footer>
 <div class="container">
 <div class="footer-grid">
-<div class="footer-brand"><div class="logo">Üreticiden <span>Halka</span></div><p>Üreticiyi tüketiciyle buluşturan yeni nesil yerel pazaryeri. Doğrudan üreticiden, güvenle alışveriş.</p></div>
+<div class="footer-brand"><div class="logo logo-img footer-logo"><img src="logo (1).png" alt="Üreticiden Halka"></div><p>Üreticiyi tüketiciyle buluşturan yeni nesil yerel pazaryeri. Doğrudan üreticiden, güvenle alışveriş.</p></div>
 <div class="footer-col"><b>Keşfet</b><a href="#urunler">Ürünler</a><a href="#ureticiler">Üreticiler</a><a href="siparis-takip.html">Sipariş Takip</a></div>
 <div class="footer-col"><b>Üreticiler</b><a href="uretici-ol.html">Üretici ol</a><a href="uretici-panel.html">Üretici giriş</a></div>
 <div class="footer-col"><b>Destek</b><a href="sepet.html">Sepetim</a><a href="index-favoriler-final.html">Favoriler</a><a href="admin.html">Yönetim</a></div>
