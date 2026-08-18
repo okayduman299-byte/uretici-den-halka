@@ -1,30 +1,83 @@
 <!doctype html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ürün | Üreticiden Halka</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f7faf7;color:#17211b}a{text-decoration:none;color:inherit}
-.container{width:min(1100px,calc(100% - 28px));margin:auto}header{background:#fff;border-bottom:1px solid #e4e9e4;position:sticky;top:0;z-index:5}.nav{height:70px;display:flex;align-items:center;gap:15px}.logo{font-weight:900;font-size:20px;color:#166534}.logo span{color:#17211b}.search{flex:1}.search input{width:100%;height:42px;border:1px solid #d9e1d9;border-radius:12px;padding:0 14px}.navbtn{padding:10px 13px;border:1px solid #d9e1d9;background:#fff;border-radius:11px;font-weight:700}
-main{padding:32px 0}.crumb{font-size:13px;color:#748078;margin-bottom:18px}.card{background:#fff;border:1px solid #e0e7e0;border-radius:22px;overflow:hidden}.product{display:grid;grid-template-columns:1fr 1fr}.photo{min-height:480px;background:#eef2ec;display:grid;place-items:center;font-size:100px}.photo img{width:100%;height:100%;object-fit:cover}.info{padding:38px}.tag{color:#55705c;font-size:13px}.title{font-size:38px;line-height:1.1;margin:10px 0}.desc{color:#6e7a72;line-height:1.7}.price{font-size:30px;font-weight:900;margin:24px 0}.stock{font-size:13px;color:#55705c}.qty{display:flex;align-items:center;gap:10px;margin:20px 0}.qty button{width:38px;height:38px;border:1px solid #d5ddd5;background:#fff;border-radius:9px;font-size:20px}.qty input{width:55px;text-align:center;height:38px;border:1px solid #d5ddd5;border-radius:9px}.buy{width:100%;height:50px;border:0;border-radius:12px;background:#166534;color:#fff;font-weight:800;font-size:16px;cursor:pointer}.producer{margin-top:20px;padding:18px;background:#f2f7f1;border-radius:15px}.loading{padding:60px;text-align:center;color:#718078}
-@media(max-width:700px){.product{grid-template-columns:1fr}.photo{min-height:300px}.info{padding:24px}.title{font-size:30px}}
-</style></head><body>
-<header><div class="container nav"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><div class="search"><input placeholder="Ürün ara..." onkeydown="if(event.key==='Enter')location.href='index.html#urunler'"></div><a class="navbtn" href="favoriler.html">♡</a><a class="navbtn" href="sepet.html">🛒 <span id="cartCount">0</span></a></div></header>
-<main><div class="container"><div class="crumb"><a href="index.html">Ana sayfa</a> / Ürün</div><div id="app" class="card"><div class="loading">Ürün yükleniyor...</div></div></div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+:root{--g:#14532d;--g2:#166534;--ink:#17211b;--muted:#718078;--line:#e1e8e1;--soft:#f5f8f4}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--soft);color:var(--ink)}a{text-decoration:none;color:inherit}
+.container{width:min(1160px,calc(100% - 30px));margin:auto}
+header{position:sticky;top:0;z-index:20;background:#ffffffed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{min-height:74px;display:flex;align-items:center;gap:18px}.logo img{width:190px;max-height:55px;object-fit:contain;display:block}.back{margin-left:auto;color:var(--g2);font-weight:900;font-size:13px}
+.page{padding:28px 0 60px}.crumb{font-size:12px;color:var(--muted);margin:0 0 16px}.crumb a{color:var(--g2);font-weight:800}
+.product{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:start}
+.gallery,.info,.below{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 35px #18351f0a}
+.gallery{overflow:hidden}.mainpic{height:570px;background:linear-gradient(145deg,#eef4eb,#dfeade);display:grid;place-items:center;position:relative}.mainpic img{width:100%;height:100%;object-fit:cover}.placeholder{font-size:150px}
+.badge{position:absolute;left:18px;top:18px;background:#fff;color:var(--g);padding:8px 11px;border-radius:999px;font-size:10px;font-weight:950;box-shadow:0 5px 15px #17351f18}
+.info{padding:30px;position:sticky;top:98px}.cat{font-size:11px;color:var(--g2);font-weight:900;text-transform:uppercase;letter-spacing:.4px}.info h1{font-size:38px;line-height:1.05;letter-spacing:-1.5px;margin:9px 0 12px}.desc{color:#647168;font-size:14px;line-height:1.75}.price{font-size:32px;font-weight:950;margin:22px 0 4px}.stock{font-size:11px;color:var(--g2);font-weight:900}.divider{height:1px;background:#edf1ed;margin:22px 0}
+.qtyrow{display:flex;align-items:center;gap:14px}.qty{display:flex;border:1px solid #d8e1d8;border-radius:11px;overflow:hidden}.qty button{width:40px;height:43px;border:0;background:#f6f8f5;font-size:20px;cursor:pointer}.qty b{width:44px;display:grid;place-items:center}.add{flex:1;height:45px;border:0;border-radius:11px;background:var(--g2);color:#fff;font-weight:950;cursor:pointer}.add:disabled{opacity:.5;cursor:not-allowed}
+.producer{border:1px solid var(--line);background:#fafcf9;border-radius:16px;padding:15px;display:flex;align-items:center;gap:12px}.avatar{width:50px;height:50px;border-radius:15px;background:#dfeedd;display:grid;place-items:center;font-size:25px}.producer b{display:block;font-size:14px}.producer small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.shop{margin-left:auto;color:var(--g2);font-size:11px;font-weight:900}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.trust div{background:#f5f8f4;border-radius:12px;padding:12px;font-size:10px;font-weight:800;text-align:center}.trust span{display:block;font-size:18px;margin-bottom:5px}
+.below{margin-top:24px;padding:28px}.below h2{margin:0 0 14px;font-size:21px}.below p{color:#66736b;font-size:13px;line-height:1.8;max-width:850px}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.fact{border:1px solid var(--line);border-radius:14px;padding:15px}.fact b{font-size:11px;display:block;margin-bottom:5px}.fact span{font-size:11px;color:var(--muted)}
+.err,.loading{padding:40px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:18px;color:var(--muted)}
+.toast{position:fixed;right:18px;bottom:18px;background:#102219;color:#fff;padding:13px 16px;border-radius:12px;font-size:12px;font-weight:800;opacity:0;transform:translateY(15px);transition:.2s;z-index:50}.toast.show{opacity:1;transform:none}
+@media(max-width:850px){.product{grid-template-columns:1fr}.info{position:static}.mainpic{height:430px}}
+@media(max-width:550px){.logo img{width:165px}.mainpic{height:330px}.info{padding:21px}.info h1{font-size:30px}.price{font-size:27px}.qtyrow{flex-wrap:wrap}.qty{width:120px}.add{width:100%;flex-basis:100%}.trust,.facts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="container nav"><a class="logo" href="index.html"><img src="logo (1).png" alt="Üreticiden Halka"></a><a class="back" href="index.html">← Alışverişe dön</a></div></header>
+<main class="container page"><div id="app"><div class="loading">Ürün hazırlanıyor...</div></div></main>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
-const id=new URLSearchParams(location.search).get("id"), app=document.getElementById("app");
-function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function cart(){try{return JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch{return[]}}
-function count(){document.getElementById("cartCount").textContent=cart().reduce((n,x)=>n+Number(x.qty||0),0)}
-function add(p,q){let c=cart(),x=c.find(a=>Number(a.id)===Number(p.id));if(x){if(x.qty+q>p.stok)return alert("Stok yetersiz.");x.qty+=q}else c.push({id:p.id,name:p.urun_adi,category:p.kategori||"",price:Number(p.fiyat),stock:Number(p.stok),image:p.gorsel_url||"",producer_id:p.uretici_id,qty:q});localStorage.setItem("uh_cart",JSON.stringify(c));count();alert("Ürün sepete eklendi ✓")}
-async function load(){
- if(!id){app.innerHTML='<div class="loading">Ürün bulunamadı.</div>';return}
- const r=await db.from("urunler").select("id,urun_adi,aciklama,kategori,fiyat,stok,gorsel_url,uretici_id").eq("id",id).eq("aktif",true).single();
- if(r.error||!r.data){app.innerHTML='<div class="loading">Ürün bulunamadı veya yayından kaldırılmış.</div>';return}
- const p=r.data;let producer=null;
- if(p.uretici_id){const q=await db.from("ureticiler").select("firma_adi,il,ilce,kategori").eq("id",p.uretici_id).maybeSingle();producer=q.data}
- app.innerHTML=`<div class="product"><div class="photo">${p.gorsel_url?`<img src="${esc(p.gorsel_url)}" alt="${esc(p.urun_adi)}">`:"🧺"}</div><div class="info"><div class="tag">${esc(p.kategori||"Ürün")}</div><h1 class="title">${esc(p.urun_adi)}</h1><p class="desc">${esc(p.aciklama||"Üreticiden doğrudan temin edilen ürün.")}</p><div class="price">${Number(p.fiyat||0).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</div><div class="stock">${p.stok>0?"✓ Stokta "+p.stok+" adet":"Stokta yok"}</div><div class="qty"><button onclick="change(-1)">−</button><input id="qty" type="number" min="1" max="${p.stok}" value="1"><button onclick="change(1)">+</button></div><button class="buy" ${p.stok<1?"disabled":""} onclick="add(p,Math.max(1,Math.min(Number(document.getElementById('qty').value)||1,p.stok)))">Sepete Ekle</button>${producer?`<div class="producer"><b>${esc(producer.firma_adi)}</b><br><small>${esc(producer.il||"")} / ${esc(producer.ilce||"")} • ${esc(producer.kategori||"")}</small></div>`:""}</div></div>`;
- window.p=p;
+const $=id=>document.getElementById(id);let product=null,qty=1;
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":">","\"":"&quot;","'":"&#039;"}[m]))}
+function money(v){return Number(v||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+" ₺"}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.remove("show"),2200)}
+function cart(){try{return JSON.parse(localStorage.getItem("uh_cart")||"[]")}catch(e){return[]}}
+function addCart(){
+ if(!product||product.stok<1)return;
+ const c=cart(),x=c.find(i=>Number(i.id)===Number(product.id)),n=Math.min(qty,Number(product.stok));
+ if(x)x.qty=Math.min(Number(x.qty)+n,Number(product.stok));else c.push({id:product.id,name:product.urun_adi,category:product.kategori||"",price:Number(product.fiyat||0),stock:Number(product.stok||0),image:product.gorsel_url||"",producer_id:product.uretici_id||null,qty:n});
+ localStorage.setItem("uh_cart",JSON.stringify(c));toast("Ürün sepete eklendi ✓");
 }
-function change(n){const e=document.getElementById("qty");if(!e)return;e.value=Math.max(1,Math.min(Number(e.max)||999,(Number(e.value)||1)+n))}
-count();load();
-</script></body></html>
+async function load(){
+ const id=new URLSearchParams(location.search).get("id");
+ if(!id){$("app").innerHTML='<div class="err">Ürün seçilmedi.</div>';return}
+ const r=await db.from("urunler").select("id,uretici_id,urun_adi,aciklama,kategori,fiyat,stok,gorsel_url,aktif").eq("id",id).eq("aktif",true).maybeSingle();
+ if(r.error||!r.data){$("app").innerHTML='<div class="err">Ürün bulunamadı veya satışta değil.</div>';return}
+ product=r.data;
+ let producer=null;
+ if(product.uretici_id){
+  const pr=await db.from("ureticiler").select("id,firma_adi,yetkili,il,ilce,kategori,durum").eq("id",product.uretici_id).eq("durum","Aktif").maybeSingle();
+  producer=pr.data||null;
+ }
+ render(producer);
+}
+function render(p){
+ const stock=Number(product.stok||0);
+ $("app").innerHTML=`
+ <div class="crumb"><a href="index.html">Ana Sayfa</a> / ${esc(product.kategori||"Ürün")} / ${esc(product.urun_adi)}</div>
+ <div class="product">
+  <div class="gallery"><div class="mainpic">${product.gorsel_url?`<img src="${esc(product.gorsel_url)}" alt="${esc(product.urun_adi)}">`:'<div class="placeholder">🧺</div>'}<span class="badge">DOĞRUDAN ÜRETİCİDEN</span></div></div>
+  <div class="info">
+   <div class="cat">${esc(product.kategori||"Yerel Ürün")}</div>
+   <h1>${esc(product.urun_adi)}</h1>
+   <div class="desc">${esc(product.aciklama||"Bu ürün doğrudan üreticiden temin edilmektedir.")}</div>
+   <div class="price">${money(product.fiyat)}</div>
+   <div class="stock">${stock>0?"✓ Stokta • "+stock+" adet":"Stok tükendi"}</div>
+   <div class="divider"></div>
+   <div class="qtyrow"><div class="qty"><button onclick="change(-1)">−</button><b id="qty">1</b><button onclick="change(1)">+</button></div><button class="add" onclick="addCart()" ${stock<1?"disabled":""}>🛒 Sepete Ekle</button></div>
+   <div class="divider"></div>
+   ${p?`<div class="producer"><div class="avatar">👨‍🌾</div><div><b>${esc(p.firma_adi)}</b><small>✓ Doğrulanmış üretici · ${esc([p.il,p.ilce].filter(Boolean).join(" / "))}</small></div><a class="shop" href="uretici-magaza.html?id=${encodeURIComponent(p.id)}">Mağazayı Gör →</a></div>`:`<div class="producer"><div class="avatar">🌿</div><div><b>Yerel üretici</b><small>Doğrudan üreticiden satış</small></div></div>`}
+   <div class="trust"><div><span>🌿</span>Yerel üretim</div><div><span>📦</span>Sipariş takibi</div><div><span>🔒</span>Güvenli sipariş</div></div>
+  </div>
+ </div>
+ <div class="below"><h2>Ürün hakkında</h2><p>${esc(product.aciklama||"Üretici tarafından sunulan doğal ve yöresel ürün. Ürün bilgileri üretici tarafından sağlanmaktadır.")}</p><div class="facts"><div class="fact"><b>Kategori</b><span>${esc(product.kategori||"Yerel Ürün")}</span></div><div class="fact"><b>Satış modeli</b><span>Doğrudan üreticiden</span></div><div class="fact"><b>Stok durumu</b><span>${stock>0?"Stokta":"Stok tükendi"}</span></div></div></div>`;
+}
+function change(d){if(!product)return;qty=Math.max(1,Math.min(Number(product.stok||1),qty+d));$("qty").textContent=qty}
+load();
+</script>
+</body></html>
