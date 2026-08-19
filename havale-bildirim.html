@@ -1,160 +1,82 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Havale Bildirimi | Üreticiden Halka</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Havale / EFT Bildirimi | Üreticiden Halka</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f8f4;color:#17211b}
-.wrap{width:min(620px,calc(100% - 28px));margin:50px auto}
-.card{background:#fff;border:1px solid #e0e7e0;border-radius:20px;padding:25px}
-.logo{font-size:22px;font-weight:900;color:#166534;margin-bottom:20px}.logo span{color:#17211b}
-h1{margin:0 0 8px}.muted{color:#718078;font-size:13px;line-height:1.6}
-.field{margin-top:13px}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}
-.field input,.field textarea{width:100%;padding:12px;border:1px solid #d8e1d8;border-radius:10px;font:inherit}
-.field textarea{min-height:90px}
-.btn{margin-top:17px;width:100%;height:47px;border:0;border-radius:10px;background:#166534;color:#fff;font-weight:900;cursor:pointer}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.msg{display:none;margin-top:13px;padding:12px;border-radius:10px;font-size:13px}
-.ok{background:#e8f6e9;color:#166534}.err{background:#fff0f0;color:#991b1b}
-.bank{margin-top:18px;padding:15px;border-radius:12px;background:#fff8e8;border:1px solid #f1dfad;color:#6d5514;font-size:13px;line-height:1.7}
-.back{display:inline-block;margin-top:18px;color:#166534;font-weight:800;text-decoration:none}
+:root{--g:#14532d;--g2:#166534;--ink:#17211b;--muted:#718078;--soft:#f5f8f4;--line:#e1e8e1}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--soft);color:var(--ink)}
+.container{width:min(720px,calc(100% - 30px));margin:auto}header{background:#fff;border-bottom:1px solid var(--line)}
+.nav{min-height:74px;display:flex;align-items:center}.logo img{width:190px;max-height:55px;object-fit:contain;display:block}.back{margin-left:auto;color:var(--g2);font-size:13px;font-weight:900;text-decoration:none}
+.page{padding:38px 0 65px}.card{background:#fff;border:1px solid var(--line);border-radius:23px;padding:28px;box-shadow:0 12px 38px #18351f0a}
+h1{margin:0 0 8px;font-size:30px;letter-spacing:-.7px}.intro{color:var(--muted);font-size:13px;line-height:1.7}
+.bank{margin-top:20px;background:#fff8e8;border:1px solid #f0dda9;border-radius:16px;padding:17px;color:#6c5413}.bank h3{margin:0 0 10px;font-size:13px}.bankrow{display:flex;justify-content:space-between;gap:15px;padding:7px 0;font-size:12px;border-bottom:1px solid #f0e2bd}.bankrow:last-child{border-bottom:0}.bankrow span{color:#826d32}.iban{font-weight:950;letter-spacing:.5px}
+.orderbox{display:none;margin-top:16px;padding:15px;background:#f4faf3;border:1px solid #d7e7d8;border-radius:14px}.orderbox div{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:5px 0}.orderbox span{color:var(--muted)}.amount{font-size:18px;font-weight:950;color:var(--g2)}
+.form{margin-top:22px}.field{margin-top:13px}.field label{display:block;font-size:12px;font-weight:900;margin-bottom:6px}.field input,.field textarea{width:100%;padding:12px;border:1px solid #d7e0d7;border-radius:10px;font:inherit;outline:0}.field input:focus,.field textarea:focus{border-color:#83a98b;box-shadow:0 0 0 3px #16653410}.field textarea{min-height:82px;resize:vertical}
+.btn{width:100%;height:48px;margin-top:18px;border:0;border-radius:11px;background:var(--g2);color:#fff;font-weight:950;cursor:pointer}.btn:disabled{opacity:.55}.msg{display:none;margin-top:12px;padding:12px;border-radius:10px;font-size:12px}.ok{background:#e7f6e9;color:var(--g2)}.err{background:#fff0f0;color:#991b1b}
+.help{margin-top:16px;padding:13px;border-radius:11px;background:#f7faf6;color:var(--muted);font-size:10px;line-height:1.6}
+@media(max-width:520px){.card{padding:20px}.logo img{width:165px}.bankrow{display:block}.bankrow b{display:block;margin-top:3px}}
 </style>
 </head>
 <body>
-<main class="wrap">
-  <div class="logo">Üreticiden <span>Halka</span></div>
-  <section class="card">
-    <h1>Havale / EFT Bildirimi</h1>
-    <p class="muted">Havale veya EFT yaptıysanız aşağıdaki formdan bildiriminizi gönderin.</p>
-
-    <div class="bank" id="bankBox">Banka bilgileri yükleniyor...</div>
-
-    <form id="form">
-      <div class="field">
-        <label>Sipariş numarası *</label>
-        <input id="orderNo" required placeholder="Örn. UH-20260818-00015">
-      </div>
-      <div class="field">
-        <label>Gönderen adı soyadı *</label>
-        <input id="sender" required>
-      </div>
-      <div class="field">
-        <label>Gönderilen tutar (₺) *</label>
-        <input id="amount" type="number" min="0.01" step="0.01" required>
-      </div>
-      <div class="field">
-        <label>Açıklama</label>
-        <textarea id="note" placeholder="Dekont / işlem bilgisi"></textarea>
-      </div>
-      <button class="btn" id="btn" type="submit">Ödeme Bildirimi Gönder</button>
-      <div id="msg" class="msg"></div>
-    </form>
-
-    <a class="back" id="back" href="index.html">← Alışverişe dön</a>
-  </section>
-</main>
-
+<header><div class="container nav"><a class="logo" href="index.html"><img src="logo (1).png" alt="Üreticiden Halka"></a><a class="back" href="index.html">← Alışverişe dön</a></div></header>
+<main class="container page"><section class="card">
+<h1>Havale / EFT Bildirimi</h1>
+<p class="intro">Havale veya EFT yaptıysan aşağıdaki formdan ödemenin bilgisini gönder. Sipariş numaranı kullanarak tutar ve sipariş bilgilerini kontrol ediyoruz.</p>
+<div class="bank" id="bankBox"><h3>Havale / EFT Bilgileri</h3><div>Banka bilgileri yükleniyor...</div></div>
+<div class="orderbox" id="orderBox"><div><span>Sipariş</span><b id="orderNo">—</b></div><div><span>Sipariş toplamı</span><b class="amount" id="orderTotal">—</b></div></div>
+<form id="form" class="form">
+<div class="field"><label>Sipariş numarası *</label><input id="orderInput" required placeholder="Örn. UH-20260816-00010"></div>
+<div class="field"><label>Gönderen ad soyad *</label><input id="sender" required placeholder="Ödemeyi yapan kişi"></div>
+<div class="field"><label>Gönderilen tutar (₺) *</label><input id="amount" type="number" min="0.01" step="0.01" required placeholder="Örn. 1250"></div>
+<div class="field"><label>Açıklama</label><textarea id="note" placeholder="Banka işlem açıklaması veya ek bilgi"></textarea></div>
+<button class="btn" id="btn">Ödeme Bildirimi Gönder</button><div id="msg" class="msg"></div>
+</form>
+<div class="help">Ödeme bildirimin gönderilmesi ödemenin otomatik olarak onaylandığı anlamına gelmez. Yönetici banka hareketini kontrol ettikten sonra ödeme durumunu günceller.</div>
+</section></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const db=window.supabase.createClient(
-  "https://bzudwfyxgbkzvfjhhywy.supabase.co",
-  "sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu"
-);
-
+const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
 const $=id=>document.getElementById(id);
-const orderFromUrl=new URLSearchParams(location.search).get("no")||"";
-
-if(orderFromUrl){
-  $("orderNo").value=orderFromUrl;
-  $("back").href="siparis-sonuc.html?no="+encodeURIComponent(orderFromUrl);
-}
-
-function esc(v){
-  return String(v??"").replace(/[&<>"']/g,m=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
-}
-
-function show(text,ok){
-  $("msg").textContent=text;
-  $("msg").className="msg "+(ok?"ok":"err");
-  $("msg").style.display="block";
-}
-
+const initialNo=new URLSearchParams(location.search).get("no");
+if(initialNo){$("orderInput").value=initialNo;loadOrder(initialNo)}
 async function loadBank(){
-  const r=await db.from("odeme_ayarlari")
-    .select("banka_adi,hesap_sahibi,iban,aciklama")
-    .eq("aktif",true)
-    .limit(1)
-    .maybeSingle();
-
-  if(r.error){
-    $("bankBox").textContent="Banka bilgileri alınamadı.";
-    return;
-  }
-
-  if(!r.data){
-    $("bankBox").innerHTML="<b>Havale bilgileri henüz tanımlanmamış.</b>";
-    return;
-  }
-
-  $("bankBox").innerHTML=
-    "<b>Havale / EFT bilgileri</b><br>"+
-    "Banka: "+esc(r.data.banka_adi||"-")+"<br>"+
-    "Hesap sahibi: "+esc(r.data.hesap_sahibi||"-")+"<br>"+
-    "IBAN: "+esc(r.data.iban||"-")+
-    (r.data.aciklama?"<br>"+esc(r.data.aciklama):"");
+ const r=await db.from("odeme_ayarlari").select("banka_adi,hesap_sahibi,iban,aciklama").eq("aktif",true).limit(1).maybeSingle();
+ const b=$("bankBox");
+ if(r.error){b.innerHTML="<h3>Havale / EFT Bilgileri</h3><div>Banka bilgileri alınamadı.</div>";return}
+ if(!r.data){b.innerHTML="<h3>Havale / EFT Bilgileri</h3><div>Banka bilgileri henüz tanımlanmamış.</div>";return}
+ const x=r.data;
+ b.innerHTML='<h3>Havale / EFT Bilgileri</h3><div class="bankrow"><span>Banka</span><b>'+esc(x.banka_adi||"-")+'</b></div><div class="bankrow"><span>Hesap sahibi</span><b>'+esc(x.hesap_sahibi||"-")+'</b></div><div class="bankrow"><span>IBAN</span><b class="iban">'+esc(x.iban||"-")+'</b></div>'+(x.aciklama?'<div class="bankrow"><span>Açıklama</span><b>'+esc(x.aciklama)+'</b></div>':"");
 }
-
-$("form").addEventListener("submit",async e=>{
-  e.preventDefault();
-  $("msg").style.display="none";
-  $("btn").disabled=true;
-  $("btn").textContent="Gönderiliyor...";
-
-  try{
-    const no=$("orderNo").value.trim();
-    const sender=$("sender").value.trim();
-    const amount=Number($("amount").value);
-    const extra=$("note").value.trim();
-
-    if(!no||!sender||!amount) throw new Error("Zorunlu alanları doldurun.");
-
-    const q=await db.from("siparisler")
-      .select("id,siparis_no,toplam,odeme_yontemi")
-      .eq("siparis_no",no)
-      .maybeSingle();
-
-    if(q.error) throw q.error;
-    if(!q.data) throw new Error("Sipariş bulunamadı.");
-    if(q.data.odeme_yontemi!=="havale")
-      throw new Error("Bu sipariş Havale / EFT olarak oluşturulmamış.");
-
-    const note="Havale bildirimi | Gönderen: "+sender+
-      " | Tutar: "+amount.toFixed(2)+" TL"+
-      (extra?" | "+extra:"");
-
-    const r=await db.from("siparisler")
-      .update({odeme_notu:note})
-      .eq("id",q.data.id);
-
-    if(r.error) throw r.error;
-
-    show("Ödeme bildiriminiz alındı. Yönetici kontrolünden sonra ödeme durumu güncellenecektir.",true);
-
-    setTimeout(()=>{
-      location.href="siparis-sonuc.html?no="+encodeURIComponent(no)+"&reported=1";
-    },900);
-
-  }catch(err){
-    show(err.message||"Bildirim gönderilemedi.",false);
-    $("btn").disabled=false;
-    $("btn").textContent="Ödeme Bildirimi Gönder";
-  }
-});
-
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":">","\"":"&quot;","'":"&#039;"}[m]))}
+function money(v){return Number(v||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+" ₺"}
+function msg(t,ok){$("msg").textContent=t;$("msg").className="msg "+(ok?"ok":"err");$("msg").style.display="block"}
+async function loadOrder(no){
+ const box=$("orderBox");box.style.display="none";
+ if(!no)return;
+ const r=await db.from("siparisler").select("id,siparis_no,toplam,odeme_yontemi,odeme_durumu").eq("siparis_no",no).maybeSingle();
+ if(r.error||!r.data)return;
+ if(r.data.odeme_yontemi!=="havale"){msg("Bu sipariş Havale / EFT olarak seçilmemiş.",false);return}
+ $("orderNo").textContent=r.data.siparis_no;$("orderTotal").textContent=money(r.data.toplam);$("amount").value=Number(r.data.toplam||0).toFixed(2);box.style.display="block";
+}
+$("orderInput").addEventListener("change",e=>loadOrder(e.target.value.trim()));
+$("form").onsubmit=async e=>{
+ e.preventDefault();$("msg").style.display="none";
+ const btn=$("btn"),no=$("orderInput").value.trim(),sender=$("sender").value.trim(),amount=Number($("amount").value);
+ if(!no||!sender||!amount){msg("Sipariş numarası, gönderen adı ve tutar zorunludur.",false);return}
+ btn.disabled=true;btn.textContent="Gönderiliyor...";
+ try{
+  const q=await db.from("siparisler").select("id,toplam,odeme_yontemi").eq("siparis_no",no).maybeSingle();
+  if(q.error)throw q.error;if(!q.data)throw new Error("Sipariş bulunamadı.");
+  if(q.data.odeme_yontemi!=="havale")throw new Error("Bu sipariş Havale / EFT olarak seçilmemiş.");
+  if(Math.abs(amount-Number(q.data.toplam||0))>0.01)throw new Error("Gönderilen tutar sipariş toplamıyla eşleşmiyor. Sipariş toplamı: "+money(q.data.toplam));
+  const note="Havale bildirimi | Gönderen: "+sender+" | Tutar: "+amount.toFixed(2)+" TL | "+$("note").value.trim();
+  const u=await db.from("siparisler").update({odeme_notu:note}).eq("id",q.data.id);
+  if(u.error)throw u.error;
+  msg("Ödeme bildiriminiz alındı. Yönetici banka kontrolünden sonra ödeme durumu güncellenecektir.",true);
+  setTimeout(()=>location.href="siparis-sonuc.html?no="+encodeURIComponent(no)+"&reported=1",900);
+ }catch(x){msg(x.message||"Bildirim gönderilemedi.",false)}finally{btn.disabled=false;btn.textContent="Ödeme Bildirimi Gönder"}
+};
 loadBank();
 </script>
 </body>
