@@ -1,142 +1,506 @@
-<!doctype html>
+,<!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Üretici Ol | Üreticiden Halka</title>
 <style>
 :root{--g:#14532d;--g2:#166534;--ink:#17211b;--muted:#718078;--bg:#f5f8f4;--line:#dfe7df}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
-.wrap{width:min(760px,calc(100% - 30px));margin:35px auto 60px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.logo img{width:185px;max-height:55px;object-fit:contain}.back{color:var(--g2);font-size:12px;font-weight:900;text-decoration:none}
-.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 12px 40px #18351f09}h1{margin:0 0 8px;font-size:30px}.intro{color:var(--muted);font-size:12px;line-height:1.7}.step{display:none}.step.active{display:block}
-.title{display:flex;align-items:center;gap:10px;margin:22px 0 16px}.num{width:30px;height:30px;border-radius:50%;background:#e8f4e8;color:var(--g2);display:grid;place-items:center;font-weight:900}.title h2{font-size:16px;margin:0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:12px}.full{grid-column:1/-1}.field label{display:block;font-size:11px;font-weight:900;margin-bottom:6px}.field input,.field textarea{width:100%;padding:12px;border:1px solid #d6e0d6;border-radius:10px;font:inherit;outline:0}.field textarea{min-height:80px;resize:vertical}
-.notice{padding:12px;border-radius:11px;background:#fff8e8;border:1px solid #f0dfb3;color:#725916;font-size:10px;line-height:1.6;margin:14px 0}.verify{padding:15px;border-radius:14px;background:#f5faf4;border:1px solid #d8e8d8;margin:13px 0}.verify b{font-size:12px}.verify p{color:var(--muted);font-size:10px;line-height:1.6}
-.btn{min-height:45px;border:0;border-radius:11px;padding:0 17px;font-size:11px;font-weight:950;cursor:pointer}.primary{background:var(--g2);color:#fff}.secondary{background:#edf3ed;color:var(--g2)}.actions{display:flex;justify-content:space-between;gap:9px;margin-top:18px}.btn:disabled{opacity:.55}
-.progress{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:22px 0}.prog{height:6px;background:#e1e7e1;border-radius:99px}.prog.on{background:var(--g2)}
-.msg{display:none;padding:12px;border-radius:10px;font-size:11px;margin-top:12px}.err{background:#fff0f0;color:#991b1b}.ok{background:#e7f6e9;color:var(--g2)}
-.success{text-align:center;padding:25px}.check{width:68px;height:68px;border-radius:50%;background:#e5f5e7;color:var(--g2);display:grid;place-items:center;font-size:30px;margin:0 auto 15px}.success h2{font-size:24px}.success p{color:var(--muted);font-size:12px;line-height:1.7}
-@media(max-width:560px){.card{padding:20px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.actions{flex-direction:column}.btn{width:100%}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{width:min(760px,calc(100% - 30px));margin:35px auto 60px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.logo img{width:185px;max-height:55px;object-fit:contain}
+.back{color:var(--g2);font-size:12px;font-weight:900;text-decoration:none}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 12px 40px #18351f09}
+h1{margin:0 0 8px;font-size:30px}
+.intro{color:var(--muted);font-size:12px;line-height:1.7}
+.step{display:none}.step.active{display:block}
+.title{display:flex;align-items:center;gap:10px;margin:22px 0 16px}
+.num{width:30px;height:30px;border-radius:50%;background:#e8f4e8;color:var(--g2);display:grid;place-items:center;font-weight:900}
+.title h2{font-size:16px;margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-bottom:12px}.full{grid-column:1/-1}
+.field label{display:block;font-size:11px;font-weight:900;margin-bottom:6px}
+.field input,.field textarea{width:100%;padding:12px;border:1px solid #d6e0d6;border-radius:10px;font:inherit;outline:0}
+.field textarea{min-height:80px;resize:vertical}
+.notice{padding:12px;border-radius:11px;background:#fff8e8;border:1px solid #f0dfb3;color:#725916;font-size:10px;line-height:1.6;margin:14px 0}
+.verify{padding:15px;border-radius:14px;background:#f5faf4;border:1px solid #d8e8d8;margin:13px 0}
+.verify b{font-size:12px}.verify p{color:var(--muted);font-size:10px;line-height:1.6}
+.btn{min-height:45px;border:0;border-radius:11px;padding:0 17px;font-size:11px;font-weight:950;cursor:pointer}
+.primary{background:var(--g2);color:#fff}.secondary{background:#edf3ed;color:var(--g2)}
+.actions{display:flex;justify-content:space-between;gap:9px;margin-top:18px}
+.btn:disabled{opacity:.55}
+.progress{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:22px 0}
+.prog{height:6px;background:#e1e7e1;border-radius:99px}.prog.on{background:var(--g2)}
+.msg{display:none;padding:12px;border-radius:10px;font-size:11px;margin-top:12px}
+.err{background:#fff0f0;color:#991b1b}.ok{background:#e7f6e9;color:var(--g2)}
+.success{text-align:center;padding:25px}
+.check{width:68px;height:68px;border-radius:50%;background:#e5f5e7;color:var(--g2);display:grid;place-items:center;font-size:30px;margin:0 auto 15px}
+.success h2{font-size:24px}.success p{color:var(--muted);font-size:12px;line-height:1.7}
+@media(max-width:560px){
+ .card{padding:20px}.grid{grid-template-columns:1fr}.full{grid-column:auto}
+ .actions{flex-direction:column}.btn{width:100%}
+}
 </style>
 </head>
 <body>
 <main class="wrap">
-<div class="top"><a class="logo" href="index.html"><img src="logo (1).png" alt="Üreticiden Halka"></a><a class="back" href="index.html">← Ana sayfa</a></div>
+<div class="top">
+<a class="logo" href="index.html"><img src="logo (1).png" alt="Üreticiden Halka"></a>
+<a class="back" href="index.html">← Ana sayfa</a>
+</div>
+
 <section class="card">
 <h1>Üretici Ol</h1>
-<p class="intro">Üretici hesabını oluştur. Önce e-posta adresini doğrula, ardından üretici bilgilerini gönder. Başvurun yönetici onayından sonra aktif hale gelir.</p>
-<div class="progress"><i class="prog on"></i><i class="prog"></i><i class="prog"></i></div>
+<p class="intro">
+Üretici hesabını oluştur. Önce e-posta adresini doğrula, ardından üretici bilgilerini gönder.
+Başvurun yönetici onayından sonra aktif hale gelir.
+</p>
 
+<div class="progress">
+<i class="prog on"></i><i class="prog"></i><i class="prog"></i>
+</div>
+
+<!-- 1. ADIM -->
 <div id="step1" class="step active">
 <div class="title"><span class="num">1</span><h2>Hesap bilgileri</h2></div>
+
 <div class="grid">
-<div class="field full"><label>E-posta *</label><input id="email" type="email" placeholder="ornek@mail.com" autocomplete="email"></div>
-<div class="field"><label>Telefon *</label><input id="phone" placeholder="+90 5XX XXX XX XX" autocomplete="tel"></div>
-<div class="field"><label>Şifre *</label><input id="password" type="password" placeholder="En az 6 karakter" autocomplete="new-password"></div>
-</div>
-<div class="notice">E-posta adresine doğrulama bağlantısı gönderilecektir. Telefon numarası kayda alınır; <b>şimdilik SMS doğrulaması yapılmaz.</b></div>
-<div class="actions"><span></span><button class="btn primary" id="createBtn" onclick="createAccount()">Hesap Oluştur →</button></div>
+<div class="field full">
+<label>E-posta *</label>
+<input id="email" type="email" placeholder="ornek@mail.com" autocomplete="email">
 </div>
 
+<div class="field">
+<label>Telefon *</label>
+<input id="phone" placeholder="+90 5XX XXX XX XX" autocomplete="tel">
+</div>
+
+<div class="field">
+<label>Şifre *</label>
+<input id="password" type="password" placeholder="En az 6 karakter" autocomplete="new-password">
+</div>
+</div>
+
+<div class="notice">
+E-posta adresine doğrulama bağlantısı gönderilecektir.
+Telefon numarası kayda alınır; <b>şimdilik SMS doğrulaması yapılmaz.</b>
+</div>
+
+<div class="actions">
+<span></span>
+<button class="btn primary" id="createBtn" onclick="createAccount()">Hesap Oluştur →</button>
+</div>
+</div>
+
+<!-- 2. ADIM -->
 <div id="step2" class="step">
 <div class="title"><span class="num">2</span><h2>E-posta doğrulaması</h2></div>
-<div class="verify"><b>📧 E-posta adresini doğrula</b><p><span id="mailText"></span> adresine bir doğrulama bağlantısı gönderdik. Gelen kutunu ve spam klasörünü kontrol et. Bağlantıya tıkladıktan sonra aşağıdaki butona bas.</p><button class="btn secondary" onclick="resendEmail()">Doğrulama Mailini Tekrar Gönder</button></div>
-<div class="actions"><button class="btn secondary" onclick="go(1)">← Geri</button><button class="btn primary" onclick="checkEmail()">E-postayı Kontrol Et →</button></div>
+
+<div class="verify">
+<b>📧 E-posta adresini doğrula</b>
+<p>
+<span id="mailText"></span> adresine doğrulama bağlantısı gönderdik.
+Gelen kutunu ve spam klasörünü kontrol et. Maildeki <b>Onayla</b> bağlantısına bastıktan
+sonra bu sayfaya geri dön.
+</p>
+<button class="btn secondary" onclick="resendEmail()">Doğrulama Mailini Tekrar Gönder</button>
 </div>
 
+<div class="actions">
+<button class="btn secondary" onclick="go(1)">← Geri</button>
+<button class="btn primary" onclick="checkEmail()">E-postayı Kontrol Et →</button>
+</div>
+</div>
+
+<!-- 3. ADIM -->
 <div id="step3" class="step">
 <div class="title"><span class="num">3</span><h2>Üretici bilgileri</h2></div>
+
 <div class="grid">
-<div class="field"><label>Ad Soyad *</label><input id="name" placeholder="Yetkili kişi"></div>
-<div class="field"><label>Firma / Çiftlik Adı *</label><input id="company" placeholder="Firma veya çiftlik adı"></div>
-<div class="field"><label>İl *</label><input id="city" placeholder="Bursa"></div>
-<div class="field"><label>İlçe *</label><input id="district" placeholder="Orhangazi"></div>
-<div class="field"><label>Mahalle *</label><input id="neighborhood" placeholder="Mahalle"></div>
-<div class="field"><label>Cadde / Sokak *</label><input id="street" placeholder="Cadde veya sokak"></div>
-<div class="field"><label>Bina No</label><input id="building" placeholder="No"></div>
-<div class="field"><label>Ürün Kategorisi *</label><input id="category" placeholder="Zeytin, bal, süt ürünleri..."></div>
-<div class="field full"><label>Açık adres *</label><textarea id="address" placeholder="Mahalle, cadde/sokak, bina no ve diğer adres detayları"></textarea></div>
-</div>
-<div class="notice">Adres bilgileri başvuruda kayıt altına alınır. Bu form tek başına resmi adres doğrulaması anlamına gelmez.</div>
-<div class="actions"><button class="btn secondary" onclick="go(2)">← Geri</button><button class="btn primary" onclick="submitApplication()">Başvuruyu Gönder →</button></div>
+<div class="field">
+<label>Ad Soyad *</label>
+<input id="name" placeholder="Yetkili kişi">
 </div>
 
-<div id="success" class="step"><div class="success"><div class="check">✓</div><h2>Başvurun alındı</h2><p>E-posta adresin doğrulandı. Üretici başvurun yönetici incelemesine gönderildi. Onaydan sonra mağazan aktif hale getirilecek.</p><a class="btn primary" href="index.html">Ana Sayfaya Dön</a></div></div>
+<div class="field">
+<label>Firma / Çiftlik Adı *</label>
+<input id="company" placeholder="Firma veya çiftlik adı">
+</div>
+
+<div class="field">
+<label>İl *</label>
+<input id="city" placeholder="Bursa">
+</div>
+
+<div class="field">
+<label>İlçe *</label>
+<input id="district" placeholder="Orhangazi">
+</div>
+
+<div class="field">
+<label>Mahalle *</label>
+<input id="neighborhood" placeholder="Mahalle">
+</div>
+
+<div class="field">
+<label>Cadde / Sokak *</label>
+<input id="street" placeholder="Cadde veya sokak">
+</div>
+
+<div class="field">
+<label>Bina No</label>
+<input id="building" placeholder="No">
+</div>
+
+<div class="field">
+<label>Ürün Kategorisi *</label>
+<input id="category" placeholder="Zeytin, bal, süt ürünleri...">
+</div>
+
+<div class="field full">
+<label>Açık adres *</label>
+<textarea id="address" placeholder="Mahalle, cadde/sokak, bina no ve diğer adres detayları"></textarea>
+</div>
+</div>
+
+<div class="notice">
+Adres bilgileri başvuruda kayıt altına alınır. Bu form tek başına resmi adres doğrulaması anlamına gelmez.
+</div>
+
+<div class="actions">
+<button class="btn secondary" onclick="go(2)">← Geri</button>
+<button class="btn primary" onclick="submitApplication()">Başvuruyu Gönder →</button>
+</div>
+</div>
+
+<!-- BAŞARI -->
+<div id="success" class="step">
+<div class="success">
+<div class="check">✓</div>
+<h2>Başvurun alındı</h2>
+<p>
+E-posta adresin doğrulandı. Üretici başvurun yönetici incelemesine gönderildi.
+Onaydan sonra mağazan aktif hale getirilecek.
+</p>
+<a class="btn primary" href="index.html">Ana Sayfaya Dön</a>
+</div>
+</div>
+
 <div id="msg" class="msg"></div>
-</section></main>
+</section>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";
-const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
+const SUPABASE_URL = "https://bzudwfyxgbkzvfjhhywy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
 
-function show(t,ok=false){$("msg").textContent=t;$("msg").className="msg "+(ok?"ok":"err");$("msg").style.display="block"}
-function go(n){document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));if(n===4){$("success").classList.add("active")}else{$("step"+n).classList.add("active")}document.querySelectorAll(".prog").forEach((x,i)=>x.classList.toggle("on",i<n))}
+const REDIRECT_URL =
+"https://okayduman299-byte.github.io/uretici-den-halka/uretici-ol.html";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = id => document.getElementById(id);
+
+function show(message, ok=false){
+  $("msg").textContent = message;
+  $("msg").className = "msg " + (ok ? "ok" : "err");
+  $("msg").style.display = "block";
+}
+
+function go(n){
+  document.querySelectorAll(".step").forEach(x => x.classList.remove("active"));
+
+  if(n === 4){
+    $("success").classList.add("active");
+  }else{
+    $("step" + n).classList.add("active");
+  }
+
+  document.querySelectorAll(".prog").forEach((x,i) => {
+    x.classList.toggle("on", i < n);
+  });
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
 
 async function createAccount(){
- const email=$("email").value.trim(),phone=$("phone").value.trim(),password=$("password").value;
- if(!email||!phone||password.length<6)return show("E-posta, telefon ve en az 6 karakterli şifre zorunludur.");
- $("createBtn").disabled=true;$("createBtn").textContent="Hesap oluşturuluyor...";
- try{
-   const response=await fetch(SUPABASE_URL+"/auth/v1/signup",{
-     method:"POST",
-     headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},
-     body:JSON.stringify({email,password,data:{account_type:"producer",phone}})
-   });
-   const data=await response.json().catch(()=>({}));
-   if(!response.ok)throw new Error(data.msg||data.message||data.error_description||"Kayıt oluşturulamadı.");
-   $("mailText").textContent=email;go(2);show("Hesap oluşturuldu. E-posta adresini doğrula.",true);
- }catch(e){show("Bağlantı hatası: "+(e.message||"Supabase'e ulaşılamadı."))}
- finally{$("createBtn").disabled=false;$("createBtn").textContent="Hesap Oluştur →"}
+
+  const email = $("email").value.trim();
+  const phone = $("phone").value.trim();
+  const password = $("password").value;
+
+  if(!email || !phone || password.length < 6){
+    show("E-posta, telefon ve en az 6 karakterli şifre zorunludur.");
+    return;
+  }
+
+  $("createBtn").disabled = true;
+  $("createBtn").textContent = "Hesap oluşturuluyor...";
+
+  try{
+
+    const {data,error} = await db.auth.signUp({
+      email: email,
+      password: password,
+
+      options:{
+        data:{
+          account_type:"producer",
+          phone:phone
+        },
+
+        emailRedirectTo: REDIRECT_URL
+      }
+    });
+
+    if(error) throw error;
+
+    if(!data.user){
+      throw new Error("Hesap oluşturulamadı.");
+    }
+
+    $("mailText").textContent = email;
+
+    go(2);
+
+    show(
+      "Hesap oluşturuldu. E-posta adresine gönderilen doğrulama bağlantısına tıkla.",
+      true
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    show(
+      error.message || "Hesap oluşturulurken bir hata oluştu."
+    );
+
+  }finally{
+
+    $("createBtn").disabled = false;
+    $("createBtn").textContent = "Hesap Oluştur →";
+
+  }
 }
 
 async function resendEmail(){
- const email=$("email").value.trim();if(!email)return show("E-posta adresini gir.");
- try{
-   const response=await fetch(SUPABASE_URL+"/auth/v1/resend",{
-     method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},
-     body:JSON.stringify({type:"signup",email})
-   });
-   const data=await response.json().catch(()=>({}));
-   if(!response.ok)throw new Error(data.msg||data.message||data.error_description||"Mail gönderilemedi.");
-   show("Doğrulama maili tekrar gönderildi.",true);
- }catch(e){show("Mail gönderilemedi: "+e.message)}
+
+  const email = $("email").value.trim();
+
+  if(!email){
+    show("E-posta adresini gir.");
+    return;
+  }
+
+  try{
+
+    const {error} = await db.auth.resend({
+      type:"signup",
+      email:email,
+      options:{
+        emailRedirectTo:REDIRECT_URL
+      }
+    });
+
+    if(error) throw error;
+
+    show("Doğrulama maili tekrar gönderildi.",true);
+
+  }catch(error){
+
+    show(error.message || "Doğrulama maili gönderilemedi.");
+
+  }
 }
 
 async function checkEmail(){
- const r=await db.auth.getUser();
- if(r.error||!r.data.user)return show("Oturum bulunamadı. E-postadaki bağlantıya tıkladıktan sonra sayfayı yenile.");
- if(!r.data.user.email_confirmed_at)return show("E-posta henüz doğrulanmamış. Maildeki doğrulama bağlantısına tıkla.");
- go(3);show("E-posta doğrulandı. Üretici bilgilerini doldur.",true);
+
+  try{
+
+    const {data,error} = await db.auth.getUser();
+
+    if(error || !data.user){
+      show(
+        "Oturum bulunamadı. E-postadaki Onayla bağlantısına bastıktan sonra bu sayfayı yenile."
+      );
+      return;
+    }
+
+    if(!data.user.email_confirmed_at){
+
+      show(
+        "E-posta henüz doğrulanmamış. Maildeki Onayla bağlantısına tıkla."
+      );
+
+      return;
+    }
+
+    go(3);
+
+    show(
+      "E-posta doğrulandı. Şimdi üretici bilgilerini doldur.",
+      true
+    );
+
+  }catch(error){
+
+    show(error.message || "E-posta kontrol edilemedi.");
+
+  }
 }
 
 async function submitApplication(){
- const ids=["name","company","city","district","neighborhood","street","category","address"];
- if(ids.some(id=>!$(id).value.trim()))return show("Zorunlu alanların tamamını doldur.");
- const u=await db.auth.getUser();
- if(!u.data.user)return show("Oturum bulunamadı.");
- if(!u.data.user.email_confirmed_at)return show("Önce e-posta adresini doğrulamalısın.");
- const p={
-   auth_user_id:u.data.user.id,
-   firma_adi:$("company").value.trim(),
-   yetkili:$("name").value.trim(),
-   telefon:$("phone").value.trim(),
-   email:u.data.user.email,
-   il:$("city").value.trim(),
-   ilce:$("district").value.trim(),
-   mahalle:$("neighborhood").value.trim(),
-   cadde:$("street").value.trim(),
-   bina_no:$("building").value.trim(),
-   adres:$("address").value.trim(),
-   kategori:$("category").value.trim(),
-   durum:"Başvuru",
-   email_verified:true,
-   phone_verified:false
- };
- const r=await db.from("ureticiler").insert(p);
- if(r.error)return show(r.error.message);
- go(4);$("msg").style.display="none";
+
+  const required = [
+    "name",
+    "company",
+    "city",
+    "district",
+    "neighborhood",
+    "street",
+    "category",
+    "address"
+  ];
+
+  for(const id of required){
+
+    if(!$(id).value.trim()){
+
+      show("Zorunlu alanların tamamını doldur.");
+
+      $(id).focus();
+
+      return;
+    }
+  }
+
+  try{
+
+    const {data,error} = await db.auth.getUser();
+
+    if(error || !data.user){
+
+      show("Oturum bulunamadı. Lütfen tekrar giriş yap.");
+
+      return;
+    }
+
+    if(!data.user.email_confirmed_at){
+
+      show("Önce e-posta adresini doğrulamalısın.");
+
+      return;
+    }
+
+    const payload = {
+
+      auth_user_id:data.user.id,
+
+      firma_adi:$("company").value.trim(),
+
+      yetkili:$("name").value.trim(),
+
+      telefon:$("phone").value.trim(),
+
+      email:data.user.email,
+
+      il:$("city").value.trim(),
+
+      ilce:$("district").value.trim(),
+
+      mahalle:$("neighborhood").value.trim(),
+
+      cadde:$("street").value.trim(),
+
+      bina_no:$("building").value.trim(),
+
+      adres:$("address").value.trim(),
+
+      kategori:$("category").value.trim(),
+
+      durum:"Başvuru",
+
+      email_verified:true,
+
+      phone_verified:false
+    };
+
+    const result = await db
+      .from("ureticiler")
+      .insert(payload);
+
+    if(result.error) throw result.error;
+
+    document
+      .querySelectorAll(".step")
+      .forEach(x => x.classList.remove("active"));
+
+    $("success").classList.add("active");
+
+    $("msg").style.display = "none";
+
+  }catch(error){
+
+    console.error(error);
+
+    show(
+      error.message || "Başvuru gönderilemedi."
+    );
+
+  }
 }
+
+/*
+  E-posta linkinden siteye dönüldüğünde Supabase oturumu
+  otomatik olarak URL'deki auth kodundan oluşturur.
+*/
+window.addEventListener("load", async () => {
+
+  const params = new URLSearchParams(window.location.search);
+
+  if(params.get("code")){
+
+    try{
+
+      const {error} = await db.auth.exchangeCodeForSession(
+        params.get("code")
+      );
+
+      if(error){
+        console.error(error);
+        show("E-posta doğrulama bağlantısı işlenemedi.");
+        return;
+      }
+
+      window.history.replaceState(
+        {},
+        document.title,
+        REDIRECT_URL
+      );
+
+      go(3);
+
+      show(
+        "E-posta adresin başarıyla doğrulandı. Üretici bilgilerini doldurabilirsin.",
+        true
+      );
+
+    }catch(error){
+
+      console.error(error);
+
+      show(
+        error.message || "E-posta doğrulaması tamamlanamadı."
+      );
+
+    }
+
+  }
+
+});
 </script>
-</body></html>
+</body>
+</html>
