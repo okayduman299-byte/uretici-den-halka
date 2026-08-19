@@ -1,30 +1,103 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Üretici Ol | Üreticiden Halka</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f8f4;color:#17211b}.container{width:min(1050px,calc(100% - 28px));margin:auto}
-header{height:70px;background:#fff;border-bottom:1px solid #e1e8e1}.nav{height:100%;display:flex;align-items:center;justify-content:space-between}.logo{font-weight:900;font-size:21px;color:#166534;text-decoration:none}.logo span{color:#17211b}.back{font-weight:800;color:#526158;text-decoration:none}
-main{padding:35px 0}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.info,.form-card{background:#fff;border:1px solid #e0e7e0;border-radius:20px;padding:28px}.info{background:linear-gradient(145deg,#edf7ed,#fff)}h1{font-size:38px;line-height:1.08;margin:0 0 12px}.lead{color:#68746c;line-height:1.7}.points{display:grid;gap:12px;margin-top:25px}.point{display:flex;gap:12px;align-items:center;background:#ffffffb8;border:1px solid #e2ebe2;padding:14px;border-radius:13px}.icon{font-size:25px}.point small{color:#718078}.form-card h2{margin-top:0}.sub{color:#718078;font-size:13px;margin-bottom:20px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:13px}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #d8e1d8;border-radius:10px;font:inherit;background:#fff}.field textarea{min-height:110px;resize:vertical}.required{color:#b42318}.submit{width:100%;height:48px;border:0;border-radius:11px;background:#166534;color:#fff;font-weight:900;font-size:15px;cursor:pointer}.submit:disabled{opacity:.65}.note{margin-top:11px;color:#718078;font-size:12px;line-height:1.5}.error{display:none;background:#fff0f0;border:1px solid #ffd1d1;color:#991b1b;padding:11px;border-radius:9px;margin-top:12px;font-size:13px}.success{display:none;text-align:center;padding:28px 5px}.success .check{font-size:50px}.success h2{margin:10px 0}.success p{color:#6d7971;line-height:1.6}.link{display:inline-block;margin-top:12px;color:#166534;font-weight:900;text-decoration:none}
-@media(max-width:780px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}h1{font-size:32px}}
-</style></head><body>
-<header><div class="container nav"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><a class="back" href="index.html">← Ana sayfa</a></div></header>
-<main><div class="container"><div class="grid">
-<section class="info"><div style="font-size:12px;font-weight:900;letter-spacing:.5px;margin-bottom:15px">✦ ÜRETİCİ PAZARYERİ</div><h1>Emeğini doğrudan müşteriye ulaştır.</h1><p class="lead">Mağazanı oluştur, ürünlerini sergile ve yeni müşterilere ulaş. Başvurun ekibimiz tarafından incelendikten sonra onay sürecine alınır.</p>
-<div class="points"><div class="point"><div class="icon">🏪</div><div><b>Kendi mağazan</b><br><small>Ürünlerini tek yerde sergile.</small></div></div><div class="point"><div class="icon">📦</div><div><b>Sipariş yönetimi</b><br><small>Gelen siparişleri panelinden takip et.</small></div></div><div class="point"><div class="icon">📈</div><div><b>Daha fazla müşteriye ulaş</b><br><small>Ürünlerini doğrudan tüketiciye sun.</small></div></div></div></section>
-<section class="form-card"><div id="formArea"><h2>Üretici başvurusu</h2><div class="sub">Bilgilerini eksiksiz gönder. Başvurun yönetici paneline düşecek.</div>
-<form id="producerForm">
-<div class="row"><div class="field"><label>Üretici / işletme adı <span class="required">*</span></label><input name="business" required placeholder="Örn. Bereket Çiftliği"></div><div class="field"><label>Yetkili kişi <span class="required">*</span></label><input name="person" required placeholder="Ad Soyad"></div></div>
-<div class="row"><div class="field"><label>Telefon <span class="required">*</span></label><input name="phone" type="tel" required placeholder="05XX XXX XX XX"></div><div class="field"><label>E-posta <span class="required">*</span></label><input name="email" type="email" required placeholder="ornek@mail.com"></div></div>
-<div class="row"><div class="field"><label>İl <span class="required">*</span></label><input name="city" required placeholder="Bursa"></div><div class="field"><label>İlçe <span class="required">*</span></label><input name="district" required placeholder="Orhangazi"></div></div>
-<div class="field"><label>Ana ürün kategorisi <span class="required">*</span></label><select name="category" required><option value="">Kategori seçin</option><option>Meyve & Sebze</option><option>Süt & Kahvaltılık</option><option>Bal & Reçel</option><option>Zeytin & Zeytinyağı</option><option>Et & Yöresel Ürünler</option><option>El Emeği</option><option>Diğer</option></select></div>
-<div class="field"><label>Ürünleriniz hakkında</label><textarea name="description" placeholder="Ne üretiyorsunuz? Kısaca anlatın."></textarea></div>
-<button class="submit" id="submit" type="submit">Başvuruyu Gönder →</button><div id="error" class="error"></div><div class="note">Başvuru ücretsizdir. Gönderdiğiniz bilgiler yalnızca başvuru değerlendirme sürecinde kullanılır.</div>
-</form></div>
-<div id="success" class="success"><div class="check">✓</div><h2>Başvurunuz alındı</h2><p>Bilgileriniz başarıyla kaydedildi. Ekibimiz başvurunuzu inceleyip sizinle iletişime geçecek.</p><a class="link" href="index.html">Ana sayfaya dön →</a></div>
-</section></div></div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
-const form=document.getElementById("producerForm"),btn=document.getElementById("submit"),err=document.getElementById("error");
-form.addEventListener("submit",async e=>{e.preventDefault();err.style.display="none";btn.disabled=true;btn.textContent="Gönderiliyor...";
-const f=new FormData(form);const payload={uretici_adi:String(f.get("business")).trim(),yetkili:String(f.get("person")).trim(),telefon:String(f.get("phone")).trim(),email:String(f.get("email")).trim(),il:String(f.get("city")).trim(),ilce:String(f.get("district")).trim(),kategori:String(f.get("category")).trim(),aciklama:String(f.get("description")||"").trim(),durum:"Beklemede"};
-try{const r=await db.from("uretici_basvurulari").insert(payload);if(r.error)throw r.error;document.getElementById("formArea").style.display="none";document.getElementById("success").style.display="block"}catch(x){err.textContent=x.message||"Başvuru gönderilemedi.";err.style.display="block";btn.disabled=false;btn.textContent="Başvuruyu Gönder →"}});
-</script></body></html>
+:root{--g:#14532d;--g2:#166534;--ink:#17211b;--muted:#718078;--bg:#f5f8f4;--line:#dfe7df}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{width:min(760px,calc(100% - 30px));margin:35px auto 60px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.logo img{width:185px;max-height:55px;object-fit:contain}.back{color:var(--g2);font-size:12px;font-weight:900;text-decoration:none}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 12px 40px #18351f09}h1{margin:0 0 8px;font-size:30px}.intro{color:var(--muted);font-size:12px;line-height:1.7}.step{display:none}.step.active{display:block}
+.title{display:flex;align-items:center;gap:10px;margin:22px 0 16px}.num{width:30px;height:30px;border-radius:50%;background:#e8f4e8;color:var(--g2);display:grid;place-items:center;font-weight:900}.title h2{font-size:16px;margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:12px}.full{grid-column:1/-1}.field label{display:block;font-size:11px;font-weight:900;margin-bottom:6px}.field input,.field textarea{width:100%;padding:12px;border:1px solid #d6e0d6;border-radius:10px;font:inherit;outline:0}.field textarea{min-height:80px;resize:vertical}
+.notice{padding:12px;border-radius:11px;background:#fff8e8;border:1px solid #f0dfb3;color:#725916;font-size:10px;line-height:1.6;margin:14px 0}.verify{padding:15px;border-radius:14px;background:#f5faf4;border:1px solid #d8e8d8;margin:13px 0}.verify b{font-size:12px}.verify p{color:var(--muted);font-size:10px;line-height:1.6}
+.btn{min-height:45px;border:0;border-radius:11px;padding:0 17px;font-size:11px;font-weight:950;cursor:pointer}.primary{background:var(--g2);color:#fff}.secondary{background:#edf3ed;color:var(--g2)}.actions{display:flex;justify-content:space-between;gap:9px;margin-top:18px}.btn:disabled{opacity:.55}
+.progress{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:22px 0}.prog{height:6px;background:#e1e7e1;border-radius:99px}.prog.on{background:var(--g2)}
+.msg{display:none;padding:12px;border-radius:10px;font-size:11px;margin-top:12px}.err{background:#fff0f0;color:#991b1b}.ok{background:#e7f6e9;color:var(--g2)}
+.success{text-align:center;padding:25px}.check{width:68px;height:68px;border-radius:50%;background:#e5f5e7;color:var(--g2);display:grid;place-items:center;font-size:30px;margin:0 auto 15px}.success h2{font-size:24px}.success p{color:var(--muted);font-size:12px;line-height:1.7}
+@media(max-width:560px){.card{padding:20px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.actions{flex-direction:column}.btn{width:100%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="top"><a class="logo" href="index.html"><img src="logo (1).png" alt="Üreticiden Halka"></a><a class="back" href="index.html">← Ana sayfa</a></div>
+<section class="card">
+<h1>Üretici Ol</h1>
+<p class="intro">Üretici hesabını oluştur. Önce e-posta adresini doğrula, ardından üretici bilgilerini gönder. Başvurun yönetici onayından sonra aktif hale gelir.</p>
+<div class="progress"><i class="prog on"></i><i class="prog"></i><i class="prog"></i></div>
+
+<div id="step1" class="step active">
+<div class="title"><span class="num">1</span><h2>Hesap bilgileri</h2></div>
+<div class="grid">
+<div class="field full"><label>E-posta *</label><input id="email" type="email" placeholder="ornek@mail.com" autocomplete="email"></div>
+<div class="field"><label>Telefon *</label><input id="phone" placeholder="+90 5XX XXX XX XX" autocomplete="tel"></div>
+<div class="field"><label>Şifre *</label><input id="password" type="password" placeholder="En az 6 karakter" autocomplete="new-password"></div>
+</div>
+<div class="notice">E-posta adresine doğrulama bağlantısı gönderilecektir. Telefon numarası kayda alınır; <b>şimdilik SMS doğrulaması yapılmaz.</b></div>
+<div class="actions"><span></span><button class="btn primary" id="createBtn" onclick="createAccount()">Hesap Oluştur →</button></div>
+</div>
+
+<div id="step2" class="step">
+<div class="title"><span class="num">2</span><h2>E-posta doğrulaması</h2></div>
+<div class="verify"><b>📧 E-posta adresini doğrula</b><p><span id="mailText"></span> adresine bir doğrulama bağlantısı gönderdik. Gelen kutunu ve spam klasörünü kontrol et. Bağlantıya tıkladıktan sonra aşağıdaki butona bas.</p><button class="btn secondary" onclick="resendEmail()">Doğrulama Mailini Tekrar Gönder</button></div>
+<div class="actions"><button class="btn secondary" onclick="go(1)">← Geri</button><button class="btn primary" onclick="checkEmail()">E-postayı Kontrol Et →</button></div>
+</div>
+
+<div id="step3" class="step">
+<div class="title"><span class="num">3</span><h2>Üretici bilgileri</h2></div>
+<div class="grid">
+<div class="field"><label>Ad Soyad *</label><input id="name" placeholder="Yetkili kişi"></div>
+<div class="field"><label>Firma / Çiftlik Adı *</label><input id="company" placeholder="Firma veya çiftlik adı"></div>
+<div class="field"><label>İl *</label><input id="city" placeholder="Bursa"></div>
+<div class="field"><label>İlçe *</label><input id="district" placeholder="Orhangazi"></div>
+<div class="field"><label>Mahalle *</label><input id="neighborhood" placeholder="Mahalle"></div>
+<div class="field"><label>Cadde / Sokak *</label><input id="street" placeholder="Cadde veya sokak"></div>
+<div class="field"><label>Bina No</label><input id="building" placeholder="No"></div>
+<div class="field"><label>Ürün Kategorisi *</label><input id="category" placeholder="Zeytin, bal, süt ürünleri..."></div>
+<div class="field full"><label>Açık adres *</label><textarea id="address" placeholder="Mahalle, cadde/sokak, bina no ve diğer adres detayları"></textarea></div>
+</div>
+<div class="notice">Adres bilgileri başvuruda kayıt altına alınır. Bu form tek başına resmi adres doğrulaması anlamına gelmez.</div>
+<div class="actions"><button class="btn secondary" onclick="go(2)">← Geri</button><button class="btn primary" onclick="submitApplication()">Başvuruyu Gönder →</button></div>
+</div>
+
+<div id="success" class="step"><div class="success"><div class="check">✓</div><h2>Başvurun alındı</h2><p>E-posta adresin doğrulandı. Üretici başvurun yönetici incelemesine gönderildi. Onaydan sonra mağazan aktif hale getirilecek.</p><a class="btn primary" href="index.html">Ana Sayfaya Dön</a></div></div>
+<div id="msg" class="msg"></div>
+</section></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
+const $=id=>document.getElementById(id);
+function show(t,ok=false){$("msg").textContent=t;$("msg").className="msg "+(ok?"ok":"err");$("msg").style.display="block"}
+function go(n){document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));$("step"+n)?.classList.add("active");if(n===4)$("success").classList.add("active");document.querySelectorAll(".prog").forEach((x,i)=>x.classList.toggle("on",i<n))}
+async function createAccount(){
+ $("msg").style.display="none";
+ const email=$("email").value.trim(),phone=$("phone").value.trim(),password=$("password").value;
+ if(!email||!phone||password.length<6)return show("E-posta, telefon ve en az 6 karakterli şifre zorunludur.");
+ $("createBtn").disabled=true;$("createBtn").textContent="Hesap oluşturuluyor...";
+ const r=await db.auth.signUp({email,password,options:{data:{account_type:"producer",phone}}});
+ $("createBtn").disabled=false;$("createBtn").textContent="Hesap Oluştur →";
+ if(r.error)return show(r.error.message);
+ if(r.data.user){$("mailText").textContent=email;go(2);show("Hesap oluşturuldu. E-posta adresini doğrula.",true)}
+}
+async function resendEmail(){
+ const email=$("email").value.trim();if(!email)return show("E-posta adresini gir.");
+ const r=await db.auth.resend({type:"signup",email});
+ if(r.error)show(r.error.message);else show("Doğrulama maili tekrar gönderildi.",true);
+}
+async function checkEmail(){
+ const r=await db.auth.getUser();if(r.error||!r.data.user)return show("Oturum bulunamadı.");
+ if(!r.data.user.email_confirmed_at)return show("E-posta henüz doğrulanmamış. Maildeki doğrulama bağlantısına tıkla.");
+ go(3);show("E-posta doğrulandı. Üretici bilgilerini doldur.",true);
+}
+async function submitApplication(){
+ const ids=["name","company","city","district","neighborhood","street","category","address"];
+ if(ids.some(id=>!$(id).value.trim()))return show("Zorunlu alanların tamamını doldur.");
+ const u=await db.auth.getUser();if(!u.data.user)return show("Oturum bulunamadı.");
+ if(!u.data.user.email_confirmed_at)return show("Önce e-posta adresini doğrulamalısın.");
+ const p={auth_user_id:u.data.user.id,firma_adi:$("company").value.trim(),yetkili:$("name").value.trim(),il:$("city").value.trim(),ilce:$("district").value.trim(),mahalle:$("neighborhood").value.trim(),cadde:$("street").value.trim(),bina_no:$("building").value.trim(),adres:$("address").value.trim(),kategori:$("category").value.trim(),durum:"Başvuru",email_verified:true,phone_verified:false};
+ const r=await db.from("ureticiler").insert(p);if(r.error)return show(r.error.message);
+ document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));$("success").classList.add("active");$("msg").style.display="none";
+}
+</script>
+</body></html>
