@@ -36,7 +36,7 @@ async function load(){
   actions(false);return;
  }
  const o=r.data, eft=o.odeme_yontemi==="havale";
- $("details").innerHTML='<div class="payment"><div class="row"><span>Ödeme yöntemi</span><b>'+ (eft?"Havale / EFT":o.odeme_yontemi==="kart"?"Online Kart":"Kapıda Ödeme") +'</b></div><div class="row"><span>Ödeme durumu</span><b class="status">'+esc(o.odeme_durumu||"Bekliyor")+'</b></div><div class="row"><span>Sipariş toplamı</span><b>'+Number(o.toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>'+ (eft?'<div class="eft" style="display:block"><b>Havale / EFT seçtiniz.</b><br>Ödeme yaptıktan sonra aşağıdaki bağlantıdan ödemenizi bildirebilirsiniz.</div>':"") +'</div>';
+ $("details").innerHTML='<div class="payment"><div class="row"><span>Ödeme yöntemi</span><b>'+ (eft?"Havale / EFT":o.odeme_yontemi==="kart"?"Online Kart":"Kapıda Ödeme") +'</b></div><div class="row"><span>Ödeme durumu</span><b class="status">'+esc(o.odeme_durumu||"Bekliyor")+'</b></div><div class="row"><span>Sipariş toplamı</span><b>'+Number(o.toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>'+ (eft?'<div class="eft" style="display:block"><b>Havale / EFT seçtiniz.</b><br>Ödeme yapmanız gereken sepet toplamı: <strong>'+Number(o.toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</strong><br>Ödeme yaptıktan sonra aşağıdaki bağlantıdan ödemenizi bildirebilirsiniz.</div>':"") +'</div>';
  actions(eft);
 }
 function actions(eft){
