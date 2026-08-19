@@ -1,142 +1,62 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Üretici Paneli</title>
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Üretici Paneli | Üreticiden Halka</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f5f8f4;color:#17211b}.c{width:min(1100px,calc(100% - 28px));margin:auto}header{height:70px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center}.top{display:flex;justify-content:space-between}.logo{font-size:20px;font-weight:800;color:#166534;text-decoration:none}.logo span{color:#17211b}.page{padding:28px 0}.card{background:#fff;border:1px solid #e0e7e0;border-radius:18px;padding:22px}.login{max-width:420px;margin:70px auto}input,select,textarea{width:100%;padding:12px;border:1px solid #dce3dc;border-radius:10px;margin-top:6px}textarea{min-height:100px}label{display:block;font-size:12px;font-weight:800;margin-top:12px}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.green{background:#166534;color:#fff}.light{background:#eef3ee}.red{background:#fee2e2;color:#991b1b}.badge{display:inline-block;background:#eaf5ea;color:#166534;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:800}.err{display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:9px;margin-top:12px}.grid{display:grid;grid-template-columns:320px 1fr;gap:18px}.store{background:linear-gradient(145deg,#123d25,#2f7d45);color:#fff;border-radius:20px;padding:24px}.store p{color:#dcece0;line-height:1.6}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product{border:1px solid #e0e7e0;border-radius:14px;overflow:hidden}.pic{height:150px;background:#eef2ec;display:grid;place-items:center;font-size:50px}.pic img{width:100%;height:100%;object-fit:cover}.pb{padding:12px}.actions{display:flex;gap:6px;margin-top:10px}.muted{color:#718078;font-size:13px}.preview{display:none;max-width:120px;margin-top:8px;border-radius:8px}@media(max-width:800px){.grid{grid-template-columns:1fr}.products{grid-template-columns:1fr 1fr}}@media(max-width:550px){.formgrid,.products{grid-template-columns:1fr}.full{grid-column:auto}}
-</style></head><body>
-<header><div class="c top"><a class="logo" href="index.html">Üreticiden <span>Halka</span></a><button id="logout" class="btn light" style="display:none">Çıkış Yap</button></div></header>
-<main class="page"><div class="c">
-<section id="login" class="login card"><h1>Üretici Paneli</h1><p class="muted">Mağazanı ve ürünlerini yönet.</p><label>E-posta<input id="email" type="email"></label><label>Şifre<input id="pass" type="password"></label><button id="loginBtn" class="btn green" style="width:100%;margin-top:15px">Giriş Yap</button><div id="loginErr" class="err"></div></section>
-<section id="panel" style="display:none"><h1 id="welcome">Mağazam</h1><p class="muted">Ürünlerini ekle ve yayına al.</p>
-<div class="grid"><aside class="store"><h2 id="storeName">Mağaza</h2><p id="storeInfo"></p></aside><div>
-<div class="card"><h2>Yeni ürün ekle</h2><form id="form" onsubmit="return false;"><div class="formgrid">
-<div><label>Ürün adı *<input id="name" required placeholder="Soğuk Sıkım Zeytinyağı"></label></div>
-<div><label>Kategori *<select id="cat" required><option value="">Seçin</option><option>Meyve & Sebze</option><option>Süt & Kahvaltılık</option><option>Bal & Reçel</option><option>Zeytin & Zeytinyağı</option><option>Et & Yöresel Ürünler</option><option>El Emeği</option><option>Diğer</option></select></label></div>
-<div><label>Fiyat (₺) *<input id="price" type="number" min="0" step=".01" required></label></div>
-<div><label>Stok *<input id="stock" type="number" min="0" required></label></div>
-<div class="full"><label>Fotoğraf<input id="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><img id="preview" class="preview"><div id="imageStatus" class="muted">JPG, PNG veya WebP • En fazla 5 MB.</div></div>
-<div class="full"><label>Açıklama<textarea id="desc"></textarea></label></div></div><button id="save" type="button" class="btn green" style="margin-top:15px">Ürünü Yayınla →</button><div id="err" class="err"></div></form></div>
-<div class="card" style="margin-top:18px"><div style="display:flex;justify-content:space-between"><div><h2>Ürünlerim</h2><p class="muted">Yayınlanan ürünler.</p></div><button id="refresh" class="btn light">↻ Yenile</button></div><div id="products" class="products"></div><div id="empty" class="muted" style="text-align:center;padding:30px;display:none">Henüz ürün yok.</div></div>
-<div class="card" style="margin-top:18px">
- <div style="display:flex;justify-content:space-between;align-items:center">
-  <div><h2>Siparişlerim</h2><p class="muted">Mağazanızdaki ürünlerden gelen siparişler.</p></div>
-  <button id="refreshOrders" class="btn light">↻ Yenile</button>
- </div>
- <div id="producerOrders"></div>
- <div id="ordersEmpty" class="muted" style="text-align:center;padding:30px;display:none">Henüz sipariş yok.</div>
-</div>
-</div></div></section></div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co"; const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu"; const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY); let user,producer;
-const $=x=>document.getElementById(x);function esc(v){return String(v??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}function showErr(x,m){$(x).textContent=m;$(x).style.display="block"}
-async function load(){
- const s=await db.auth.getSession();if(!s.data.session)return;user=s.data.session.user;
- $("login").style.display="none";$("panel").style.display="block";$("logout").style.display="block";
- const r=await db.from("ureticiler").select("*").eq("user_id",user.id).eq("durum","Aktif").maybeSingle();
- if(r.error||!r.data){showErr("err",r.error?.message||"Bu hesaba bağlı aktif üretici bulunamadı.");return}
- producer=r.data;$("welcome").textContent=producer.firma_adi;$("storeName").textContent=producer.firma_adi;$("storeInfo").innerHTML=producer.il+" / "+producer.ilce+"<br>"+producer.kategori+"<br>"+producer.email;products();orders();
+:root{--g:#14532d;--g2:#166534;--ink:#17211b;--muted:#718078;--bg:#f5f8f4;--line:#dfe7df;--danger:#991b1b;--gold:#8a6500}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,textarea,select{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}.wrap{width:min(1200px,calc(100% - 28px));margin:auto}
+header{position:sticky;top:0;z-index:30;background:#ffffffed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav{min-height:72px;display:flex;align-items:center;gap:18px}.brand{font-weight:950;color:var(--g2);font-size:20px}.brand span{color:var(--ink)}.navright{margin-left:auto;display:flex;align-items:center;gap:8px}.navbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;font-size:11px;font-weight:900;color:var(--g2)}
+main{padding:28px 0 65px}.head{display:flex;justify-content:space-between;gap:15px;align-items:end;margin-bottom:20px}.head h1{margin:0 0 6px;font-size:32px}.muted{color:var(--muted);font-size:12px;line-height:1.6}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 18px}.tab{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;font-size:11px;font-weight:900;color:#496052}.tab.active{background:var(--g2);color:#fff;border-color:var(--g2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px}.stat span{display:block;color:var(--muted);font-size:10px;font-weight:800}.stat b{display:block;font-size:25px;margin-top:5px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 9px 28px #18351f08}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}.toolbar input,.toolbar select{flex:1;min-width:170px}.field input,.field textarea,.field select,.toolbar input,.toolbar select{width:100%;border:1px solid #d8e1d8;border-radius:10px;padding:11px;outline:0;background:#fff}.field textarea{min-height:90px;resize:vertical}.field label{display:block;font-size:10px;font-weight:900;margin-bottom:5px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
+.btn{border:0;border-radius:10px;padding:10px 13px;font-size:11px;font-weight:900}.green{background:var(--g2);color:#fff}.light{background:#edf3ed;color:var(--g2)}.danger{background:#fee2e2;color:var(--danger)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.product{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:#fff}.pic{height:170px;background:linear-gradient(145deg,#eef4ec,#e1eae0);display:grid;place-items:center;font-size:45px;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.pbody{padding:14px}.pbody h3{margin:5px 0;font-size:15px}.cat{font-size:9px;color:#758078;font-weight:800}.pdesc{font-size:10px;color:var(--muted);min-height:30px}.pfoot{display:flex;justify-content:space-between;align-items:end;margin-top:12px}.price{font-size:17px;font-weight:950}.stock{font-size:9px;color:var(--g2);margin-top:3px;font-weight:800}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.orders{display:grid;gap:10px}.order{border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;grid-template-columns:1.3fr 1fr auto auto;gap:12px;align-items:center}.order strong{display:block;font-size:12px;margin-bottom:4px}.badge{display:inline-block;border-radius:99px;padding:6px 9px;font-size:9px;font-weight:900}.new{background:#fff7d6;color:#806300}.prep{background:#e7f0ff;color:#245ca6}.ship{background:#eee7ff;color:#6941a5}.done{background:#e6f6e8;color:#166534}.cancel{background:#fee2e2;color:#991b1b}.empty{text-align:center;padding:45px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:#0b1d1180;display:none;place-items:center;padding:18px;z-index:100}.modal.show{display:grid}.modalbox{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:22px}.modalhead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:16px}.modalhead h2{margin:0;font-size:20px}.close{border:0;background:#edf3ed;border-radius:9px;padding:8px 10px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.formgrid .full{grid-column:1/-1}.msg{display:none;padding:11px;border-radius:10px;font-size:11px;margin-bottom:12px}.ok{background:#e7f6e9;color:var(--g2)}.err{background:#fff0f0;color:var(--danger)}.profilegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.profilegrid .full{grid-column:1/-1}#appError{display:none;background:#fff0f0;color:var(--danger);padding:13px;border-radius:11px;margin-bottom:14px;font-size:11px}
+@media(max-width:900px){.products{grid-template-columns:repeat(2,1fr)}.order{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.navright .navbtn:first-child{display:none}.head{display:block}.stats{grid-template-columns:1fr 1fr}.products{grid-template-columns:1fr}.grid2,.formgrid,.profilegrid{grid-template-columns:1fr}.full{grid-column:auto}.order{grid-template-columns:1fr}.card{padding:15px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="index.html">Üreticiden <span>Halka</span></a><div class="navright"><a class="navbtn" href="uretici-magaza.html" id="shopLink">Mağazam</a><a class="navbtn" href="index.html">Siteye Git</a><button class="navbtn" onclick="logout()">Çıkış</button></div></div></header>
+<main class="wrap">
+<div class="head"><div><h1 id="welcome">Üretici Paneli</h1><div class="muted" id="producerMeta">Hesabınız yükleniyor...</div></div><button class="btn green" onclick="openProduct()">＋ Yeni Ürün</button></div>
+<div id="appError"></div>
+<div class="stats"><div class="stat"><span>Toplam ürün</span><b id="stProducts">0</b></div><div class="stat"><span>Yayındaki ürün</span><b id="stActive">0</b></div><div class="stat"><span>Toplam sipariş</span><b id="stOrders">0</b></div><div class="stat"><span>Bekleyen sipariş</span><b id="stPending">0</b></div></div>
+<div class="tabs"><button class="tab active" data-tab="products">Ürünlerim</button><button class="tab" data-tab="orders">Siparişler</button><button class="tab" data-tab="profile">Mağaza Bilgileri</button></div>
+<section id="productsTab" class="card"><div class="toolbar"><input id="productSearch" placeholder="Ürün ara..."><select id="productFilter"><option value="all">Tüm ürünler</option><option value="active">Yayında</option><option value="passive">Yayında değil</option></select><button class="btn light" onclick="loadAll()">↻ Yenile</button></div><div id="productsBox" class="products"><div class="empty">Ürünler yükleniyor...</div></div></section>
+<section id="ordersTab" class="card" style="display:none"><div class="toolbar"><input id="orderSearch" placeholder="Sipariş no veya müşteri ara..."><select id="orderFilter"><option value="all">Tüm durumlar</option><option>Yeni</option><option>Hazırlanıyor</option><option>Kargoda</option><option>Teslim Edildi</option><option>İptal</option></select></div><div id="ordersBox" class="orders"><div class="empty">Siparişler yükleniyor...</div></div></section>
+<section id="profileTab" class="card" style="display:none"><div class="profilegrid"><div class="field"><label>Firma / Çiftlik Adı</label><input id="pfirma"></div><div class="field"><label>Yetkili</label><input id="pyetkili"></div><div class="field"><label>Telefon</label><input id="ptelefon"></div><div class="field"><label>Ürün Kategorisi</label><input id="pkategori"></div><div class="field"><label>İl</label><input id="pil"></div><div class="field"><label>İlçe</label><input id="pilce"></div><div class="field"><label>Mahalle</label><input id="pmahalle"></div><div class="field"><label>Bina No</label><input id="pbina"></div><div class="field full"><label>Cadde / Sokak</label><input id="pcadde"></div></div><div id="profileMsg" class="msg" style="margin-top:12px"></div><button class="btn green" style="margin-top:13px" onclick="saveProfile()">Bilgileri Kaydet</button></section>
+</main>
+<div id="productModal" class="modal"><div class="modalbox"><div class="modalhead"><h2 id="productTitle">Yeni Ürün</h2><button class="close" onclick="closeProduct()">✕</button></div><div id="productMsg" class="msg"></div><div class="formgrid"><div class="field"><label>Ürün adı *</label><input id="fName"></div><div class="field"><label>Kategori *</label><input id="fCat" placeholder="Zeytin, bal, süt..."></div><div class="field"><label>Fiyat (₺) *</label><input id="fPrice" type="number" min="0" step="0.01"></div><div class="field"><label>Stok *</label><input id="fStock" type="number" min="0" step="1"></div><div class="field full"><label>Görsel URL</label><input id="fImage" placeholder="https://..."></div><div class="field full"><label>Açıklama</label><textarea id="fDesc"></textarea></div></div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button class="btn light" onclick="closeProduct()">Vazgeç</button><button class="btn green" id="saveProductBtn" onclick="saveProduct()">Kaydet</button></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhywy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
+const $=id=>document.getElementById(id);let user=null,producer=null,products=[],orders=[],editingId=null;
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function money(v){return Number(v||0).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺'}
+function statusClass(s){return s==='Yeni'?'new':s==='Hazırlanıyor'?'prep':s==='Kargoda'?'ship':s==='Teslim Edildi'?'done':'cancel'}
+function showAppError(t){$('appError').textContent=t;$('appError').style.display='block'}
+async function init(){
+ const s=await db.auth.getSession();user=s.data.session?.user;if(!user){location.href='uretici-giris.html';return}
+ const linked=await db.rpc('claim_producer_account');if(linked.error)showAppError(linked.error.message);
+ const pr=await db.from('ureticiler').select('*').eq('user_id',user.id).eq('durum','Aktif').maybeSingle();
+ if(pr.error||!pr.data){showAppError('Aktif üretici hesabınız bulunamadı. Yönetici onayından sonra tekrar giriş yapın.');return}
+ producer=pr.data;$('welcome').textContent='Merhaba, '+(producer.yetkili||producer.firma_adi||'Üretici');$('producerMeta').textContent=(producer.firma_adi||'Mağazanız')+' • '+[producer.il,producer.ilce].filter(Boolean).join(' / ');$('shopLink').href='uretici-magaza.html?id='+producer.id;fillProfile();await loadAll();
 }
-async function products(){const r=await db.from("urunler").select("*").eq("user_id",user.id).order("id",{ascending:false});if(r.error)return showErr("err",r.error.message);$("products").innerHTML="";$("empty").style.display=r.data.length?"none":"block";r.data.forEach(p=>{let d=document.createElement("div");d.className="product";d.innerHTML='<div class="pic">'+(p.gorsel_url?'<img src="'+p.gorsel_url+'">':'🧺')+'</div><div class="pb"><b>'+p.urun_adi+'</b><p class="muted">'+p.kategori+'</p><strong>'+Number(p.fiyat).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</strong><p class="muted">Stok: '+p.stok+'</p><div class="actions"><button class="btn '+(p.aktif?"red":"green")+'" onclick="toggle('+p.id+','+p.aktif+')">'+(p.aktif?"Yayından kaldır":"Yayınla")+'</button><button class="btn light" onclick="del('+p.id+')">Sil</button></div></div>';$("products").appendChild(d)})}
-async function orders(){
- const r=await db.from("siparisler").select("id,siparis_no,durum,created_at").order("created_at",{ascending:false});
- if(r.error)return showErr("err",r.error.message);
- const box=$("producerOrders"),empty=$("ordersEmpty");
- box.innerHTML=""; empty.style.display=r.data.length?"none":"block";
- if(!r.data.length)return;
- for(const o of r.data){
-   const ir=await db.from("siparis_urunleri").select("urun_adi,fiyat,adet,ara_toplam,uretici_id").eq("siparis_id",o.id).eq("uretici_id",producer.id);
-   if(ir.error||!ir.data.length)continue;
-   const d=document.createElement("div"); d.className="product"; d.style.marginTop="10px";
-   const statusOptions=["Yeni","Hazırlanıyor","Kargoda","Teslim Edildi","İptal"];
-   d.innerHTML='<div class="pb"><div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><div><b>'+esc(o.siparis_no)+'</b><p class="muted">'+new Date(o.created_at).toLocaleString("tr-TR")+'</p></div><select class="orderStatus" data-id="'+o.id+'" style="width:auto;margin:0;padding:7px">'+statusOptions.map(st=>'<option '+(o.durum===st?'selected':'')+'>'+st+'</option>').join("")+'</select></div>'+
-     ir.data.map(x=>'<div style="display:flex;justify-content:space-between;border-top:1px solid #edf0ed;padding:9px 0"><span>'+esc(x.urun_adi)+' × '+esc(x.adet)+'</span><b>'+Number(x.ara_toplam||0).toLocaleString("tr-TR",{minimumFractionDigits:2})+' ₺</b></div>').join("")+
-     '</div>';
-   box.appendChild(d);
- }
- box.querySelectorAll(".orderStatus").forEach(sel=>sel.addEventListener("change",async()=>{
-   const id=Number(sel.dataset.id),status=sel.value;
-   const r=await db.from("siparisler").update({durum:status}).eq("id",id);
-   if(r.error){alert(r.error.message);orders()}else{alert("Sipariş durumu güncellendi ✓");orders()}
- }));
-}
-async function upload(f){
- if(!f)return null;
- if(f.size>5242880)throw Error("Fotoğraf 5 MB'dan büyük olamaz.");
- if(!f.type.startsWith("image/"))throw Error("Lütfen bir görsel dosyası seç.");
- const ext=(f.name.split(".").pop()||"jpg").toLowerCase();
- const safeExt=["jpg","jpeg","png","webp","gif"].includes(ext)?ext:"jpg";
- const path=user.id+"/"+crypto.randomUUID()+"."+safeExt;
- $("imageStatus").textContent="Fotoğraf yükleniyor...";
- const r=await db.storage.from("product-images").upload(path,f,{contentType:f.type,upsert:false});
- if(r.error)throw r.error;
- const publicUrl=db.storage.from("product-images").getPublicUrl(path).data.publicUrl;
- $("imageStatus").textContent="Fotoğraf başarıyla yüklendi ✓";
- return publicUrl
-}
-async function publishProduct(){
- $("err").style.display="none";
- $("save").disabled=true;
- $("save").textContent="Yayınlanıyor...";
- try{
-   const session=await db.auth.getSession();
-   if(!session.data.session) throw new Error("Oturum yok. Üretici hesabıyla tekrar giriş yapın.");
-   user=session.data.session.user;
-
-   const pr=await db.from("ureticiler").select("*").eq("user_id",user.id).eq("durum","Aktif").maybeSingle();
-   if(pr.error) throw pr.error;
-   if(!pr.data) throw new Error("Bu hesaba bağlı aktif üretici bulunamadı.");
-   producer=pr.data;
-
-   const name=$("name").value.trim();
-   const cat=$("cat").value;
-   const price=Number($("price").value);
-   const stock=Number($("stock").value);
-
-   if(!name) throw new Error("Ürün adını girin.");
-   if(!cat) throw new Error("Kategori seçin.");
-   if(!Number.isFinite(price)) throw new Error("Geçerli bir fiyat girin.");
-   if(!Number.isInteger(stock)||stock<0) throw new Error("Geçerli bir stok girin.");
-
-   let imageUrl=null;
-   const file=$("image").files[0];
-   if(file) imageUrl=await upload(file);
-
-   const r=await db.from("urunler").insert([{
-     user_id:user.id,
-     uretici_id:producer.id,
-     urun_adi:name,
-     kategori:cat,
-     fiyat:price,
-     stok:stock,
-     aciklama:$("desc").value.trim(),
-     gorsel_url:imageUrl,
-     aktif:true
-   }]);
-
-   if(r.error) throw r.error;
-
-   $("form").reset();
-   $("preview").style.display="none";
-   await products();
-   alert("Ürün başarıyla yayınlandı ✓");
- }catch(e){
-   console.error(e);
-   showErr("err",e.message||"Ürün eklenemedi.");
- }finally{
-   $("save").disabled=false;
-   $("save").textContent="Ürünü Yayınla →";
- }
-}
-
-$("save").addEventListener("click",publishProduct);
-
-$("image").onchange=()=>{
- let f=$("image").files[0];
- if(!f){$("preview").style.display="none";$("imageStatus").textContent="JPG, PNG veya WebP • En fazla 5 MB.";return}
- if(f.size>5242880){$("image").value="";$("preview").style.display="none";return showErr("err","Fotoğraf 5 MB'dan büyük olamaz.")}
- $("preview").src=window.URL.createObjectURL(f);
- $("preview").style.display="block";
- $("imageStatus").textContent="Fotoğraf seçildi ✓ Yayınla'ya bastığında yüklenir.";
-}
-async function toggle(id,a){let r=await db.from("urunler").update({aktif:!a}).eq("id",id).eq("user_id",user.id);if(r.error)alert(r.error.message);else products()}
-async function del(id){if(!confirm("Ürün silinsin mi?"))return;let r=await db.from("urunler").delete().eq("id",id).eq("user_id",user.id);if(r.error)alert(r.error.message);else products()}
-$("refreshOrders").onclick=orders;$("loginBtn").onclick=async()=>{let r=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("pass").value});if(r.error)return showErr("loginErr",r.error.message);load()};$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};$("refresh").onclick=products;load();
-</script></body></html>
+async function loadAll(){if(!producer)return;const p=await db.from('urunler').select('*').eq('uretici_id',producer.id).order('created_at',{ascending:false});if(p.error){showAppError(p.error.message);return}products=p.data||[];const su=await db.from('siparis_urunleri').select('siparis_id,urun_id,urun_adi,uretici_id,fiyat,adet,ara_toplam').eq('uretici_id',producer.id);if(su.error){showAppError(su.error.message);return}const ids=[...new Set((su.data||[]).map(x=>x.siparis_id))];orders=[];if(ids.length){const o=await db.from('siparisler').select('*').in('id',ids).order('created_at',{ascending:false});if(o.error)showAppError(o.error.message);else orders=o.data||[]}updateStats();renderProducts();renderOrders()}
+function updateStats(){$('stProducts').textContent=products.length;$('stActive').textContent=products.filter(x=>x.aktif).length;$('stOrders').textContent=orders.length;$('stPending').textContent=orders.filter(x=>!['Teslim Edildi','Tamamlandı','İptal'].includes(x.durum)).length}
+function renderProducts(){const q=$('productSearch').value.trim().toLocaleLowerCase('tr-TR'),f=$('productFilter').value;const list=products.filter(p=>(f==='all'||(f==='active'&&p.aktif)||(f==='passive'&&!p.aktif))&&([p.urun_adi,p.kategori,p.aciklama].join(' ').toLocaleLowerCase('tr-TR').includes(q)));if(!list.length){$('productsBox').innerHTML='<div class="empty">Ürün bulunamadı.</div>';return}$('productsBox').innerHTML=list.map(p=>`<article class="product"><div class="pic">${p.gorsel_url?`<img src="${esc(p.gorsel_url)}" alt="${esc(p.urun_adi)}">`:'🧺'}</div><div class="pbody"><div class="cat">${esc(p.kategori||'Ürün')}</div><h3>${esc(p.urun_adi)}</h3><div class="pdesc">${esc(p.aciklama||'Açıklama eklenmemiş.')}</div><div class="pfoot"><div><div class="price">${money(p.fiyat)}</div><div class="stock">${p.stok>0?'✓ '+p.stok+' adet':'Stok yok'} • ${p.aktif?'Yayında':'Yayında değil'}</div></div></div><div class="actions"><button class="btn light" onclick="openProduct(${p.id})">Düzenle</button><button class="btn ${p.aktif?'danger':'green'}" onclick="toggleProduct(${p.id},${p.aktif})">${p.aktif?'Yayından kaldır':'Yayınla'}</button><button class="btn danger" onclick="deleteProduct(${p.id})">Sil</button></div></div></article>`).join('')}
+function renderOrders(){const q=$('orderSearch').value.trim().toLocaleLowerCase('tr-TR'),f=$('orderFilter').value;const list=orders.filter(o=>(f==='all'||o.durum===f)&&[o.siparis_no,o.musteri_adi,o.musteri_telefon].join(' ').toLocaleLowerCase('tr-TR').includes(q));if(!list.length){$('ordersBox').innerHTML='<div class="empty">Sipariş bulunamadı.</div>';return}$('ordersBox').innerHTML=list.map(o=>`<div class="order"><div><strong>${esc(o.siparis_no||('#'+o.id))}</strong><span class="muted">${new Date(o.created_at).toLocaleString('tr-TR')}</span></div><div><strong>${esc(o.musteri_adi)}</strong><span class="muted">${esc(o.musteri_telefon)}</span></div><div><span class="badge ${statusClass(o.durum)}">${esc(o.durum)}</span><div class="muted" style="margin-top:4px">${money(o.toplam)}</div></div><div><select onchange="setOrderStatus(${o.id},this.value)"><option ${o.durum==='Yeni'?'selected':''}>Yeni</option><option ${o.durum==='Hazırlanıyor'?'selected':''}>Hazırlanıyor</option><option ${o.durum==='Kargoda'?'selected':''}>Kargoda</option><option ${o.durum==='Teslim Edildi'?'selected':''}>Teslim Edildi</option><option ${o.durum==='İptal'?'selected':''}>İptal</option></select></div></div>`).join('')}
+function fillProfile(){const m={firma_adi:'pfirma',yetkili:'pyetkili',telefon:'ptelefon',kategori:'pkategori',il:'pil',ilce:'pilce',mahalle:'pmahalle',bina_no:'pbina',cadde:'pcadde'};Object.entries(m).forEach(([k,id])=>$(id).value=producer[k]||'')}
+async function saveProfile(){const r=await db.rpc('update_producer_profile',{p_firma_adi:$('pfirma').value,p_yetkili:$('pyetkili').value,p_telefon:$('ptelefon').value,p_il:$('pil').value,p_ilce:$('pilce').value,p_kategori:$('pkategori').value,p_mahalle:$('pmahalle').value,p_cadde:$('pcadde').value,p_bina_no:$('pbina').value});const m=$('profileMsg');m.className='msg '+(r.error?'err':'ok');m.textContent=r.error?r.error.message:'Mağaza bilgileriniz güncellendi ✓';m.style.display='block';if(!r.error){const pr=await db.from('ureticiler').select('*').eq('user_id',user.id).eq('durum','Aktif').maybeSingle();if(pr.data){producer=pr.data;$('welcome').textContent='Merhaba, '+(producer.yetkili||producer.firma_adi||'Üretici');$('producerMeta').textContent=(producer.firma_adi||'Mağazanız')+' • '+[producer.il,producer.ilce].filter(Boolean).join(' / ');$('shopLink').href='uretici-magaza.html?id='+producer.id}}}
+function openProduct(id){editingId=id||null;$('productTitle').textContent=id?'Ürünü Düzenle':'Yeni Ürün';$('productMsg').style.display='none';const p=products.find(x=>x.id==id);$('fName').value=p?.urun_adi||'';$('fCat').value=p?.kategori||'';$('fPrice').value=p?.fiyat??'';$('fStock').value=p?.stok??0;$('fImage').value=p?.gorsel_url||'';$('fDesc').value=p?.aciklama||'';$('productModal').classList.add('show')}
+function closeProduct(){$('productModal').classList.remove('show')}
+async function saveProduct(){const name=$('fName').value.trim(),cat=$('fCat').value.trim(),price=Number($('fPrice').value),stock=Number($('fStock').value);if(!name||!cat||!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){showProductMsg('Ürün adı, kategori, fiyat ve geçerli stok zorunludur.');return}$('saveProductBtn').disabled=true;let r;if(editingId){r=await db.from('urunler').update({urun_adi:name,kategori:cat,fiyat:price,stok:stock,gorsel_url:$('fImage').value.trim()||null,aciklama:$('fDesc').value.trim()}).eq('id',editingId).eq('user_id',user.id)}else{r=await db.from('urunler').insert({uretici_id:producer.id,user_id:user.id,urun_adi:name,kategori:cat,fiyat:price,stok:stock,gorsel_url:$('fImage').value.trim()||null,aciklama:$('fDesc').value.trim(),aktif:true})}if(r.error){showProductMsg(r.error.message);$('saveProductBtn').disabled=false;return}closeProduct();$('saveProductBtn').disabled=false;await loadAll()}
+function showProductMsg(t){const m=$('productMsg');m.className='msg err';m.textContent=t;m.style.display='block'}
+async function toggleProduct(id,active){const r=await db.from('urunler').update({aktif:!active}).eq('id',id).eq('user_id',user.id);if(r.error)showAppError(r.error.message);else await loadAll()}
+async function deleteProduct(id){if(!confirm('Bu ürünü silmek istediğinize emin misiniz?'))return;const r=await db.from('urunler').delete().eq('id',id).eq('user_id',user.id);if(r.error)showAppError(r.error.message);else await loadAll()}
+async function setOrderStatus(id,status){const r=await db.from('siparisler').update({durum:status}).eq('id',id);if(r.error)showAppError(r.error.message);else await loadAll()}
+async function logout(){await db.auth.signOut();location.href='uretici-giris.html'}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');['products','orders','profile'].forEach(t=>$(t+'Tab').style.display=t===b.dataset.tab?'block':'none')});$('productSearch').oninput=renderProducts;$('productFilter').onchange=renderProducts;$('orderSearch').oninput=renderOrders;$('orderFilter').onchange=renderOrders;init();
+</script>
+</body></html>
