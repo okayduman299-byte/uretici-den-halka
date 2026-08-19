@@ -66,38 +66,77 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const db=window.supabase.createClient("https://bzudwfyxgbkzvfjhhy.supabase.co","sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu");
+const SUPABASE_URL="https://bzudwfyxgbkzvfjhhywy.supabase.co";
+const SUPABASE_KEY="sb_publishable_a_gZqrURzUqY14KGJXbxxw_AgBbOxRu";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
+
 function show(t,ok=false){$("msg").textContent=t;$("msg").className="msg "+(ok?"ok":"err");$("msg").style.display="block"}
-function go(n){document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));$("step"+n)?.classList.add("active");if(n===4)$("success").classList.add("active");document.querySelectorAll(".prog").forEach((x,i)=>x.classList.toggle("on",i<n))}
+function go(n){document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));if(n===4){$("success").classList.add("active")}else{$("step"+n).classList.add("active")}document.querySelectorAll(".prog").forEach((x,i)=>x.classList.toggle("on",i<n))}
+
 async function createAccount(){
- $("msg").style.display="none";
  const email=$("email").value.trim(),phone=$("phone").value.trim(),password=$("password").value;
  if(!email||!phone||password.length<6)return show("E-posta, telefon ve en az 6 karakterli şifre zorunludur.");
  $("createBtn").disabled=true;$("createBtn").textContent="Hesap oluşturuluyor...";
- const r=await db.auth.signUp({email,password,options:{data:{account_type:"producer",phone}}});
- $("createBtn").disabled=false;$("createBtn").textContent="Hesap Oluştur →";
- if(r.error)return show(r.error.message);
- if(r.data.user){$("mailText").textContent=email;go(2);show("Hesap oluşturuldu. E-posta adresini doğrula.",true)}
+ try{
+   const response=await fetch(SUPABASE_URL+"/auth/v1/signup",{
+     method:"POST",
+     headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},
+     body:JSON.stringify({email,password,data:{account_type:"producer",phone}})
+   });
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok)throw new Error(data.msg||data.message||data.error_description||"Kayıt oluşturulamadı.");
+   $("mailText").textContent=email;go(2);show("Hesap oluşturuldu. E-posta adresini doğrula.",true);
+ }catch(e){show("Bağlantı hatası: "+(e.message||"Supabase'e ulaşılamadı."))}
+ finally{$("createBtn").disabled=false;$("createBtn").textContent="Hesap Oluştur →"}
 }
+
 async function resendEmail(){
  const email=$("email").value.trim();if(!email)return show("E-posta adresini gir.");
- const r=await db.auth.resend({type:"signup",email});
- if(r.error)show(r.error.message);else show("Doğrulama maili tekrar gönderildi.",true);
+ try{
+   const response=await fetch(SUPABASE_URL+"/auth/v1/resend",{
+     method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},
+     body:JSON.stringify({type:"signup",email})
+   });
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok)throw new Error(data.msg||data.message||data.error_description||"Mail gönderilemedi.");
+   show("Doğrulama maili tekrar gönderildi.",true);
+ }catch(e){show("Mail gönderilemedi: "+e.message)}
 }
+
 async function checkEmail(){
- const r=await db.auth.getUser();if(r.error||!r.data.user)return show("Oturum bulunamadı.");
+ const r=await db.auth.getUser();
+ if(r.error||!r.data.user)return show("Oturum bulunamadı. E-postadaki bağlantıya tıkladıktan sonra sayfayı yenile.");
  if(!r.data.user.email_confirmed_at)return show("E-posta henüz doğrulanmamış. Maildeki doğrulama bağlantısına tıkla.");
  go(3);show("E-posta doğrulandı. Üretici bilgilerini doldur.",true);
 }
+
 async function submitApplication(){
  const ids=["name","company","city","district","neighborhood","street","category","address"];
  if(ids.some(id=>!$(id).value.trim()))return show("Zorunlu alanların tamamını doldur.");
- const u=await db.auth.getUser();if(!u.data.user)return show("Oturum bulunamadı.");
+ const u=await db.auth.getUser();
+ if(!u.data.user)return show("Oturum bulunamadı.");
  if(!u.data.user.email_confirmed_at)return show("Önce e-posta adresini doğrulamalısın.");
- const p={auth_user_id:u.data.user.id,firma_adi:$("company").value.trim(),yetkili:$("name").value.trim(),il:$("city").value.trim(),ilce:$("district").value.trim(),mahalle:$("neighborhood").value.trim(),cadde:$("street").value.trim(),bina_no:$("building").value.trim(),adres:$("address").value.trim(),kategori:$("category").value.trim(),durum:"Başvuru",email_verified:true,phone_verified:false};
- const r=await db.from("ureticiler").insert(p);if(r.error)return show(r.error.message);
- document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));$("success").classList.add("active");$("msg").style.display="none";
+ const p={
+   auth_user_id:u.data.user.id,
+   firma_adi:$("company").value.trim(),
+   yetkili:$("name").value.trim(),
+   telefon:$("phone").value.trim(),
+   email:u.data.user.email,
+   il:$("city").value.trim(),
+   ilce:$("district").value.trim(),
+   mahalle:$("neighborhood").value.trim(),
+   cadde:$("street").value.trim(),
+   bina_no:$("building").value.trim(),
+   adres:$("address").value.trim(),
+   kategori:$("category").value.trim(),
+   durum:"Başvuru",
+   email_verified:true,
+   phone_verified:false
+ };
+ const r=await db.from("ureticiler").insert(p);
+ if(r.error)return show(r.error.message);
+ go(4);$("msg").style.display="none";
 }
 </script>
 </body></html>
