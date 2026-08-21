@@ -27,6 +27,10 @@ jobs:
         working-directory: android-wrapper
         run: npm install
 
+      - name: Clean old Android project
+        working-directory: android-wrapper
+        run: rm -rf android
+
       - name: Install Capacitor Android
         working-directory: android-wrapper
         run: npx cap add android
