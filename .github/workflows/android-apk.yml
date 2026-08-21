@@ -33,11 +33,10 @@ jobs:
 
       - name: Install Capacitor Android
         working-directory: android-wrapper
-        run: npx cap add android
-
-      - name: Sync Capacitor
-        working-directory: android-wrapper
-        run: npx cap sync android
+        run: |
+          npx cap add android || true
+          mkdir -p android/app/src/main/assets
+          npx cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v4
