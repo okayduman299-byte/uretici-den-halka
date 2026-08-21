@@ -3,9 +3,6 @@ name: Apply global UI polish
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - 'site-polish.css'
-      - '.github/workflows/apply-ui-polish.yml'
 permissions:
   contents: write
 jobs:
