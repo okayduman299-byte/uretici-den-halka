@@ -6,6 +6,7 @@ on:
     paths:
       - 'android-wrapper/**'
       - '.github/workflows/android-apk.yml'
+      - '*.html'
 
 jobs:
   build:
@@ -27,15 +28,27 @@ jobs:
         working-directory: android-wrapper
         run: npm install
 
-      - name: Clean old Android project
+      - name: Prepare Capacitor web directory
         working-directory: android-wrapper
-        run: rm -rf android
+        run: |
+          rm -rf android www
+          mkdir -p www
+          cat > www/index.html <<'EOF'
+          <!doctype html>
+          <html lang="tr">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Üreticiden Halka</title>
+          </head>
+          <body></body>
+          </html>
+          EOF
 
       - name: Install Capacitor Android
         working-directory: android-wrapper
         run: |
-          npx cap add android || true
-          mkdir -p android/app/src/main/assets
+          npx cap add android
           npx cap sync android
 
       - name: Setup Java
