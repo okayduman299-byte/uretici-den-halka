@@ -52,7 +52,7 @@ async function load(){
  product=r.data;
  let producer=null;
  if(product.uretici_id){
-  const pr=await db.from("ureticiler").select("id,firma_adi,yetkili,il,ilce,kategori,durum").eq("id",product.uretici_id).eq("durum","Aktif").maybeSingle();
+  const pr=await db.from("ureticiler_public").select("id,firma_adi,il,ilce,kategori,durum").eq("id",product.uretici_id).eq("durum","Aktif").maybeSingle();
   producer=pr.data||null;
  }
  render(producer);
