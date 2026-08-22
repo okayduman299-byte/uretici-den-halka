@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ödeme Bildirimi Alındı | Üreticiden Halka</title>
+<link rel="stylesheet" href="site-polish.css">
+<style>
+:root{--g:#14532d;--g2:#166534;--ink:#17211b;--muted:#718078;--soft:#f5f8f4;--line:#e1e8e1}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--soft);color:var(--ink)}
+.container{width:min(760px,calc(100% - 30px));margin:auto}header{background:#fff;border-bottom:1px solid var(--line)}
+.nav{min-height:74px;display:flex;align-items:center}.logo img{width:190px;max-height:55px;object-fit:contain;display:block}
+.page{padding:48px 0 70px}.card{background:#fff;border:1px solid var(--line);border-radius:25px;padding:34px;box-shadow:0 15px 45px #18351f0c;text-align:center}
+.icon{width:76px;height:76px;border-radius:50%;background:#e6f5e9;color:var(--g2);display:grid;place-items:center;font-size:38px;font-weight:950;margin:0 auto 20px}
+h1{margin:0 0 10px;font-size:31px;letter-spacing:-.7px}.sub{color:var(--muted);font-size:13px;line-height:1.7}
+.order{margin:25px auto 0;max-width:470px;border:1px solid #d9e5da;border-radius:17px;background:#f8fbf8;text-align:left;padding:18px}
+.row{display:flex;justify-content:space-between;gap:18px;padding:9px 0;border-bottom:1px solid #e4ece4;font-size:12px}.row:last-child{border-bottom:0}.row span{color:var(--muted)}.row b{color:var(--ink)}
+.amount{font-size:19px!important;color:var(--g2)!important}.status{display:inline-flex;padding:5px 9px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:900;font-size:10px}
+.info{margin:20px auto 0;max-width:560px;padding:16px;border-radius:14px;background:#f7faf6;color:var(--muted);font-size:11px;line-height:1.7;text-align:left}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:25px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:11px;font-size:12px;font-weight:950;text-decoration:none}.primary{background:var(--g2);color:#fff}.secondary{background:#edf3ed;color:var(--g2)}
+.note{margin-top:20px;color:var(--muted);font-size:10px;line-height:1.6}@media(max-width:520px){.card{padding:25px 16px}h1{font-size:27px}.row{display:block}.row b{display:block;margin-top:4px}.logo img{width:165px}}
+</style>
+</head>
+<body>
+<header><div class="container nav"><a class="logo" href="index.html"><img src="logo (1).png" alt="Üreticiden Halka"></a></div></header>
+<main class="container page"><section class="card">
+<div class="icon">✓</div>
+<h1>Ödeme bildiriminiz alındı</h1>
+<div class="sub">Bildiriminiz başarıyla sisteme kaydedildi. Banka hareketi kontrol edildikten sonra ödeme durumunuz güncellenecektir.</div>
+<div class="order">
+<div class="row"><span>Sipariş numarası</span><b id="orderNo">—</b></div>
+<div class="row"><span>Bildirilen tutar</span><b class="amount" id="amount">—</b></div>
+<div class="row"><span>Durum</span><b><span class="status">Banka kontrolü bekleniyor</span></b></div>
+</div>
+<div class="info"><b>Önemli:</b> Bu ekran ödeme yapıldığını kesin olarak onaylamaz. Ödeme bildiriminiz alınmıştır; banka hesabındaki hareket doğrulandıktan sonra siparişinizin ödeme durumu güncellenecektir.</div>
+<div class="actions"><a class="btn primary" id="track" href="siparis-takip.html">Siparişimi Takip Et</a><a class="btn secondary" href="index.html">Alışverişe Devam Et</a></div>
+<div class="note">Sipariş numaranızı saklayın. Sipariş takibinde sipariş numaranız ve telefonunuzun son 4 hanesi istenebilir.</div>
+</section></main>
+<script>
+const p=new URLSearchParams(location.search);const no=p.get('no')||'';const amount=Number(p.get('amount')||0);
+document.getElementById('orderNo').textContent=no||'—';
+document.getElementById('amount').textContent=amount>0?amount.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₺':'—';
+document.getElementById('track').href='siparis-takip.html'+(no?'?no='+encodeURIComponent(no):'');
+</script>
+</body></html>
