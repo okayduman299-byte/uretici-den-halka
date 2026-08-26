@@ -1,0 +1,2 @@
+# GitHub Pages does not apply arbitrary HTTP response headers from this repository.
+# CSP and X-Frame-Options must be configured at the hosting/CDN layer when a custom domain is connected.
