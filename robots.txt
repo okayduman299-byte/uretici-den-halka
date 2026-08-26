@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /musteri-giris.html
+Disallow: /musteri-kayit.html
+Disallow: /siparislerim.html
+Disallow: /havale-bildirim.html
+Disallow: /siparis-takip.html
+Sitemap: https://okayduman299-byte.github.io/uretici-den-halka/sitemap.xml
